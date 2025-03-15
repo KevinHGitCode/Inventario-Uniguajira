@@ -53,7 +53,7 @@ CREATE TABLE bienes_equipos (
     modelo VARCHAR(100),
     serial VARCHAR(100) UNIQUE,
     estado ENUM('activo', 'inactivo', 'en_mantenimiento') NOT NULL,
-    colores VARCHAR(100),
+    color VARCHAR(100),
     condiciones_tecnicas TEXT,
     fecha_ingreso DATE,
     fecha_salida DATE,
