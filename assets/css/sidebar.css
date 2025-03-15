@@ -1,0 +1,45 @@
+/*Sidebar*/
+.sidebar{
+    margin-top: 4rem;
+    width: 4rem;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding: 1.1rem 0;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    background-color: var(--background-color);
+    transition: width 0.5s ease;
+}
+.sidebar.menu-toggle{
+    width: 18.75rem;
+}
+.sidebar a{
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    padding: 0.9rem 0.7rem;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color: var(--text-color);
+}
+.sidebar a:hover{
+    background-color: var(--background-hover)
+}
+.sidebar a.selected{
+    color: var(--text-selected-color);
+    background-color: var(--background-selected);
+}
+.sidebar a.search{
+    padding: 1rem 0.7rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.2rem;
+}
+.sidebar img{
+    width: 1.6rem;
+}

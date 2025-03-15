@@ -1,0 +1,90 @@
+/*Header*/
+header{
+    z-index: 200;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.45rem 2rem 0.45rem 1.27rem;
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    background-color: var(--background-color);
+    top: 0;
+    left: 0;
+}
+/*Left Section*/
+.left{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+}
+
+/*Menu*/
+.menu-container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.menu{
+    width: 1.5rem;
+    height: 37%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.menu div{
+    width: 100%;
+    height: 0.15rem;
+    background-color: var(--menu-color);
+    transition: all 0.2s ease;
+}
+.menu.menu-toggle div:first-child{
+    width: 40%;
+    transform: rotate(-35deg) translate(-30%,175%);
+}
+.menu.menu-toggle div:last-child{
+    width: 40%;
+    transform: rotate(35deg) translate(-30%,-160%);
+}
+/*Brand*/
+.brand{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+}
+.brand .logo{
+    width: 1.7rem;
+}
+.brand .name{
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text-title-color);
+}
+
+/*Right Section*/
+.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.6rem;
+}
+.right a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+.right a:hover{
+    background-color: var(--background-hover);
+}
+.right img{
+    width: 1.5rem;
+    margin: 0.5rem;
+}
+.right .user{
+    width: 2.1rem;
+    border-radius: 50%;
+}

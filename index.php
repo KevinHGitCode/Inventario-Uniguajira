@@ -1,1 +1,1 @@
-<?php include_once 'app/views/index.html';
+<?php include_once 'app/views/index.php'; ?>
