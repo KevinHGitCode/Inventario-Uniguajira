@@ -22,5 +22,6 @@
     </main>
 
     <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/navbar.js"></script>
 </body>
 </html>

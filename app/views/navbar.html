@@ -8,8 +8,7 @@
             </div>
         </div>
         <div class="brand">
-            <img src="assets/icons/udemy.svg" alt="icon-udemy" class="logo">
-            <span class="name">apex</span>
+            <img src="assets/icons/logoUniguajira.png" alt="icon-udemy" class="logo">
         </div>
     </div>
     <div class="right">
@@ -22,6 +21,18 @@
         <a href="#" class="icons-header">
             <img src="assets/icons/notification.svg" alt="notification">
         </a>
-        <img src="assets/images/cristianosiuuu.jpg" alt="img-user" class="user">
+        <div class="user-menu">
+            <img src="assets/images/cristianosiuuu.jpg" alt="img-user" class="user" onclick="toggleUserMenu()">
+            <div id="userMenu" class="user-menu-content" style="display: none;">
+                <a href="#" class="user-menu-item" style="display: flex; align-items: center;">
+                    <img src="assets/icons/editarPerfil.png" alt="edit" class="user-menu-icon" style="margin-right: 8px;"> 
+                    <span>Editar Perfil</span>
+                </a>
+                <a href="#" class="user-menu-item" style="display: flex; align-items: center;">
+                    <img src="assets/icons/cerrarSesion.png" alt="logout" class="user-menu-icon" style="margin-right: 8px;">
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </div>
     </div>
 </header>

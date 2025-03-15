@@ -55,7 +55,7 @@ header{
     gap: 0.6rem;
 }
 .brand .logo{
-    width: 1.7rem;
+    width: 10.0rem;
 }
 .brand .name{
     font-size: 1.5rem;
@@ -87,4 +87,40 @@ header{
 .right .user{
     width: 2.1rem;
     border-radius: 50%;
+}
+
+/*Menu de Usuario*/
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+.user-menu-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.3); /* More transparent and less gray */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.user-menu-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap; /* Ensure each option is on a new line */
+}
+.user-menu-content a:hover {
+    background-color: #f1f1f1;
+}
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre el icono y el texto */
+    text-decoration: none;
+}
+
+.user-menu-icon {
+    margin-right: 8px;
+    width: 24px; /* Ajusta el tamaño del icono según necesites */
+    height: 24px;
 }
