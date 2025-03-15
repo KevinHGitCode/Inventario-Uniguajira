@@ -1,3 +1,1 @@
-<!-- redirecciona esto a app/views/index.html -->
-<?php
-header('Location: app/views/index.html');
+<?php include_once 'app/views/index.html';
