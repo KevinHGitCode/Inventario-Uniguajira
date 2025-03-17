@@ -19,7 +19,13 @@ function loadContent(path) {
         
 }
 
-// cuando este cargado el dom clickea la opcion con la clase selected
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.selected').click();
+// asignar evento click a las etiquetas <a> del sidebar
+// para asignar la clase seleted al elemento clickeado
+// y eliminar la clase selected de los demás elementos
+const links = document.querySelectorAll('.sidebar a');
+links.forEach(link => {
+    link.addEventListener('click', () => {
+        links.forEach(l => l.classList.remove('selected'));
+        link.classList.add('selected');
+    });
 });
