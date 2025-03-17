@@ -9,3 +9,16 @@ menu.addEventListener('click',()=>{
     menu.classList.toggle('menu-toggle');
     main.classList.toggle('menu-toggle');
 });
+
+
+function loadContent(path) {
+    fetch(path)
+        .then(response => response.text())
+        .then(html => document.getElementById('main').innerHTML = html)
+        .catch(error => console.error('Error:', error));
+}
+
+// cuando este cargado el dom clickea la opcion con la clase selected
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.selected').click();
+});
