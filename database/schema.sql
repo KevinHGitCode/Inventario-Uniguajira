@@ -73,7 +73,7 @@ CREATE INDEX idx_inventarios_estado_conservacion ON inventarios(estado_conservac
 CREATE TABLE bienes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    tipo ENUM('Cantidad', 'Serial') NOT NULL,  -- ENUM para tipos de bienes
+    tipo ENUM('Cantidad', 'Serial') NOT NULL  -- ENUM para tipos de bienes
 );
 
 CREATE INDEX idx_bienes_nombre ON bienes(nombre);

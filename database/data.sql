@@ -1,200 +1,111 @@
+-- Insertar el usuario administrador
 INSERT INTO usuarios (nombre, email, contraseña, rol)
-VALUES ('Administrador', 'admin@email.com', 'Administrador', 'Administrador');
+VALUES ('Administrador', 'admin@email.com', 'administrador', 'administrador');
 
----------------------------------------------------------------------------------------
-
+-- Insertar los grupos del bloque A y bloque B
 INSERT INTO grupos (nombre)
 VALUES ('Bloque A'), ('Bloque B');
 
----------------------------------------------------------------------------------------
-
--- Obtener el ID del Bloque A y Bloque B
-SET @grupo_a_id = (SELECT id FROM grupos WHERE nombre = 'Bloque A');
-SET @grupo_b_id = (SELECT id FROM grupos WHERE nombre = 'Bloque B');
-
----------------------------------------------------------------------------------------
-
--- Insertar inventarios para el Bloque A
+-- Insertar los inventarios para el grupo A (1A, 2A, 3A) y el grupo B (1B)
 INSERT INTO inventarios (nombre, grupo_id, estado_conservacion)
 VALUES 
-    ('1A', @grupo_a_id, 'bueno'),
-    ('2A', @grupo_a_id, 'bueno'),
-    ('3A', @grupo_a_id, 'bueno');
+    ('1A', 1, 'bueno'),  -- 1A pertenece al grupo Bloque A (id=1)
+    ('2A', 1, 'bueno'),  -- 2A pertenece al grupo Bloque A (id=1)
+    ('3A', 1, 'bueno'),  -- 3A pertenece al grupo Bloque A (id=1)
+    ('1B', 2, 'bueno');  -- 1B pertenece al grupo Bloque B (id=2)
 
----------------------------------------------------------------------------------------
-
--- Insertar inventarios para el Bloque B
-INSERT INTO inventarios (nombre, grupo_id, estado_conservacion)
+-- Insertar los tipos de bienes
+INSERT INTO bienes (nombre, tipo)
 VALUES 
-    ('1B', @grupo_b_id, 'bueno');
+    ('pupitres', 'Cantidad'),
+    ('escritorio de docente', 'Cantidad'),
+    ('abanicos de pared', 'Cantidad'),
+    ('abanicos de techo', 'Cantidad'),
+    ('tablero', 'Cantidad'),
+    ('lámparas', 'Cantidad'),
+    ('sillas de docente', 'Cantidad'),
+    ('puertas', 'Cantidad'),
+    ('ventanas', 'Cantidad'),
+    ('botes de basura', 'Cantidad'),
+    ('gabinetes de red', 'Cantidad'),
+    ('escritorio', 'Cantidad');
 
----------------------------------------------------------------------------------------
+-- Insertar los bienes en cada salón
+-- Primero, insertar la relación entre bienes e inventarios en la tabla bienes_inventarios
+-- Luego, insertar las cantidades en la tabla bienes_cantidad
 
-INSERT INTO tipos_bienes (nombre)
+-- Salón 1A
+INSERT INTO bienes_inventarios (bien_id, inventario_id)
 VALUES 
-    ('pupitres'),
-    ('escritorio de docente'),
-    ('abanicos de pared'),
-    ('abanicos de techo'),
-    ('tablero'),
-    ('lámparas'),
-    ('sillas de docente'),
-    ('puertas'),
-    ('ventanas'),
-    ('botes de basura'),
-    ('gabinetes de red'),
-    ('escritorio');
+    (1, 1),  -- pupitres en 1A
+    (5, 1),  -- tablero en 1A
+    (10, 1), -- bote de basura en 1A
+    (2, 1),  -- escritorio de docente en 1A
+    (6, 1),  -- lámparas en 1A
+    (4, 1);  -- abanicos de techo en 1A
 
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los inventarios
-SET @inventario_1a_id = (SELECT id FROM inventarios WHERE nombre = '1A');
-SET @inventario_2a_id = (SELECT id FROM inventarios WHERE nombre = '2A');
-SET @inventario_3a_id = (SELECT id FROM inventarios WHERE nombre = '3A');
-SET @inventario_1b_id = (SELECT id FROM inventarios WHERE nombre = '1B');
-
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los tipos de bienes
-SET @pupitres_id = (SELECT id FROM tipos_bienes WHERE nombre = 'pupitres');
-SET @escritorio_docente_id = (SELECT id FROM tipos_bienes WHERE nombre = 'escritorio de docente');
-SET @abanicos_techo_id = (SELECT id FROM tipos_bienes WHERE nombre = 'abanicos de techo');
-SET @tablero_id = (SELECT id FROM tipos_bienes WHERE nombre = 'tablero');
-SET @lamparas_id = (SELECT id FROM tipos_bienes WHERE nombre = 'lámparas');
-SET @botes_basura_id = (SELECT id FROM tipos_bienes WHERE nombre = 'botes de basura');
-
----------------------------------------------------------------------------------------
-
--- Insertar bienes de tipo cantidad para 1A
-INSERT INTO bienes (nombre, tipo_bien_id, inventario_id)
-VALUES
-    ('Pupitres 1A', @pupitres_id, @inventario_1a_id),
-    ('Tablero 1A', @tablero_id, @inventario_1a_id),
-    ('Bote de basura 1A', @botes_basura_id, @inventario_1a_id),
-    ('Escritorio docente 1A', @escritorio_docente_id, @inventario_1a_id),
-    ('Lámparas 1A', @lamparas_id, @inventario_1a_id),
-    ('Abanicos de techo 1A', @abanicos_techo_id, @inventario_1a_id);
--- TODO: ELIMINAR EL CAMPO NOMBRE DE LA TABLA BIENES
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los bienes insertados
-SET @pupitres_1a_id = LAST_INSERT_ID() - 5;
-SET @tablero_1a_id = LAST_INSERT_ID() - 4;
-SET @bote_basura_1a_id = LAST_INSERT_ID() - 3;
-SET @escritorio_docente_1a_id = LAST_INSERT_ID() - 2;
-SET @lamparas_1a_id = LAST_INSERT_ID() - 1;
-SET @abanicos_techo_1a_id = LAST_INSERT_ID();
-
----------------------------------------------------------------------------------------
-
--- Insertar cantidades para los bienes de tipo cantidad
-INSERT INTO bienes_cantidad (bien_id, cantidad)
+INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
 VALUES 
-    (@pupitres_1a_id, 30),
-    (@tablero_1a_id, 1),
-    (@bote_basura_1a_id, 1),
-    (@escritorio_docente_1a_id, 1),
-    (@lamparas_1a_id, 4),
-    (@abanicos_techo_1a_id, 3);
+    (1, 30),  -- 30 pupitres en 1A
+    (2, 1),   -- 1 tablero en 1A
+    (3, 1),   -- 1 bote de basura en 1A
+    (4, 1),   -- 1 escritorio de docente en 1A
+    (5, 4),   -- 4 lámparas en 1A
+    (6, 3);   -- 3 abanicos de techo en 1A
 
----------------------------------------------------------------------------------------
-
--- Insertar bienes de tipo cantidad para 2A
-INSERT INTO bienes (nombre, tipo_bien_id, inventario_id)
+-- Salón 2A
+INSERT INTO bienes_inventarios (bien_id, inventario_id)
 VALUES 
-    ('Pupitres 2A', @pupitres_id, @inventario_2a_id),
-    ('Tablero 2A', @tablero_id, @inventario_2a_id),
-    ('Bote de basura 2A', @botes_basura_id, @inventario_2a_id),
-    ('Escritorio docente 2A', @escritorio_docente_id, @inventario_2a_id),
-    ('Lámparas 2A', @lamparas_id, @inventario_2a_id),
-    ('Abanicos de techo 2A', @abanicos_techo_id, @inventario_2a_id);
+    (1, 2),  -- pupitres en 2A
+    (5, 2),  -- tablero en 2A
+    (10, 2), -- bote de basura en 2A
+    (2, 2),  -- escritorio de docente en 2A
+    (6, 2),  -- lámparas en 2A
+    (4, 2);  -- abanicos de techo en 2A
 
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los bienes insertados
-SET @pupitres_2a_id = LAST_INSERT_ID() - 5;
-SET @tablero_2a_id = LAST_INSERT_ID() - 4;
-SET @bote_basura_2a_id = LAST_INSERT_ID() - 3;
-SET @escritorio_docente_2a_id = LAST_INSERT_ID() - 2;
-SET @lamparas_2a_id = LAST_INSERT_ID() - 1;
-SET @abanicos_techo_2a_id = LAST_INSERT_ID();
-
----------------------------------------------------------------------------------------
-
--- Insertar cantidades para los bienes de tipo cantidad
-INSERT INTO bienes_cantidad (bien_id, cantidad)
+INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
 VALUES 
-    (@pupitres_2a_id, 30),
-    (@tablero_2a_id, 1),
-    (@bote_basura_2a_id, 1),
-    (@escritorio_docente_2a_id, 1),
-    (@lamparas_2a_id, 4),
-    (@abanicos_techo_2a_id, 3);
+    (7, 30),  -- 30 pupitres en 2A
+    (8, 1),   -- 1 tablero en 2A
+    (9, 1),   -- 1 bote de basura en 2A
+    (10, 1),  -- 1 escritorio de docente en 2A
+    (11, 4),  -- 4 lámparas en 2A
+    (12, 3);  -- 3 abanicos de techo en 2A
 
----------------------------------------------------------------------------------------
-
--- Insertar bienes de tipo cantidad para 3A
-INSERT INTO bienes (nombre, tipo_bien_id, inventario_id)
+-- Salón 3A
+INSERT INTO bienes_inventarios (bien_id, inventario_id)
 VALUES 
-    ('Pupitres 3A', @pupitres_id, @inventario_3a_id),
-    ('Tablero 3A', @tablero_id, @inventario_3a_id),
-    ('Bote de basura 3A', @botes_basura_id, @inventario_3a_id),
-    ('Escritorio docente 3A', @escritorio_docente_id, @inventario_3a_id),
-    ('Lámparas 3A', @lamparas_id, @inventario_3a_id),
-    ('Abanicos de techo 3A', @abanicos_techo_id, @inventario_3a_id);
+    (1, 3),  -- pupitres en 3A
+    (5, 3),  -- tablero en 3A
+    (10, 3), -- bote de basura en 3A
+    (2, 3),  -- escritorio de docente en 3A
+    (6, 3),  -- lámparas en 3A
+    (4, 3);  -- abanicos de techo en 3A
 
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los bienes insertados
-SET @pupitres_3a_id = LAST_INSERT_ID() - 5;
-SET @tablero_3a_id = LAST_INSERT_ID() - 4;
-SET @bote_basura_3a_id = LAST_INSERT_ID() - 3;
-SET @escritorio_docente_3a_id = LAST_INSERT_ID() - 2;
-SET @lamparas_3a_id = LAST_INSERT_ID() - 1;
-SET @abanicos_techo_3a_id = LAST_INSERT_ID();
-
----------------------------------------------------------------------------------------
-
--- Insertar cantidades para los bienes de tipo cantidad
-INSERT INTO bienes_cantidad (bien_id, cantidad)
+INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
 VALUES 
-    (@pupitres_3a_id, 30),
-    (@tablero_3a_id, 1),
-    (@bote_basura_3a_id, 1),
-    (@escritorio_docente_3a_id, 1),
-    (@lamparas_3a_id, 4),
-    (@abanicos_techo_3a_id, 3);
+    (13, 30), -- 30 pupitres en 3A
+    (14, 1),  -- 1 tablero en 3A
+    (15, 1),  -- 1 bote de basura en 3A
+    (16, 1),  -- 1 escritorio de docente en 3A
+    (17, 4),  -- 4 lámparas en 3A
+    (18, 3);  -- 3 abanicos de techo en 3A
 
----------------------------------------------------------------------------------------
-
--- Insertar bienes de tipo cantidad para 1B
-INSERT INTO bienes (nombre, tipo_bien_id, inventario_id)
+-- Salón 1B
+INSERT INTO bienes_inventarios (bien_id, inventario_id)
 VALUES 
-    ('Pupitres 1B', @pupitres_id, @inventario_1b_id),
-    ('Tablero 1B', @tablero_id, @inventario_1b_id),
-    ('Bote de basura 1B', @botes_basura_id, @inventario_1b_id),
-    ('Escritorio docente 1B', @escritorio_docente_id, @inventario_1b_id),
-    ('Lámparas 1B', @lamparas_id, @inventario_1b_id),
-    ('Abanicos de techo 1B', @abanicos_techo_id, @inventario_1b_id);
+    (1, 4),  -- pupitres en 1B
+    (5, 4),  -- tablero en 1B
+    (10, 4), -- bote de basura en 1B
+    (2, 4),  -- escritorio de docente en 1B
+    (6, 4),  -- lámparas en 1B
+    (4, 4);  -- abanicos de techo en 1B
 
----------------------------------------------------------------------------------------
-
--- Obtener IDs de los bienes insertados
-SET @pupitres_1b_id = LAST_INSERT_ID() - 5;
-SET @tablero_1b_id = LAST_INSERT_ID() - 4;
-SET @bote_basura_1b_id = LAST_INSERT_ID() - 3;
-SET @escritorio_docente_1b_id = LAST_INSERT_ID() - 2;
-SET @lamparas_1b_id = LAST_INSERT_ID() - 1;
-SET @abanicos_techo_1b_id = LAST_INSERT_ID();
-
----------------------------------------------------------------------------------------
-
--- Insertar cantidades para los bienes de tipo cantidad
-INSERT INTO bienes_cantidad (bien_id, cantidad)
+INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
 VALUES 
-    (@pupitres_1b_id, 30),
-    (@tablero_1b_id, 1),
-    (@bote_basura_1b_id, 1),
-    (@escritorio_docente_1b_id, 1),
-    (@lamparas_1b_id, 4),
-    (@abanicos_techo_1b_id, 3);
+    (19, 30), -- 30 pupitres en 1B
+    (20, 1),  -- 1 tablero en 1B
+    (21, 1),  -- 1 bote de basura en 1B
+    (22, 1),  -- 1 escritorio de docente en 1B
+    (23, 4),  -- 4 lámparas en 1B
+    (24, 3);  -- 3 abanicos de techo en 1B
