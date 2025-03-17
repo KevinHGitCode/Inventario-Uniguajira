@@ -16,6 +16,7 @@ function loadContent(path) {
         .then(response => response.text())
         .then(html => document.getElementById('main').innerHTML = html)
         .catch(error => console.error('Error:', error));
+        
 }
 
 // cuando este cargado el dom clickea la opcion con la clase selected
