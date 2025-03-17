@@ -29,3 +29,6 @@ links.forEach(link => {
         link.classList.add('selected');
     });
 });
+
+// cuando se carga la pagina, se carga el contenido de home.php
+window.onload = () => loadContent('app/views/home.php');
