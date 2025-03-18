@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/userMenu.css">
+    <link rel="stylesheet" href="assets/css/home.css">
     
 </head>
 <body>
