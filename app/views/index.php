@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
+    <link rel="stylesheet" href="assets/css/userMenu.css">
     
 </head>
 <body>
