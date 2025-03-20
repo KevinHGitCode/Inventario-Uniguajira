@@ -1,5 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
+/** PALETA DE COLORES
+
+--color-tradewind-100: #d2f5f2;
+--color-tradewind-200: #a5eae6;
+--color-tradewind-300: #70d8d5;
+--color-tradewind-400: #43bebe;
+--color-tradewind-500: #2db0b2;
+--color-tradewind-600: #1e7f83;
+--color-tradewind-700: #1c6569;
+
+--color-sea-buckthorn-100: #fbe9ca;
+--color-sea-buckthorn-200: #f7d390;
+--color-sea-buckthorn-300: #f3b656;
+--color-sea-buckthorn-400: #f1a036;
+--color-sea-buckthorn-500: #ea7a16;
+--color-sea-buckthorn-600: #cf5910;
+
+--color-terracotta-100: #fce7e4;
+--color-terracotta-200: #fad3ce;
+--color-terracotta-300: #f6b4ab;
+--color-terracotta-400: #ee887b;
+--color-terracotta-500: #e2604f;
+--color-terracotta-600: #ce4634;
+--color-terracotta-700: #ad3728;
+*/
+
 /*Colors*/
 :root {
     --background-color: white;
