@@ -16,7 +16,6 @@ function loadContent(path) {
         .then(response => response.text())
         .then(html => document.getElementById('main').innerHTML = html)
         .catch(error => console.error('Error:', error));
-        
 }
 
 // asignar evento click a las etiquetas <a> del sidebar
