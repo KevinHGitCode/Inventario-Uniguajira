@@ -1,8 +1,11 @@
 RewriteEngine On
 
-# Redirect all requests to index.php
+# No redirigir solicitudes para archivos existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir todas las demás solicitudes a index.php
 RewriteRule ^(.*)$ index.php [QSA,L]
 
-
-# Custom error document for 403 Forbidden
+# Documento de error personalizado para 403 Forbidden
 ErrorDocument 403 /scr/views/not-found.php
