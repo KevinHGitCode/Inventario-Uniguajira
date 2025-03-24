@@ -18,7 +18,7 @@ if (is_array($allGoods)) {
         echo "ID: {$good['id']}, Nombre: {$good['nombre']}, Tipo: {$good['tipo']}<br>";
     }
 } else {
-    echo "FAILED\n";
+    echo "FAILED<br>";
 }
 
 
@@ -30,7 +30,7 @@ $tipo = 2;
 if ($goods->create($nombre, $tipo)) {
     echo "PASSED\n";
 } else {
-    echo "FAILED\n";
+    echo "FAILED<br>";
 }
 */
 
@@ -42,7 +42,7 @@ $nuevoNombre = "PC Gamer";
 if ($goods->updateName($id, $nuevoNombre)) {
     echo "PASSED\n";
 } else {
-    echo "FAILED\n";
+    echo "FAILED<br>";
 }
 */
 
@@ -53,7 +53,7 @@ $idEliminar = 13;  // Cambiar según un ID válido en la base de datos
 if ($goods->delete($idEliminar)) {
     echo "PASSED\n";
 } else {
-    echo "FAILED\n";
+    echo "FAILED<br>";
 }
 */
 
