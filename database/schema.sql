@@ -1,3 +1,7 @@
+-- 
+-- SQUEMA DE BASE DE DATOS
+-- 
+
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -47,22 +51,55 @@ CREATE INDEX idx_grupos_nombre ON grupos(nombre);
 --
 
 
+-- Crear la tabla responsables
+CREATE TABLE responsables (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Crear índice para responsables
+CREATE INDEX idx_responsables_nombre ON responsables(nombre);
+
+-- Crear la tabla bloques
+CREATE TABLE bloques (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Crear índice para bloques
+CREATE INDEX idx_bloques_nombre ON bloques(nombre);
+
+-- Crear la tabla dependencias
+CREATE TABLE dependencias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+-- Crear índice para dependencias
+CREATE INDEX idx_dependencias_nombre ON dependencias(nombre);
+
+-- Crear la nueva tabla inventarios
 CREATE TABLE inventarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    responsable INT,
-    bloque VARCHAR(100),
-    dependencia VARCHAR(100),
+    responsable_id INT,
+    bloque_id INT,
+    dependencia_id INT,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     estado_conservacion ENUM('bueno', 'regular', 'malo') NOT NULL,
     grupo_id INT,
     FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE CASCADE,
-    FOREIGN KEY (responsable) REFERENCES usuarios(id) ON DELETE SET NULL
+    FOREIGN KEY (responsable_id) REFERENCES responsables(id) ON DELETE SET NULL,
+    FOREIGN KEY (bloque_id) REFERENCES bloques(id) ON DELETE SET NULL,
+    FOREIGN KEY (dependencia_id) REFERENCES dependencias(id) ON DELETE SET NULL
 );
 
+-- Crear índices para la tabla inventarios
 CREATE INDEX idx_inventarios_nombre ON inventarios(nombre);
 CREATE INDEX idx_inventarios_grupo_id ON inventarios(grupo_id);
-CREATE INDEX idx_inventarios_responsable ON inventarios(responsable);
+CREATE INDEX idx_inventarios_responsable_id ON inventarios(responsable_id);
+CREATE INDEX idx_inventarios_bloque_id ON inventarios(bloque_id);
+CREATE INDEX idx_inventarios_dependencia_id ON inventarios(dependencia_id);
 CREATE INDEX idx_inventarios_estado_conservacion ON inventarios(estado_conservacion);
 
 -- 

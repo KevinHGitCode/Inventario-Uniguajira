@@ -1,12 +1,20 @@
--- Insertar el usuario administrador
-INSERT INTO usuarios (nombre, email, contraseña, rol)
-VALUES ('Administrador', 'admin@email.com', 'administrador', 'administrador');
+-- DESCRIPCION DE LOS DATOS DE PRUEBA 
+-- 1. Insertar el usuario administrador
+-- 2. Insertar los grupos del bloque A y bloque B
+-- 3. Insertar los inventarios para el grupo A (1A, 2A, 3A) y el grupo B (1B)
+-- 4. Insertar los tipos de bienes
+-- 5. Insertar los bienes en cada salón (pupitres, tableros, abanicos, etc.)
+--
 
--- Insertar los grupos del bloque A y bloque B
+-- 1. Insertar el usuario administrador
+INSERT INTO usuarios (nombre, email, contraseña, rol)
+VALUES ('Administrador', 'admin@email.com', 'Administrador', 'administrador');
+
+-- 2. Insertar los grupos del bloque A y bloque B
 INSERT INTO grupos (nombre)
 VALUES ('Bloque A'), ('Bloque B');
 
--- Insertar los inventarios para el grupo A (1A, 2A, 3A) y el grupo B (1B)
+-- 3. Insertar los inventarios para el grupo A (1A, 2A, 3A) y el grupo B (1B)
 INSERT INTO inventarios (nombre, grupo_id, estado_conservacion)
 VALUES 
     ('1A', 1, 'bueno'),  -- 1A pertenece al grupo Bloque A (id=1)
@@ -14,7 +22,7 @@ VALUES
     ('3A', 1, 'bueno'),  -- 3A pertenece al grupo Bloque A (id=1)
     ('1B', 2, 'bueno');  -- 1B pertenece al grupo Bloque B (id=2)
 
--- Insertar los tipos de bienes
+-- 4. Insertar los tipos de bienes
 INSERT INTO bienes (nombre, tipo)
 VALUES 
     ('pupitres', 'Cantidad'),
@@ -30,7 +38,7 @@ VALUES
     ('gabinetes de red', 'Cantidad'),
     ('escritorio', 'Cantidad');
 
--- Insertar los bienes en cada salón
+-- 5. Insertar los bienes en cada salón
 -- Primero, insertar la relación entre bienes e inventarios en la tabla bienes_inventarios
 -- Luego, insertar las cantidades en la tabla bienes_cantidad
 
