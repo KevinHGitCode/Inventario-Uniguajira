@@ -1,6 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
 /*Colors*/
+/* TODO: COLORES MAS DESCRIPTIVOS */
+:root {
+   --background-color: white;
+   --text-title-color: #053D4E;
+   --text-color: #32363B;
+   --menu-color: #707780;
+
+   --text-selected-color: #355CC0;
+   --background-selected: #EBF0FF;
+   --background-hover: #F7F9FA;
+
+   --border-color: #E6E9ED;
+}
+
+
+/*Colors*/
 * {
     margin: 0;
     padding: 0;

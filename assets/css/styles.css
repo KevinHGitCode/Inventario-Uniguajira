@@ -27,12 +27,11 @@
 */
 
 /*Colors*/
+/* TODO: COLORES MAS DESCRIPTIVOS */
 :root {
     --background-color: white;
     --text-title-color: #053D4E;
     --text-color: #32363B;
-    --icon-color: #32363B;
-    --icon-menu-color: #707780;
     --menu-color: #707780;
 
     --text-selected-color: #355CC0;
@@ -54,4 +53,7 @@ body{
     height: 100vh;
 }
 
+h1, h2, h3, h4, h5, h6{
+    color: var(--text-title-color);
+}
 
