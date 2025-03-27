@@ -16,7 +16,8 @@
         </div>
     </div>
     <div class="right">
-        <a href="#" class="icons-header">
+        <!-- Iconos desactivados (Mantener en el codigo) -->
+        <!-- <a href="#" class="icons-header">
             <img src="assets/icons/chat.svg" alt="chat" />
         </a>
         <a href="#" class="icons-header">
@@ -24,7 +25,7 @@
         </a>
         <a href="#" class="icons-header">
             <img src="assets/icons/notification.svg" alt="notification" />
-        </a>
+        </a> -->
 
         <img
             src="assets/images/cristianosiuuu.jpg"
@@ -32,29 +33,29 @@
             class="user"
             onclick="toggleUserMenu()"
         />
+        
     </div>
 </header>
 
-<!-- Se movio este menu fuera del <div class="right"> para que no altere los estilos del navbar -->
-<!-- TODO: Corregir la funcionalidad -->
+<!-- TODO: Implementar las funciones editProfile y logout -->
 <div class="user-menu">
-    <div id="userMenu" class="user-menu-content">
-        <a href="#" class="user-menu-item">
+    <div id="userMenu" class="user-menu-content hidden">
+        <button class="user-menu-item" onclick="editProfile()">
             <img
+                class="user-menu-icon"
                 src="assets/icons/editarPerfil.svg"
                 alt="edit"
-                class="user-menu-icon"
             />
             <span>Editar Perfil</span>
-        </a>
+        </button>
 
-        <a href="#" class="user-menu-item">
+        <button class="user-menu-item" onclick="logout()">
             <img
+                class="user-menu-icon"
                 src="assets/icons/cerrarSesion.svg"
                 alt="logout"
-                class="user-menu-icon"
             />
             <span>Cerrar Sesión</span>
-        </a>
+        </button>
     </div>
 </div>

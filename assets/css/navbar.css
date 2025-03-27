@@ -20,7 +20,7 @@ header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0.45rem 2rem 0.45rem 1.27rem;
+    padding: 0.45rem 3rem 0.45rem 1.27rem;
     border-bottom: 1px solid var(--border-color);
     position: fixed;
     background-color: var(--background-color);
@@ -105,6 +105,6 @@ header {
 }
 
 .right .user {
-    width: 2.1rem;
+    width: 2.8rem;
     border-radius: 50%;
 }

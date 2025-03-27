@@ -15,45 +15,60 @@
 
 /*Menu de Usuario*/
 .user-menu {
-    position: relative;
-    display: inline-block;
+    border: 2px solid red;
+    position: fixed;
+    top: 3.8rem;
+    right: 3.4rem;
+    z-index: 1000;
+    display: flex;
 }
 
 .user-menu-content {
-    display: none;
     position: absolute;
     right: 0;
-    background-color: rgba(255, 255, 255, 0.3); /* More transparent and less gray */
+    background-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.user-menu-content a {
-    color: black;
+
+.user-menu-content.hidden {
+    transform: scale(0.8);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.user-menu-content.visible {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+.user-menu-content button {
     padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    white-space: nowrap; /* Ensure each option is on a new line */
-    display: flex; align-items: center /* IN LINE */
+    background-color: white;
+    opacity: 0.9;
+    width: 100%;
+    border: none;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
 }
 
-.user-menu-content a:hover {
+.user-menu-content button:hover {
     background-color: #f1f1f1;
 }
-
-.user-menu-content img {
-    margin-right: 8px /* IN LINE */
+ 
+.user-menu-icon {
+    margin-right: 8px;
+    width: 24px;
 }
 
 .user-menu-item {
     display: flex;
     align-items: center;
-    gap: 8px; /* Espacio entre el icono y el texto */
+    gap: 8px;
     text-decoration: none;
 }
 
-.user-menu-icon {
-    margin-right: 8px;
-    width: 24px; /* Ajusta el tamaño del icono según necesites */
-    height: 24px;
-}

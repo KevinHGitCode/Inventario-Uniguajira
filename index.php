@@ -14,3 +14,7 @@ $folderPath = dirname($_SERVER['SCRIPT_NAME']);
 $url = substr($requestUri, strlen($folderPath));
 
 $router->dispatch($url);
+
+// include 'app/controllers/Controller.class.php';
+// $ctl = new Controller();
+// $ctl->index();
