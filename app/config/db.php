@@ -9,7 +9,8 @@ class Database {
             $config['host'],
             $config['username'],
             $config['password'],
-            $config['database']
+            $config['database'],
+            $config['port'] ?? 3306
         );
 
         if ($this->connection->connect_error) {
