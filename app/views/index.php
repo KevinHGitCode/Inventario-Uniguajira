@@ -1,3 +1,5 @@
+<?php require_once 'app/controllers/SessionCheck.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

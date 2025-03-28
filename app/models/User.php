@@ -9,15 +9,13 @@ class User {
     }
 
     public function getById($id) {
-        // TODO: Cambiar * por los campos que se necesitan
-        $stmt = $this->connection->prepare("SELECT * FROM usuarios WHERE id = ?");
+        $stmt = $this->connection->prepare("SELECT id, nombre, email, rol FROM usuarios WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();
     }
 
-    // TODO: Agregar más métodos
 
     // metodo de para obtener todos los usuarios
 
@@ -113,7 +111,7 @@ class User {
                 return "la contraseña no actualizo";
             }
         }catch(Exception $e){
-            throw new Exception("error para actualizar contraseña:" . $e->get_mensaje());
+            throw new Exception("error para actualizar contraseña:" . $e->getMessage());
         }
     }
 
@@ -152,7 +150,7 @@ class User {
     
               if($usuario){
                 if(password_verify($contraseña, $usuario['contraseña'])){
-                     return true;
+                     return $usuario['id'];
                 }else{
                      return false;
                 }

@@ -11,6 +11,8 @@
     --background-hover: #F7F9FA;
 
     --border-color: #E6E9ED;
+
+    --border-radius: 8px;
 }
 
 /*Menu de Usuario*/
@@ -26,14 +28,15 @@
 .user-menu-content {
     position: absolute;
     right: 0;
-    background-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 
 .user-menu-content.hidden {
-    transform: scale(0.8);
+    transform: scale(0.2);
     opacity: 0;
     pointer-events: none;
 }
@@ -58,6 +61,15 @@
 
 .user-menu-content button:hover {
     background-color: #f1f1f1;
+}
+
+.user-menu-content button:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.user-menu-content button:last-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
  
 .user-menu-icon {

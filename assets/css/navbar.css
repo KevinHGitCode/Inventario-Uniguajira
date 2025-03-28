@@ -11,6 +11,9 @@
     --background-hover: #F7F9FA;
 
     --border-color: #E6E9ED;
+
+    /* navbar variables */
+    --navbar-background-color: #4f87da;
 }
 
 
@@ -73,10 +76,15 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 9.5rem;
+    height: 61.95px;
 }
 
 .brand .logo {
-    width: 9.5rem;
+    /* quiero cambiar el ancho de la imagen pero que no cambie el tamaño de su contenedo y que la imagen quede recortada a los lados */
+    width: 12.2rem;
+    object-fit: cover;
+    object-position: center;
 }
 
 /*Right Section*/
@@ -108,3 +116,4 @@ header {
     width: 2.8rem;
     border-radius: 50%;
 }
+
