@@ -1,4 +1,4 @@
-<?php require_once 'app/controllers/SessionCheck.php'; ?>
+<!-- < ?php require_once 'app/controllers/SessionCheck.php'; ?> -->
 
 <!DOCTYPE html>
 <html lang="en">
