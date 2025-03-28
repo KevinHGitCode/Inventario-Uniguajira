@@ -9,7 +9,7 @@ $router->add('/404', 'not-found.html');
 
 // $requestUri = $_SERVER['REQUEST_URI'];
 // $folderPath = dirname($_SERVER['SCRIPT_NAME']);
-// $url = substr($requestUri, strlen($folderPath));
+$url = substr($requestUri, strlen($folderPath));
 
 $router->dispatch($url);
 // echo 'requestUri: '.$requestUri.'<br>';
