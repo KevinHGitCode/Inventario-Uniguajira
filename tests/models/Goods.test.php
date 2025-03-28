@@ -1,11 +1,8 @@
 <?php
 
 require_once '../../app/models/Goods.php';
-require_once '../../app/config/config.php';
 
-$database = new Database();
-$connection = $database->getConnection();
-$goods = new Goods($connection);
+$goods = new Goods();
 
 
 

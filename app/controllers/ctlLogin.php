@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../models/User.php';
-require_once '../config/config.php'; // Asegúrate de incluir la conexión a la base de datos
 
 header('Content-Type: application/json');
 

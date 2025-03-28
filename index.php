@@ -13,7 +13,10 @@ $requestUri = $_SERVER['REQUEST_URI'];
 $folderPath = dirname($_SERVER['SCRIPT_NAME']);
 $url = substr($requestUri, strlen($folderPath));
 
-$router->dispatch($url);
+// $router->dispatch($url);
+echo 'requestUri: '.$requestUri.'<br>';
+echo 'folderPath: '.$folderPath.'<br>';
+echo 'url: '.$url;
 
 // include 'app/controllers/Controller.class.php';
 // $ctl = new Controller();

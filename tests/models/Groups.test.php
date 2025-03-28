@@ -1,11 +1,8 @@
 <?php
 
 require_once '../../app/models/Groups.php';
-require_once '../../app/config/config.php';
 
-$database = new Database();
-$connection = $database->getConnection();
-$group = new Groups($connection);
+$group = new Groups();
 
 
 

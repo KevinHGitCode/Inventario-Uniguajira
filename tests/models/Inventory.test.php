@@ -1,11 +1,8 @@
 <?php
 
 require_once '../../app/models/Inventory.php';
-require_once '../../app/config/config.php';
 
-$database = new Database();
-$connection = $database->getConnection();
-$inventory = new Inventory($connection);
+$inventory = new Inventory();
 
 
 // Prueba 1: Obtener todos los inventarios

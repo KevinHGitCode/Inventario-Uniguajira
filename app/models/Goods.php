@@ -1,10 +1,11 @@
 <?php
-
+require_once __DIR__ . '/../config/db.php';
 class Goods {
     private $connection;
 
-    public function __construct($connection) {
-        $this->connection = $connection;
+    public function __construct() {
+        $database = new Database();
+        $this->connection = $database->getConnection();
     }
 
     // Obtener la lista de todos los bienes (nombre y tipo)

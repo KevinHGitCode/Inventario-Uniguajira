@@ -1,10 +1,12 @@
 <?php
+require_once __DIR__ . '/../config/db.php';
 
 class Inventory {
     private $connection;
 
-    public function __construct($connection) {
-        $this->connection = $connection;
+    public function __construct() {
+        $database = new Database();
+        $this->connection = $database->getConnection();
     }
 
     // Obtener todos los inventarios

@@ -1,11 +1,8 @@
 <?php
 
 require_once '../../app/models/Tasks.php';
-require_once '../../app/config/config.php';
 
-$database = new Database();
-$connection = $database->getConnection();
-$tasks = new Tasks($connection);
+$tasks = new Tasks();
 
 /*
 // Prueba 1: Obtener todas las tareas

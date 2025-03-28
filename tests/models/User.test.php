@@ -1,11 +1,7 @@
 <?php
-
 require_once '../../app/models/User.php';
-require_once '../../app/config/config.php';
 
-$database = new Database();
-$connection = $database->getConnection();
-$user = new User($connection);
+$user = new User();
 
 /*$id = 1;
 $expectedResult = [
