@@ -4,7 +4,7 @@ class DataBase {
     private $connection;
 
     public function __construct() {
-        $config = require __DIR__ . '/db.php';
+        $config = require __DIR__ . '/config.php';
         $this->connection = new mysqli(
             $config['host'],
             $config['username'],
