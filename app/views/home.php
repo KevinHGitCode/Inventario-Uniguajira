@@ -1,8 +1,7 @@
 <?php
-require_once __DIR__ . '/../controllers/ctlHome.php';
-$userName = ctlHome::getUserNameById(1);
+$username = require_once __DIR__ . '/../controllers/ctlHome.php';
 ?>
-<h1>¡Bienvenido, <?php echo htmlspecialchars($userName); ?>!</h1>
+<h1>¡Bienvenido, <?php echo $username ?>!</h1>
 
 <h2 class="tittle-list-task">Tareas pendientes</h2>
 
