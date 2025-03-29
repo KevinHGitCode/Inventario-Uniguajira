@@ -1,21 +1,22 @@
 <?php
 
-class Database {
+class DataBase {
     private $connection;
 
     public function __construct() {
-        $config = require __DIR__ . '/db.php';
+        $config = require __DIR__ . '/config.php';
         $this->connection = new mysqli(
             $config['host'],
             $config['username'],
             $config['password'],
-            $config['database']
+            $config['database'],
+            $config['port'] ?? 3306
         );
 
         if ($this->connection->connect_error) {
             die("Connection failed: " . $this->connection->connect_error);
         }
-        // echo "Connected successfully";
+        echo "Connected successfully";
     }
 
     public function getConnection() {
