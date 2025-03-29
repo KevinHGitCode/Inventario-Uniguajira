@@ -4,7 +4,7 @@
     --background-color: white;
     --text-title-color: #053D4E;
     --text-color: #32363B;
-    --menu-color: #707780;
+    --menu-color: #96adcb; /* Las lineas del menu*/
 
     --text-selected-color: #355CC0;
     --background-selected: #EBF0FF;
@@ -13,7 +13,7 @@
     --border-color: #E6E9ED;
 
     /* navbar variables */
-    --navbar-background-color: #4f87da;
+    --navbar-background-color: #ce4634;
 }
 
 
@@ -26,9 +26,14 @@ header {
     padding: 0.45rem 3rem 0.45rem 1.27rem;
     border-bottom: 1px solid var(--border-color);
     position: fixed;
-    background-color: var(--background-color);
+    background-color: var(--navbar-background-color);
     top: 0;
     left: 0;
+    /* redondea bordes inferiore */
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    /* sombra */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /*Left Section*/
