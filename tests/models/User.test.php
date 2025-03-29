@@ -21,7 +21,7 @@ if ($result == $expectedResult) {
 }
 
 echo "<br>";
-
+*/
 
 
 
@@ -43,7 +43,7 @@ try {
 
 
 
-
+/*
 // Ejemplo de uso crear nuevo usuario
 
 try {
@@ -96,13 +96,13 @@ try {
     echo "Error: " . $e->getMessage();
 }*/
 
-try {
-    $nombre = "makiabelico Actualizado";
-    $contraseña = "nuevaPassword123";
+// try {
+//     $nombre = "makiabelico Actualizado";
+//     $contraseña = "nuevaPassword123";
 
-    echo var_dump($user->authentication($nombre, $contraseña));  
+//     echo var_dump($user->authentication($nombre, $contraseña));  
 
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
-?>
+// } catch (Exception $e) {
+//     echo "Error: " . $e->getMessage();
+// }
+// ?>

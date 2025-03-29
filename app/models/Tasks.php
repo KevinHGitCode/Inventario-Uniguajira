@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 
-class Tasks {
-    private $connection;
+class Tasks extends Database {
 
     public function __construct() {
-        $database = new Database();
-        $this->connection = $database->getConnection();
+        parent::__construct();
     }
 
     // Crear una tarea

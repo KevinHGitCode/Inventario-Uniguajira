@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 
-class User {
-    private $connection;
+class User extends Database {
 
     public function __construct() {
-        $database = new DataBase();
-        $this->connection = $database->getConnection();
+        parent::__construct();
     }
 
     public function getById($id) {

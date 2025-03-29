@@ -11,6 +11,7 @@ class Router {
         $baseDir = __DIR__ . '/../views/';
         if (array_key_exists($requestUri, $this->routes)) {
             require $baseDir . $this->routes[$requestUri];
+            // require 'app/views/index.php';
         } else {
             require $baseDir . 'not-found.html';
         }

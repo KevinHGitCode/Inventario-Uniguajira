@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 
-class Inventory {
-    private $connection;
+class Inventory extends Database {
 
     public function __construct() {
-        $database = new Database();
-        $this->connection = $database->getConnection();
+        parent::__construct();
     }
 
     // Obtener todos los inventarios

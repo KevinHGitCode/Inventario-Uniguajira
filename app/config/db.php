@@ -1,7 +1,7 @@
 <?php
 
-class DataBase {
-    private $connection;
+class Database {
+    protected $connection;
 
     public function __construct() {
         $config = require __DIR__ . '/config.php';

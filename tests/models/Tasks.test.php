@@ -4,7 +4,7 @@ require_once '../../app/models/Tasks.php';
 
 $tasks = new Tasks();
 
-/*
+
 // Prueba 1: Obtener todas las tareas
 echo "Testing getAll()... <br>";
 $allTasks = $tasks->getAll();
@@ -17,7 +17,7 @@ if (is_array($allTasks)) {
 } else {
     echo "FAILED\n";
 }
-*/
+
 
 /*
 // Prueba 2: Crear una tarea
@@ -57,7 +57,7 @@ if ($tasks->delete($idEliminar)) {
 }
 */
 
-
+/*
 echo "Testing changeState()... <br>";
 $id = 6;  // Cambiar según un ID válido en la base de datos
 if ($tasks->changeState($id)) {
@@ -65,6 +65,6 @@ if ($tasks->changeState($id)) {
 } else {
     echo "FAILED\n";
 }
-
+*/
 
 ?>
