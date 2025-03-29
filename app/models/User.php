@@ -149,9 +149,9 @@ class User extends Database {
     
               if($usuario){
                 if(password_verify($contraseña, $usuario['contraseña'])){
-                     return $usuario['id'];
+                    return $usuario;
                 }else{
-                     return false;
+                    return false;
                 }
               }else{
                 return false;

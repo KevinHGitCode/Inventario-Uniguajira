@@ -74,17 +74,21 @@ try {
 }
 
 //ejemplo de cambio de contrseña
+*/
+
+
+// try {
+//     $id = 1; // ID del usuario a actualizar
+//     $nuevaContraseña = "admin123";
+
+//     $resultado = $user->updatePassword($id, $nuevaContraseña);
+//     echo $resultado;
+// } catch (Exception $e) {
+//     echo "Error: " . $e->getMessage();
+// }
+
+
 /*
-try {
-    $id = 1; // ID del usuario a actualizar
-    $nuevaContraseña = "nuevaPassword123";
-
-    $resultado = $user->updatePassword($id, $nuevaContraseña);
-    echo $resultado;
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
-
 //ejemplo de eliminacion del usuario
 
 try {
