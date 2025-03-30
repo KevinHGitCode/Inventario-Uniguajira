@@ -47,10 +47,10 @@ try {
 // Ejemplo de uso crear nuevo usuario
 
 try {
-    $nombre = "Nuevo Usuario";
-    $email = "nuevo.usuario@email.com";
-    $contraseña = "password123";
-    $rol = 2;
+    $nombre = "Kevin";
+    $email = "kevin@email.com";
+    $contraseña = "1234";
+    $rol = 1;
 
     $resultado = $user->createUser($nombre, $email, $contraseña, $rol);
     echo $resultado;
@@ -78,8 +78,8 @@ try {
 
 
 // try {
-//     $id = 1; // ID del usuario a actualizar
-//     $nuevaContraseña = "admin123";
+//     $id = 8; // ID del usuario a actualizar
+//     $nuevaContraseña = "1234";
 
 //     $resultado = $user->updatePassword($id, $nuevaContraseña);
 //     echo $resultado;

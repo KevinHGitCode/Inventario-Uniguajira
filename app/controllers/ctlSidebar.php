@@ -1,5 +1,5 @@
 <?php
-
+require_once 'app/controllers/sessionCheck.php';
 require_once __DIR__ . '/../models/User.php';
 
 /**
@@ -28,8 +28,7 @@ class ctlSidebar {
      * @return void
      */
     public function home() {
-        $userData = $this->userModel->getById(1);
-        $username = $userData['nombre'];
+        $username = $_SESSION['user_name'];
         // Pass $username to the view
         require __DIR__ . '/../views/home.php';
     }
