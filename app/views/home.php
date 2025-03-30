@@ -1,11 +1,5 @@
-<?php
-// $username = require_once __DIR__ . '/../controllers/ctlHome.php';
-// echo __DIR__;
-require __DIR__.'/../config/db.php';
-new DataBase();
-?>
 
-<!-- <h1>¡Bienvenido, < ?php echo $username ?>!</h1> -->
+<h1>¡Bienvenido, <?php $username ?>!</h1>
 
 <h2 class="tittle-list-task">Tareas pendientes</h2>
 
