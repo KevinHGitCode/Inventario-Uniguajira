@@ -1,5 +1,4 @@
-
-<h1>¡Bienvenido, <?php $username ?>!</h1>
+<h1>¡Bienvenido, <?php echo $username ?>!</h1>
 
 <h2 class="tittle-list-task">Tareas pendientes</h2>
 

@@ -26,8 +26,17 @@ links.forEach(link => {
     link.addEventListener('click', () => {
         links.forEach(l => l.classList.remove('selected'));
         link.classList.add('selected');
+
+        // imprimir el atributo on click
+        console.log(link.getAttribute('onclick'));
     });
 });
 
-// cuando se carga la pagina, se carga el contenido de home.php
-window.onload = () => loadContent('app/views/home.php');
+// cuando se carga la pagina, hacer click en el elemento con id home
+window.onload = () => {
+    const homeElement = document.getElementById('home');
+    if (homeElement) {
+        homeElement.click();
+        // console.log("click en home");
+    }
+};

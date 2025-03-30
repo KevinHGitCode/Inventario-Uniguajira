@@ -1,1 +1,2 @@
-todo el inventario:
+<p>todo el inventario:</p>
+<br>
