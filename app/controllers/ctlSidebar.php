@@ -3,10 +3,14 @@
 require_once __DIR__ . '/../models/User.php';
 
 /**
- * Clase ctlSidebar
  * Controlador para manejar las vistas de la barra lateral.
  */
 class ctlSidebar {
+    /**
+     * Modelo de usuario.
+     *
+     * @var User
+     */
     private $userModel;
 
     /**
@@ -18,8 +22,10 @@ class ctlSidebar {
     }
 
     /**
-     * Método home.
-     * Carga la vista principal y pasa el nombre del usuario al archivo de vista.
+     * Muestra la vista principal (home).
+     * Obtiene los datos del usuario con ID 1 y los pasa a la vista.
+     *
+     * @return void
      */
     public function home() {
         $userData = $this->userModel->getById(1);
@@ -29,8 +35,9 @@ class ctlSidebar {
     }
 
     /**
-     * Método goods.
-     * Carga la vista de bienes.
+     * Muestra la vista de bienes (goods).
+     *
+     * @return void
      */
     public function goods() {
         // Logic for goods view
@@ -40,8 +47,9 @@ class ctlSidebar {
     }
 
     /**
-     * Método inventary.
-     * Carga la vista del inventario.
+     * Muestra la vista de inventario (inventary).
+     *
+     * @return void
      */
     public function inventary() {
         // Logic for inventary view
@@ -51,8 +59,9 @@ class ctlSidebar {
     }
 
     /**
-     * Método users.
-     * Carga la vista de usuarios.
+     * Muestra la vista de usuarios (users).
+     *
+     * @return void
      */
     public function users() {
         // Logic for users view

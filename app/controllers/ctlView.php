@@ -21,7 +21,7 @@ class ctlView {
      * @return void
      */
     public function login() {
-        include 'app/views/login.php';
+        include 'app/views/login.html';
     }
 
     /**
@@ -30,7 +30,7 @@ class ctlView {
      * @return void
      */
     public function doc() {
-        include 'app/views/doc.php';
+        include 'app/views/doc.html';
     }
 
     /**
@@ -39,7 +39,7 @@ class ctlView {
      * @return void
      */
     public function notFound() {
-        include 'app/views/not-found.php';
+        include 'app/views/not-found.html';
     }
 
     /**

@@ -1,10 +1,15 @@
 <?php
-// session_start();
+/**
+ * sessionCheck.php
+ * 
+ * Este archivo verifica si existe una sesión activa para el usuario.
+ * Si no hay una sesión activa, redirige al usuario a la página de inicio de sesión.
+ */
 
-// if (!isset($_SESSION['user_id'])) {
-//     // Redirect to login page if no session exists
-//     $url = explode('/', $_SERVER['REQUEST_URI']);
-//     header("Location: /login");
-//     exit();
-// }
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /login");
+    exit();
+}
 

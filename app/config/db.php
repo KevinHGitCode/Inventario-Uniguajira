@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Clase Database
+ * 
+ * Esta clase se encarga de gestionar la conexión a la base de datos utilizando MySQLi.
+ * 
+ * Métodos:
+ * - __construct(): Establece la conexión a la base de datos utilizando los parámetros de configuración.
+ * - getConnection(): Devuelve la conexión activa a la base de datos.
+ * - __destruct(): Cierra la conexión a la base de datos al destruir la instancia de la clase.
+ * 
+ */
 class Database {
     protected $connection;
 
@@ -10,7 +21,7 @@ class Database {
             $config['username'],
             $config['password'],
             $config['database'],
-            $config['port'] ?? 3306
+            $config['port']
         );
 
         if ($this->connection->connect_error) {
@@ -28,7 +39,3 @@ class Database {
     }
 }
 
-
-// create a new instance of the Database class
-// $database = new Database();
-// $connection = $database->getConnection();

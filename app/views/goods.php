@@ -1,4 +1,4 @@
-<?php require_once 'app/controllers/SessionCheck.php'; ?>
+<?php require_once 'app/controllers/sessionCheck.php'; ?>
 
 <p>todos los bienes:</p>
 <br>

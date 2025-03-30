@@ -1,16 +1,34 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
 
+/**
+ * Controlador para la gestión de usuarios.
+ * 
+ * Este controlador incluye métodos para manejar las operaciones relacionadas con los usuarios,
+ * como iniciar sesión, registrar nuevos usuarios, obtener perfiles y editar información.
+ * 
+ * Instrucciones para el desarrollo de cada método:
+ * - Validar los parámetros de entrada.
+ * - Interactuar con el modelo `User` para realizar las operaciones necesarias.
+ * - Manejar las respuestas adecuadas (redirecciones, mensajes de error, etc.).
+ */
 class ctlUser {
     private $userModel;
 
+    /**
+     * Constructor de la clase.
+     * Inicializa el modelo de usuario.
+     */
     public function __construct() {
         $this->userModel = new User();
     }
 
     /**
      * Método para iniciar sesión.
-     * Obtiene los parámetros desde $_POST.
+     * 
+     * Este método valida las credenciales del usuario y crea una sesión si son correctas.
+     * 
+     * @TODO: Implementar validaciones adicionales y manejo de errores más robusto.
      */
     public function login() {
         // Validar si existen los parámetros necesarios
@@ -41,7 +59,10 @@ class ctlUser {
 
     /**
      * Método para registrar un nuevo usuario.
-     * Obtiene los parámetros desde $_POST.
+     * 
+     * Este método valida los datos de entrada y registra un nuevo usuario en el sistema.
+     * 
+     * @TODO: Implementar la lógica para guardar el usuario en la base de datos.
      */
     public function register() {
         // Validar si existen los parámetros necesarios
@@ -62,7 +83,10 @@ class ctlUser {
 
     /**
      * Método para obtener el perfil de un usuario.
-     * Obtiene el ID desde $_GET.
+     * 
+     * Este método recupera la información del perfil de un usuario específico.
+     * 
+     * @TODO: Implementar la lógica para obtener los datos del usuario desde el modelo.
      */
     public function profile() {
         // Validar si existe el parámetro necesario
@@ -80,7 +104,10 @@ class ctlUser {
 
     /**
      * Método para editar la información de un usuario.
-     * Obtiene los parámetros desde $_POST.
+     * 
+     * Este método actualiza los datos de un usuario existente en el sistema.
+     * 
+     * @TODO: Implementar la lógica para actualizar los datos en la base de datos.
      */
     public function edit() {
         // Validar si existen los parámetros necesarios
