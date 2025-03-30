@@ -3,16 +3,25 @@ require 'app/controllers/Router.php';
 
 $router = new Router();
 
-$router->add('/', 'index.php');
-$router->add('/login', 'login.html');
-$router->add('/username', '/../controllers/ctlSidebar.php');
-$router->add('/404', 'not-found.html');
+// Rutas para vistas principales
+$router->add('/', 'ctlView', 'index');
+$router->add('/login', 'ctlView', 'login');
+$router->add('/doc', 'ctlView', 'doc');
+$router->add('/404', 'ctlView', 'notFound');
 
-$router->addController('/api/login', 'ctlUser', 'login');
-$router->addController('/home', 'ctlSidebar', 'home');
-$router->addController('/goods', 'ctlSidebar', 'goods');
-$router->addController('/inventary', 'ctlSidebar', 'inventary');
-$router->addController('/users', 'ctlSidebar', 'users');
+// Rutas para el sidebar
+$router->add('/home', 'ctlSidebar', 'home');
+$router->add('/goods', 'ctlSidebar', 'goods');
+$router->add('/inventary', 'ctlSidebar', 'inventary');
+$router->add('/users', 'ctlSidebar', 'users');
 
+// Rutas para la API de usuarios
+$router->add('/api/login', 'ctlUser', 'login');
+
+
+// Mas rutas...
+
+
+// Despachar la solicitud según la URI
 $requestUri = $_SERVER['REQUEST_URI'];
 $router->dispatch($requestUri);
