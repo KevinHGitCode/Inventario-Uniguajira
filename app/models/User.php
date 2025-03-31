@@ -150,9 +150,7 @@ class User extends Database {
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
-                echo ": <br>";
-                return "contraseña actualizada ";
-
+                return "contraseña actualizada";
             } else {
                 return "la contraseña no actualizo";
             }
