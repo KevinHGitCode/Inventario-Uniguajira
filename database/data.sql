@@ -6,13 +6,46 @@
 -- 5. Insertar los bienes en cada salón (pupitres, tableros, abanicos, etc.)
 --
 
--- 1. Insertar el usuario administrador
+-- 1. Insertar usuarios
+-- // TODO: cambiar las contraseñas por contraseñas encriptadas
 INSERT INTO usuarios (nombre, email, contraseña, rol)
-VALUES ('Administrador', 'admin@email.com', 'Administrador', 'administrador');
+VALUES 
+    ('Administrador', 'admin@email.com', 'Administrador', 'administrador'),
+    ('Daniel', 'daniel@email.com', '1234', 'administrador'),
+    ('Luis', 'luis@email.com', '1234', 'administrador'),
+    ('Renzo', 'renzo@email.com', '1234', 'administrador'),
+    ('Kevin', 'kevin@email.com', '1234', 'administrador'),
+    ('Consultor', 'consultor@email.com', 'Consultor', 'consultor');
+
+
+-- ---------------------------------------------------------------------------------------------------------
+-- Insertar tareas
+-- Insertar tareas para el usuario con id = 1
+INSERT INTO tareas (nombre, descripcion, fecha, estado, usuario_id)
+VALUES
+    ('Revisar inventario general', 'Revisar el estado de todos los inventarios y generar un reporte.', '2025-04-01', 'por hacer', 1),
+    ('Actualizar bienes', 'Actualizar la información de bienes en el sistema.', '2025-04-02', 'por hacer', 1),
+    ('Generar reporte mensual', 'Generar y exportar el reporte mensual de inventarios.', '2025-04-03', 'por hacer', 1),
+    ('Auditar inventario Bloque A', 'Realizar una auditoría completa del Bloque A.', '2025-04-04', 'por hacer', 1),
+    ('Capacitar usuarios', 'Capacitar a los usuarios sobre el uso del sistema de inventarios.', '2025-04-05', 'por hacer', 1);
+
+-- Insertar 2 tareas para los demás usuarios
+INSERT INTO tareas (nombre, descripcion, fecha, estado, usuario_id)
+VALUES
+    ('Revisar inventario Bloque B', 'Revisar el estado del inventario del Bloque B.', '2025-04-01', 'por hacer', 2),
+    ('Actualizar bienes Bloque B', 'Actualizar la información de bienes en el Bloque B.', '2025-04-02', 'por hacer', 2),
+    ('Revisar inventario Bloque C', 'Revisar el estado del inventario del Bloque C.', '2025-04-01', 'por hacer', 3),
+    ('Actualizar bienes Bloque C', 'Actualizar la información de bienes en el Bloque C.', '2025-04-02', 'por hacer', 3),
+    ('Revisar inventario Bloque D', 'Revisar el estado del inventario del Bloque D.', '2025-04-01', 'por hacer', 4),
+    ('Actualizar bienes Bloque D', 'Actualizar la información de bienes en el Bloque D.', '2025-04-02', 'por hacer', 4),
+    ('Revisar inventario Bloque E', 'Revisar el estado del inventario del Bloque E.', '2025-04-01', 'por hacer', 5),
+    ('Actualizar bienes Bloque E', 'Actualizar la información de bienes en el Bloque E.', '2025-04-02', 'por hacer', 5);
+
+-- ---------------------------------------------------------------------------------------------------------
 
 -- 2. Insertar los grupos del bloque A y bloque B
 INSERT INTO grupos (nombre)
-VALUES ('Bloque A'), ('Bloque B');
+VALUES ('Bloque A'), ('Bloque B'), ('Salas');
 
 -- 3. Insertar los inventarios para el grupo A (1A, 2A, 3A) y el grupo B (1B)
 INSERT INTO inventarios (nombre, grupo_id, estado_conservacion)
@@ -20,23 +53,33 @@ VALUES
     ('1A', 1, 'bueno'),  -- 1A pertenece al grupo Bloque A (id=1)
     ('2A', 1, 'bueno'),  -- 2A pertenece al grupo Bloque A (id=1)
     ('3A', 1, 'bueno'),  -- 3A pertenece al grupo Bloque A (id=1)
-    ('1B', 2, 'bueno');  -- 1B pertenece al grupo Bloque B (id=2)
+    ('1B', 2, 'bueno'),  -- 1B pertenece al grupo Bloque B (id=2)
+    ('Sala de redes', 3, 'bueno');  -- Sala de redes pertenece al grupo Salas (id=3)
+    
 
 -- 4. Insertar los tipos de bienes
-INSERT INTO bienes (nombre, tipo)
+INSERT INTO bienes (id, nombre, tipo)
 VALUES 
-    ('pupitres', 'Cantidad'),
-    ('escritorio de docente', 'Cantidad'),
-    ('abanicos de pared', 'Cantidad'),
-    ('abanicos de techo', 'Cantidad'),
-    ('tablero', 'Cantidad'),
-    ('lámparas', 'Cantidad'),
-    ('sillas de docente', 'Cantidad'),
-    ('puertas', 'Cantidad'),
-    ('ventanas', 'Cantidad'),
-    ('botes de basura', 'Cantidad'),
-    ('gabinetes de red', 'Cantidad'),
-    ('escritorio', 'Cantidad');
+    (1, 'pupitres', 'Cantidad'),   -- id: 1
+    (2, 'escritorio de docente', 'Cantidad'),   -- id: 2
+    (3, 'abanicos de pared', 'Cantidad'),   -- id: 3
+    (4, 'abanicos de techo', 'Cantidad'),   -- id: 4
+    (5, 'tablero', 'Cantidad'),   -- id: 5
+    (6, 'lámparas', 'Cantidad'),   -- id: 6
+    (7, 'sillas de docente', 'Cantidad'),   -- id: 7
+    (8, 'puertas', 'Cantidad'),   -- id: 8
+    (9, 'ventanas', 'Cantidad'),   -- id: 9
+    (10, 'botes de basura', 'Cantidad'),   -- id: 10
+    (11, 'gabinetes de red', 'Cantidad'),   -- id: 11
+    (12, 'escritorio', 'Cantidad');   -- id: 12
+
+-- Insertar más bienes en la tabla bienes
+INSERT INTO bienes (id, nombre, tipo)
+VALUES 
+    (13, 'Computadores', 'Serial'),   -- id: 13
+    (14, 'Sillas', 'Cantidad'),   -- id: 14
+    (15, 'Rack grande', 'Cantidad'),   -- id: 15
+    (16, 'Rack mediano', 'Cantidad');   -- id: 16
 
 -- 5. Insertar los bienes en cada salón
 -- Primero, insertar la relación entre bienes e inventarios en la tabla bienes_inventarios
@@ -117,3 +160,48 @@ VALUES
     (22, 1),  -- 1 escritorio de docente en 1B
     (23, 4),  -- 4 lámparas en 1B
     (24, 3);  -- 3 abanicos de techo en 1B
+
+
+-- Relacionar bienes con el inventario "Sala de redes"
+INSERT INTO bienes_inventarios (bien_id, inventario_id)
+VALUES 
+    (13, 5),  -- Computadores
+    (14, 5),  -- Sillas
+    (15, 5),  -- Rack grande
+    (16, 5);  -- Rack mediano
+
+-- Insertar cantidades para los bienes de tipo Cantidad
+INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
+VALUES 
+    (14, 25),  -- 25 sillas
+    (15, 1),   -- 1 rack grande
+    (16, 1);   -- 1 rack mediano
+
+-- Insertar detalles de los computadores en la tabla bienes_equipos
+INSERT INTO bienes_equipos (bien_inventario_id, descripcion, marca, modelo, serial, estado, color, condiciones_tecnicas, fecha_ingreso)
+VALUES 
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN001', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN002', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN003', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN004', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN005', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN006', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN007', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN008', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN009', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN010', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN011', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN012', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN013', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN014', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN015', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN016', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN017', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN018', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN019', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN020', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN021', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN022', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN023', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN024', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN025', 'activo', 'Negro', 'Buen estado', '2025-03-31');

@@ -5,18 +5,21 @@
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
+    nombre_usuario VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     contraseña VARCHAR(255) NOT NULL,
-    rol ENUM('administrador', 'consultor') NOT NULL
+    rol ENUM('administrador', 'consultor') NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_ultimo_acceso TIMESTAMP NULL
 );
 
+CREATE INDEX idx_usuarios_nombre_usuario ON usuarios(nombre_usuario);
 CREATE INDEX idx_usuarios_email ON usuarios(email);
 CREATE INDEX idx_usuarios_rol ON usuarios(rol);
 
 -- 
 -- ---------------------------------------------------------
 --
-
 
 CREATE TABLE tareas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,6 +28,7 @@ CREATE TABLE tareas (
     fecha DATE,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_completado TIMESTAMP,
+    estado ENUM('por hacer', 'completado') NOT NULL DEFAULT 'por hacer',
     usuario_id INT NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
@@ -33,6 +37,7 @@ CREATE INDEX idx_tareas_usuario_id ON tareas(usuario_id);
 CREATE INDEX idx_tareas_fecha ON tareas(fecha);
 CREATE INDEX idx_tareas_fecha_creacion ON tareas(fecha_creacion);
 CREATE INDEX idx_tareas_fecha_completado ON tareas(fecha_completado);
+CREATE INDEX idx_tareas_estado ON tareas(estado);
 
 -- 
 -- ---------------------------------------------------------
@@ -60,46 +65,22 @@ CREATE TABLE responsables (
 -- Crear índice para responsables
 CREATE INDEX idx_responsables_nombre ON responsables(nombre);
 
--- Crear la tabla bloques
-CREATE TABLE bloques (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
-);
-
--- Crear índice para bloques
-CREATE INDEX idx_bloques_nombre ON bloques(nombre);
-
--- Crear la tabla dependencias
-CREATE TABLE dependencias (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
-);
-
--- Crear índice para dependencias
-CREATE INDEX idx_dependencias_nombre ON dependencias(nombre);
-
 -- Crear la nueva tabla inventarios
 CREATE TABLE inventarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     responsable_id INT,
-    bloque_id INT,
-    dependencia_id INT,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     estado_conservacion ENUM('bueno', 'regular', 'malo') NOT NULL,
     grupo_id INT,
     FOREIGN KEY (grupo_id) REFERENCES grupos(id) ON DELETE CASCADE,
-    FOREIGN KEY (responsable_id) REFERENCES responsables(id) ON DELETE SET NULL,
-    FOREIGN KEY (bloque_id) REFERENCES bloques(id) ON DELETE SET NULL,
-    FOREIGN KEY (dependencia_id) REFERENCES dependencias(id) ON DELETE SET NULL
+    FOREIGN KEY (responsable_id) REFERENCES responsables(id) ON DELETE SET NULL
 );
 
 -- Crear índices para la tabla inventarios
 CREATE INDEX idx_inventarios_nombre ON inventarios(nombre);
 CREATE INDEX idx_inventarios_grupo_id ON inventarios(grupo_id);
 CREATE INDEX idx_inventarios_responsable_id ON inventarios(responsable_id);
-CREATE INDEX idx_inventarios_bloque_id ON inventarios(bloque_id);
-CREATE INDEX idx_inventarios_dependencia_id ON inventarios(dependencia_id);
 CREATE INDEX idx_inventarios_estado_conservacion ON inventarios(estado_conservacion);
 
 -- 
@@ -174,3 +155,81 @@ CREATE INDEX idx_bienes_equipos_estado ON bienes_equipos(estado);
 CREATE INDEX idx_bienes_equipos_fecha_ingreso ON bienes_equipos(fecha_ingreso);
 CREATE INDEX idx_bienes_equipos_fecha_salida ON bienes_equipos(fecha_salida);
 
+
+-- 
+-- ---------------------------------------------------------
+--
+
+-- Tabla para organizar reportes en carpetas
+CREATE TABLE carpetas_reportes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Crear índices para la tabla carpetas_reportes
+CREATE INDEX idx_carpetas_reportes_nombre ON carpetas_reportes(nombre);
+CREATE INDEX idx_carpetas_reportes_fecha_creacion ON carpetas_reportes(fecha_creacion);
+
+-- Tabla para almacenar reportes generados
+CREATE TABLE reportes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carpeta_id INT,  -- Relación con carpetas_reportes
+    nombre_inventario VARCHAR(100) NOT NULL,
+    responsable VARCHAR(100),
+    estado_inventario ENUM('bueno', 'regular', 'malo') NOT NULL,
+    numero_total_bienes INT NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    descripcion TEXT,  -- Contenido detallado del reporte
+    FOREIGN KEY (carpeta_id) REFERENCES carpetas_reportes(id) ON DELETE SET NULL
+);
+
+-- Crear índices para la tabla reportes
+CREATE INDEX idx_reportes_carpeta_id ON reportes(carpeta_id);
+CREATE INDEX idx_reportes_nombre_inventario ON reportes(nombre_inventario);
+CREATE INDEX idx_reportes_responsable ON reportes(responsable);
+CREATE INDEX idx_reportes_estado_inventario ON reportes(estado_inventario);
+CREATE INDEX idx_reportes_fecha_creacion ON reportes(fecha_creacion);
+
+-- 
+-- ---------------------------------------------------------
+-- VISTAS (TABLAS VIRTUALES) PARA OPTIMIZAR CONSULTAS
+
+
+-- Vista para obtener las cantidades de todos los bienes en un inventario
+CREATE VIEW vista_cantidades_bienes_inventario AS
+SELECT 
+    i.nombre AS inventario,
+    b.nombre AS bien,
+    SUM(bc.cantidad) AS cantidad
+FROM bienes b
+JOIN bienes_inventarios bi ON b.id = bi.bien_id
+JOIN inventarios i ON bi.inventario_id = i.id
+LEFT JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
+GROUP BY i.nombre, b.nombre
+UNION
+SELECT 
+    i.nombre AS inventario,
+    b.nombre AS bien,
+    COUNT(be.id) AS cantidad
+FROM bienes b
+JOIN bienes_inventarios bi ON b.id = bi.bien_id
+JOIN inventarios i ON bi.inventario_id = i.id
+LEFT JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
+GROUP BY i.nombre, b.nombre;
+
+
+-- Vista para obtener todos los bienes de tipo Serial de un inventario
+CREATE VIEW vista_bienes_serial_inventario AS
+SELECT 
+    i.nombre AS inventario,
+    b.nombre AS bien,
+    be.marca,
+    be.modelo,
+    be.serial,
+    be.estado
+FROM bienes b
+JOIN bienes_inventarios bi ON b.id = bi.bien_id
+JOIN inventarios i ON bi.inventario_id = i.id
+JOIN bienes_equipos be ON bi.id = be.bien_inventario_id;
