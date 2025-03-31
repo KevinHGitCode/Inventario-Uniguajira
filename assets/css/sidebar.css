@@ -1,8 +1,6 @@
 /*Colors*/
-/* TODO: COLORES MAS DESCRIPTIVOS */
 :root {
     --background-color: white;
-    --text-title-color: #053D4E;
     --text-color: #32363B;
 
     --text-selected-color: #355CC0;
@@ -12,6 +10,7 @@
     --border-color: #E6E9ED;
 }
 
+/* DESCRIPCION: Este archivo tiene los estilos para el sidebar */
 
 /* Sidebar */
 .sidebar {

@@ -27,18 +27,12 @@
 */
 
 /*Colors*/
-/* TODO: COLORES MAS DESCRIPTIVOS */
 :root {
-    --background-color: white;
     --text-title-color: #053D4E;
-    --text-color: #32363B;
-
-    --text-selected-color: #355CC0;
-    --background-selected: #EBF0FF;
-    --background-hover: #F7F9FA;
-
-    --border-color: #E6E9ED;
 }
+
+/* DESCRIPCION: Este archivo tiene los estilos generales */
+
 /*Global styles*/
 *{
     margin: 0;

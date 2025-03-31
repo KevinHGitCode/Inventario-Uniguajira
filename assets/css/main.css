@@ -1,17 +1,12 @@
 /*Colors*/
-/* TODO: COLORES MAS DESCRIPTIVOS */
-:root {
-    --background-color: white;
-    --text-title-color: #053D4E;
-    --text-color: #32363B;
+/* No se han definido los colores para estos estilos */
+/* :root {
 
-    --text-selected-color: #355CC0;
-    --background-selected: #EBF0FF;
-    --background-hover: #F7F9FA;
+} */
 
-    --border-color: #E6E9ED;
-}
+/* DESCRIPCION: Este archivo tiene los estilos para main, esto incluye los contenedores */
 
+/* TODO: Convertir al main en un contenedor grip */
 
 /*main*/
 main{

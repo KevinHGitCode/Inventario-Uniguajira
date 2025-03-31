@@ -10,12 +10,12 @@
 -- // TODO: cambiar las contraseñas por contraseñas encriptadas
 INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol)
 VALUES 
-    ('Administrador', 'admin', 'admin@email.com', 'admin', 'administrador'),
-    ('Daniel', 'daniel', 'daniel@email.com', '1234', 'administrador'),
-    ('Luis', 'luis', 'luis@email.com', '1234', 'administrador'),
-    ('Renzo', 'renzo', 'renzo@email.com', '1234', 'administrador'),
-    ('Kevin', 'kevin', 'kevin@email.com', '1234', 'administrador'),
-    ('Consultor', 'consultor', 'consultor@email.com', 'consul', 'consultor');
+    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador'), -- Contraseña: admin
+    ('Daniel', 'daniel', 'daniel@email.com', '$2y$10$Z6Q86q9MRsyZdSrcpSjFA.uvfq1mS1U2DkaVwXp1EtHtJhNyXkDRC', 'administrador'), -- Contraseña: 1234
+    ('Luis', 'luis', 'luis@email.com', '$2y$10$WuTyyr1liA1oXkq1baarA./Yjf6n9bO3o68LzKtYY9XyUlZXTwOFm', 'administrador'), -- Contraseña: 1234
+    ('Renzo', 'renzo', 'renzo@email.com', '$2y$10$4xh8/0LXMaebWN69C.0QwOPfKkJ.QTHQFgrhnZO0O9wKon495/xhG', 'administrador'), -- Contraseña: 1234
+    ('Kevin', 'kevin', 'kevin@email.com', '$2y$10$NwbZSqVtN5E6vMTu8nCxrejlRYYZRVxKHs0QK/3zfxmKlkgOXv/sm', 'administrador'), -- Contraseña: 1234
+    ('Consultor', 'consultor', 'consultor@email.com', '$2y$10$Ki86sKsnOrXFUI.RoGyAsum9hcbzR5KJQZ269hqEjThJ0vrHIS3ou', 'consultor'); -- Contraseña: consul
 
 
 -- ---------------------------------------------------------------------------------------------------------

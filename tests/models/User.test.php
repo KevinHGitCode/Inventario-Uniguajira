@@ -5,9 +5,15 @@ function runTests() {
     testGetAllUsers();
     // testCreateUser();
     // testUpdateUser();
-    // testUpdatePassword(2, "1234");
+    // testUpdatePassword(1, "admin");
+    // testUpdatePassword(6, "consul");
     // testDeleteUser();
-    // testAuthentication();
+    testAuthentication("Administrador", "admin");
+    testAuthentication("renzo", "1234");
+    testAuthentication("luis", "1234");
+    testAuthentication("danil", "1234");
+    testAuthentication("kevin", "1234");
+    testAuthentication("Consultor", "consul");
 }
 
 function testGetAllUsers() {
@@ -80,13 +86,12 @@ function testDeleteUser() {
     }
 }
 
-function testAuthentication() {
+function testAuthentication($nombre, $contraseña) {
     $user = new User();
     try {
-        $nombre = "makiabelico Actualizado";
-        $contraseña = "nuevaPassword123";
-
-        echo var_dump($user->authentication($nombre, $contraseña));
+        echo "<pre>";
+        var_dump($user->authentication($nombre, $contraseña));
+        echo "</pre>";
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }

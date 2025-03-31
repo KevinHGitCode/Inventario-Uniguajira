@@ -195,6 +195,8 @@ class User extends Database {
      * @return array|false Datos del usuario si la autenticación es exitosa, false en caso contrario.
      * @throws Exception Si ocurre un error al autenticar al usuario.
      */
+    // TODO: Actualizar el metodo, a autenticacion debe ser con nombre de usuario o email
+    // No debe regresar la contraseña
     public function authentication($nombre, $contraseña) {
         try {
             $query = "SELECT id, nombre, email, contraseña, rol FROM usuarios WHERE nombre = ?";
