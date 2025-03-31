@@ -197,38 +197,42 @@ CREATE INDEX idx_reportes_fecha_creacion ON reportes(fecha_creacion);
 -- VISTAS (TABLAS VIRTUALES) PARA OPTIMIZAR CONSULTAS
 
 
--- Vista para obtener las cantidades de todos los bienes en un inventario
+-- Vista para contar todos los bienes de un inventario, excluyendo los que tienen cantidad cero
 CREATE VIEW vista_cantidades_bienes_inventario AS
 SELECT 
+    i.id AS inventario_id,
+    b.id AS bien_id,
     i.nombre AS inventario,
     b.nombre AS bien,
-    SUM(bc.cantidad) AS cantidad
+    COALESCE(SUM(bc.cantidad), COUNT(be.id)) AS cantidad
 FROM bienes b
 JOIN bienes_inventarios bi ON b.id = bi.bien_id
 JOIN inventarios i ON bi.inventario_id = i.id
 LEFT JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
-GROUP BY i.nombre, b.nombre
-UNION
-SELECT 
-    i.nombre AS inventario,
-    b.nombre AS bien,
-    COUNT(be.id) AS cantidad
-FROM bienes b
-JOIN bienes_inventarios bi ON b.id = bi.bien_id
-JOIN inventarios i ON bi.inventario_id = i.id
 LEFT JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
-GROUP BY i.nombre, b.nombre;
+GROUP BY i.id, b.id, i.nombre, b.nombre
+HAVING cantidad > 0;
 
 
--- Vista para obtener todos los bienes de tipo Serial de un inventario
+-- 
+-- Vista para obtener todos los bienes de tipo Serial de un inventario con todos los campos
 CREATE VIEW vista_bienes_serial_inventario AS
 SELECT 
+    i.id AS inventario_id,
+    b.id AS bien_id,
     i.nombre AS inventario,
     b.nombre AS bien,
+    bi.id AS bienes_inventarios_id,
+    be.id AS bienes_equipos_id,
+    be.descripcion,
     be.marca,
     be.modelo,
     be.serial,
-    be.estado
+    be.estado,
+    be.color,
+    be.condiciones_tecnicas,
+    be.fecha_ingreso,
+    be.fecha_salida
 FROM bienes b
 JOIN bienes_inventarios bi ON b.id = bi.bien_id
 JOIN inventarios i ON bi.inventario_id = i.id

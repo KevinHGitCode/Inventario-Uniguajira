@@ -8,14 +8,14 @@
 
 -- 1. Insertar usuarios
 -- // TODO: cambiar las contraseñas por contraseñas encriptadas
-INSERT INTO usuarios (nombre, email, contraseña, rol)
+INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol)
 VALUES 
-    ('Administrador', 'admin@email.com', 'Administrador', 'administrador'),
-    ('Daniel', 'daniel@email.com', '1234', 'administrador'),
-    ('Luis', 'luis@email.com', '1234', 'administrador'),
-    ('Renzo', 'renzo@email.com', '1234', 'administrador'),
-    ('Kevin', 'kevin@email.com', '1234', 'administrador'),
-    ('Consultor', 'consultor@email.com', 'Consultor', 'consultor');
+    ('Administrador', 'admin', 'admin@email.com', 'admin', 'administrador'),
+    ('Daniel', 'daniel', 'daniel@email.com', '1234', 'administrador'),
+    ('Luis', 'luis', 'luis@email.com', '1234', 'administrador'),
+    ('Renzo', 'renzo', 'renzo@email.com', '1234', 'administrador'),
+    ('Kevin', 'kevin', 'kevin@email.com', '1234', 'administrador'),
+    ('Consultor', 'consultor', 'consultor@email.com', 'consul', 'consultor');
 
 
 -- ---------------------------------------------------------------------------------------------------------
@@ -60,26 +60,18 @@ VALUES
 -- 4. Insertar los tipos de bienes
 INSERT INTO bienes (id, nombre, tipo)
 VALUES 
-    (1, 'pupitres', 'Cantidad'),   -- id: 1
-    (2, 'escritorio de docente', 'Cantidad'),   -- id: 2
-    (3, 'abanicos de pared', 'Cantidad'),   -- id: 3
-    (4, 'abanicos de techo', 'Cantidad'),   -- id: 4
-    (5, 'tablero', 'Cantidad'),   -- id: 5
-    (6, 'lámparas', 'Cantidad'),   -- id: 6
-    (7, 'sillas de docente', 'Cantidad'),   -- id: 7
-    (8, 'puertas', 'Cantidad'),   -- id: 8
-    (9, 'ventanas', 'Cantidad'),   -- id: 9
-    (10, 'botes de basura', 'Cantidad'),   -- id: 10
-    (11, 'gabinetes de red', 'Cantidad'),   -- id: 11
-    (12, 'escritorio', 'Cantidad');   -- id: 12
-
--- Insertar más bienes en la tabla bienes
-INSERT INTO bienes (id, nombre, tipo)
-VALUES 
-    (13, 'Computadores', 'Serial'),   -- id: 13
-    (14, 'Sillas', 'Cantidad'),   -- id: 14
-    (15, 'Rack grande', 'Cantidad'),   -- id: 15
-    (16, 'Rack mediano', 'Cantidad');   -- id: 16
+    (1, 'pupitres', 'Cantidad'),
+    (2, 'escritorio de docente', 'Cantidad'),
+    (3, 'abanicos de pared', 'Cantidad'),
+    (4, 'abanicos de techo', 'Cantidad'),
+    (5, 'tablero', 'Cantidad'),
+    (6, 'lámparas', 'Cantidad'),
+    (7, 'sillas de docente', 'Cantidad'),
+    (8, 'puertas', 'Cantidad'),
+    (9, 'ventanas', 'Cantidad'),
+    (10, 'botes de basura', 'Cantidad'),
+    (11, 'gabinetes de red', 'Cantidad'),
+    (12, 'escritorio', 'Cantidad');
 
 -- 5. Insertar los bienes en cada salón
 -- Primero, insertar la relación entre bienes e inventarios en la tabla bienes_inventarios
@@ -162,6 +154,14 @@ VALUES
     (24, 3);  -- 3 abanicos de techo en 1B
 
 
+-- Insertar más bienes en la tabla bienes
+INSERT INTO bienes (id, nombre, tipo)
+VALUES 
+    (13, 'Computadores', 'Serial'),
+    (14, 'Sillas', 'Cantidad'),
+    (15, 'Rack grande', 'Cantidad'),
+    (16, 'Rack mediano', 'Cantidad');
+
 -- Relacionar bienes con el inventario "Sala de redes"
 INSERT INTO bienes_inventarios (bien_id, inventario_id)
 VALUES 
@@ -173,35 +173,35 @@ VALUES
 -- Insertar cantidades para los bienes de tipo Cantidad
 INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
 VALUES 
-    (14, 25),  -- 25 sillas
-    (15, 1),   -- 1 rack grande
-    (16, 1);   -- 1 rack mediano
+    (26, 25),  -- 25 sillas
+    (27, 1),   -- 1 rack grande
+    (28, 1);   -- 1 rack mediano
 
 -- Insertar detalles de los computadores en la tabla bienes_equipos
 INSERT INTO bienes_equipos (bien_inventario_id, descripcion, marca, modelo, serial, estado, color, condiciones_tecnicas, fecha_ingreso)
 VALUES 
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN001', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN002', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN003', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN004', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN005', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN006', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN007', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN008', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN009', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN010', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN011', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN012', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN013', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN014', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN015', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN016', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN017', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN018', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN019', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN020', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN021', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN022', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN023', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN024', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
-    (13, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN025', 'activo', 'Negro', 'Buen estado', '2025-03-31');
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN001', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN002', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN003', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN004', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN005', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN006', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN007', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN008', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN009', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN010', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN011', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN012', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN013', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN014', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN015', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN016', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN017', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN018', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN019', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN020', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN021', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN022', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN023', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN024', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
+    (25, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN025', 'activo', 'Negro', 'Buen estado', '2025-03-31');
