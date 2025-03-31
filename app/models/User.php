@@ -196,7 +196,8 @@ class User extends Database {
      * @throws Exception Si ocurre un error al autenticar al usuario.
      */
     // TODO: Actualizar el metodo, a autenticacion debe ser con nombre de usuario o email
-    // No debe regresar la contraseña
+    // TODO: No debe regresar la contraseña
+    // TODO: Debe distinguir entre mayusculas y minusculas
     public function authentication($nombre, $contraseña) {
         try {
             $query = "SELECT id, nombre, email, contraseña, rol FROM usuarios WHERE nombre = ?";

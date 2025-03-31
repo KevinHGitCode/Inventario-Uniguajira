@@ -20,6 +20,7 @@
                 <li><a href="#rutas">Rutas</a></li>
                 <li><a href="#modelos">Modelos</a></li>
                 <li><a href="#javascript">JavaScript</a></li>
+                <li><a href="#flujo">Flujo de Rutas</a></li>
                 <li><a href="#css-classes">Clases CSS</a></li>
             </ul>
         </nav>
@@ -515,6 +516,89 @@
                     </details>
                 </details>
 
+            </section>
+
+            <section id="flujo">
+                <h2>Flujo de Rutas en la Aplicación</h2>
+                <p>Este documento describe el flujo que sigue cada ruta en la aplicación desde que se realiza una solicitud hasta que se genera la respuesta.</p>
+                <!-- Pasos de las rutas -->
+                <details>
+                    <summary>Flujo de Rutas</summary>
+                    <div class="step">
+                        <h2>1. Solicitud inicial del cliente</h2>
+                        <p>El cliente realiza una solicitud HTTP a una URL específica, como <code>/home</code> o <code>/api/login</code>.</p>
+                    </div>
+    
+                    <div class="step">
+                        <h2>2. Redirección por .htaccess</h2>
+                        <p>El archivo <code>.htaccess</code> intercepta la solicitud. Si la solicitud no corresponde a un archivo o directorio existente, redirige la solicitud a <code>index.php</code> con la misma URI.</p>
+                    </div>
+    
+                    <div class="step">
+                        <h2>3. Ejecución de index.php</h2>
+                        <p>El archivo <code>index.php</code> se ejecuta. Se incluye el archivo del enrutador <code>Router.php</code> y se crea una instancia de la clase <code>Router</code>.</p>
+                    </div>
+    
+                    <div class="step">
+                        <h2>4. Definición de rutas</h2>
+                        <p>En <code>index.php</code>, se definen las rutas mediante el método <code>add</code> de la clase <code>Router</code>. Por ejemplo:</p>
+                        <pre><code>$router->add('/home', 'ctlSidebar', 'home');</code></pre>
+                        <p>Esto asocia la ruta <code>/home</code> con el controlador <code>ctlSidebar</code> y el método <code>home</code>.</p>
+                    </div>
+    
+                    <div class="step">
+                        <h2>5. Despacho de la solicitud</h2>
+                        <p>La URI solicitada se obtiene mediante <code>$_SERVER['REQUEST_URI']</code>. Luego, se llama al método <code>dispatch</code> de la clase <code>Router</code> con la URI como argumento:</p>
+                        <pre><code>$router->dispatch($requestUri);</code></pre>
+                    </div>
+    
+                    <div class="step">
+                        <h2>6. Lógica del enrutador (Router.php)</h2>
+                        <p>En el método <code>dispatch</code> de <code>Router.php</code>:</p>
+                        <ul>
+                            <li>Se verifica si la URI solicitada coincide con alguna ruta registrada.</li>
+                            <li>Si coincide:
+                                <ul>
+                                    <li>Se carga el archivo del controlador correspondiente.</li>
+                                    <li>Se crea una instancia del controlador.</li>
+                                    <li>Se llama al método asociado a la ruta.</li>
+                                </ul>
+                            </li>
+                            <li>Si no coincide, se incluye la vista de error 404.</li>
+                        </ul>
+                    </div>
+    
+                    <div class="step">
+                        <h2>7. Ejecución del controlador</h2>
+                        <p>El controlador correspondiente se ejecuta. Por ejemplo:</p>
+                        <ul>
+                            <li>Para la ruta <code>/home</code>, se ejecuta el método <code>home</code> de la clase <code>ctlSidebar</code>.</li>
+                            <li>En este método, las variables necesarias se definen desde el modelo o se obtienen desde el método HTTP correspondiente.</li>
+                            <li>Este método puede incluir una vista, como <code>home.php</code>, para generar la respuesta.</li>
+                        </ul>
+                    </div>
+    
+                    <div class="step">
+                        <h2>8. Generación de la respuesta</h2>
+                        <p>El controlador incluye la vista correspondiente, que genera el contenido HTML o JSON que se enviará al cliente.</p>
+                    </div>
+    
+                    <div class="step">
+                        <h2>9. Respuesta al cliente</h2>
+                        <p>El servidor envía la respuesta generada (HTML, JSON, etc.) al cliente. El cliente recibe y renderiza la respuesta en el navegador.</p>
+                    </div>
+    
+                    <h2>Ejemplo: Ruta <code>/home</code></h2>
+                    <ol>
+                        <li>El cliente solicita <code>/home</code>.</li>
+                        <li><code>.htaccess</code> redirige la solicitud a <code>index.php</code>.</li>
+                        <li>En <code>index.php</code>, la ruta <code>/home</code> está asociada al controlador <code>ctlSidebar</code> y al método <code>home</code>.</li>
+                        <li>El método <code>dispatch</code> de <code>Router.php</code> llama al método <code>home</code> de <code>ctlSidebar</code>.</li>
+                        <li>El método <code>home</code> incluye la vista <code>home.php</code>, que genera el contenido HTML.</li>
+                        <li>El servidor envía el HTML al cliente.</li>
+                    </ol>
+                </details>
+                
             </section>
 
             <section id="css-classes">

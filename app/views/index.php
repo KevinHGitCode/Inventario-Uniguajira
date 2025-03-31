@@ -21,9 +21,18 @@
 
     <?php include 'app/views/sidebar.html'; ?>
 
+    <!-- -------------------------------------------------------------------
+        main: Las opciones del sidebar están vinculadas 
+        a una función de JavaScript que actualiza dinámicamente 
+        el contenido del elemento <main> utilizando innerHTML.
+    ------------------------------------------------------------------- -->
     <main id="main">
         
     </main>
+
+    <!-- TODO: Crear un modal que para usar innerHTML -->
+
+    <!-- TODO: Crear un notificacion toast para usar innerHTML  -->
 
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
