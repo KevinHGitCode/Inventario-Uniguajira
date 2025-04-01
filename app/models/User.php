@@ -62,8 +62,8 @@ class User extends Database {
         try {
             $query = "INSERT INTO usuarios (nombre, email, contraseña, rol) VALUES (?, ?, ?, ?)";
             $stmt = $this->connection->prepare($query);
-            // $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT); // Encriptar la contraseña
-            $stmt->bind_param("sssi", $nombre, $email, $contraseña, $rol);
+            $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT); // Encriptar la contraseña
+            $stmt->bind_param("sssi", $nombre, $email, $hashedPassword, $rol);
             $stmt->execute();
             if ($stmt->affected_rows > 0) {
                 return "Usuario creado exitosamente.";

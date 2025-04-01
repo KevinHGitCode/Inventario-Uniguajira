@@ -7,7 +7,6 @@
 --
 
 -- 1. Insertar usuarios
--- // TODO: cambiar las contraseñas por contraseñas encriptadas
 INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol)
 VALUES 
     ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador'), -- Contraseña: admin
