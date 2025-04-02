@@ -126,4 +126,10 @@ class ctlUser {
         // Validar y procesar los datos
         echo "Método de edición llamado para el ID: $id con nombre: $nombre, correo: $email";
     }
+
+    public function logout() {
+        session_start();
+        session_destroy();
+        header("Location: /login.php");
+    }
 }

@@ -1,24 +1,15 @@
 <?php
 require_once 'app/controllers/sessionCheck.php';
-require_once __DIR__ . '/../models/User.php';
 
 /**
  * Controlador para manejar las vistas de la barra lateral.
  */
 class ctlSidebar {
     /**
-     * Modelo de usuario.
-     *
-     * @var User
-     */
-    private $userModel;
-
-    /**
      * Constructor de la clase ctlSidebar.
-     * Inicializa el modelo de usuario.
      */
     public function __construct() {
-        $this->userModel = new User();
+        // Constructor vacío, los modelos se cargarán en los métodos correspondientes.
     }
 
     /**
@@ -28,6 +19,9 @@ class ctlSidebar {
      * @return void
      */
     public function home() {
+        require_once __DIR__ . '/../models/Tasks.php';
+        $task = new Tasks();
+
         $username = $_SESSION['user_name'];
         // Pass $username to the view
         require __DIR__ . '/../views/home.php';
@@ -39,6 +33,9 @@ class ctlSidebar {
      * @return void
      */
     public function goods() {
+        require_once __DIR__ . '/../models/Goods.php';
+        $goods = new Goods();
+
         // Logic for goods view
         require __DIR__ . '/../views/goods.php';
 
@@ -51,6 +48,9 @@ class ctlSidebar {
      * @return void
      */
     public function inventary() {
+        require_once __DIR__ . '/../models/Inventory.php';
+        $inventory = new Inventory();
+
         // Logic for inventary view
         require __DIR__ . '/../views/inventary.php';
 
@@ -63,6 +63,12 @@ class ctlSidebar {
      * @return void
      */
     public function users() {
+        require_once __DIR__ . '/../models/User.php';
+        $user = new User();
+        // variables 
+        $num = 1000;
+        $name   = "Juanito Perez";
+
         // Logic for users view
         require __DIR__ . '/../views/users.php';
 

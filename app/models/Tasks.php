@@ -26,6 +26,8 @@ class Tasks extends Database {
      * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
      * @return bool Devuelve true si la tarea se creó correctamente, false en caso contrario.
      */
+    // TODO: El estado al crear una tarea debería ser 'por hacer' por defecto.
+    // TODO: Solo crear la tarea si el usuario es administrador.
     public function create($name, $description, $usuario_id, $estado) {
         $stmt = $this->connection->prepare("INSERT INTO tareas (nombre, descripcion, usuario_id, estado) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssis", $name, $description, $usuario_id, $estado);
@@ -79,8 +81,8 @@ class Tasks extends Database {
      * @return bool Devuelve true si el estado se cambió correctamente, false en caso contrario.
      */
     public function changeState($id) {
-        $stmt = $this->connection->prepare("UPDATE tareas SET estado = IF(estado = 'por hacer', 'completado', 
-        'por hacer') WHERE id = ?");
+        $stmt = $this->connection->prepare("UPDATE tareas SET estado = IF(estado = 'por hacer', 
+                                            'completado', 'por hacer') WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
 
