@@ -9,5 +9,5 @@ function toggleUserMenu() {
 }
 
 function logout() {
-    window.location.href = '/logout'; // Redirigir al endpoint de logout del backend
+    window.location.href = '/api/logout'; // Redirigir al endpoint correcto del backend
 }
