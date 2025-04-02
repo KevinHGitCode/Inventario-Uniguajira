@@ -1,6 +1,27 @@
-projecto de ing software 2
 
+# Inventario Uniguajira
 
-deploy: https://inventario-uniguajira.onrender.com
+Este es un proyecto desarrollado para la asignatura de Ingeniería de Software 2. Es una aplicación web para la gestión de inventarios.
 
-hola
+## Despliegue
+
+El proyecto está desplegado en: [https://inventario-uniguajira.onrender.com](https://inventario-uniguajira.onrender.com)
+
+## Requisitos previos
+
+Antes de instalar el proyecto, asegúrate de tener lo siguiente instalado en tu sistema:
+
+- PHP >= 7.4
+- Servidor web (como Apache o Nginx)
+- MySQL
+- XAMPP (opcional, para un entorno de desarrollo local)
+
+## Instalación
+
+Sigue estos pasos para instalar el proyecto en tu entorno local:
+
+1. **Clona el repositorio**
+
+   ```bash
+   git clone https://github.com/tu-usuario/inventario-uniguajira.git
+   cd inventario-uniguajira
