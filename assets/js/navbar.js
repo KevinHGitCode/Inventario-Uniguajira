@@ -1,18 +1,13 @@
 /*Animacion al cliquear el boton de Menu de usuario*/
 function toggleUserMenu() {
     var menu = document.getElementById('userMenu');
-    menu.classList.toggle('hidden');
-    menu.classList.toggle('visible');
+    if (menu) {
+        menu.classList.toggle('hidden'); // Usar una sola clase para mostrar/ocultar
+    } else {
+        console.error('El elemento con ID "userMenu" no existe.');
+    }
 }
 
 function logout() {
-    fetch('/api/logout')
-        .then(response => {
-            if (response.ok) {
-                window.location.href = '/login'; // Redirigir al login después de cerrar sesión
-            } else {
-                console.error('Error al cerrar sesión:', response.statusText);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    window.location.href = '/logout'; // Redirigir al endpoint de logout del backend
 }

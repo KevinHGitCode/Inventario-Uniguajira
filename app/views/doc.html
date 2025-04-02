@@ -134,6 +134,11 @@
                         <p>Edita la información de un usuario existente.</p>
                         <p><strong>Retorna:</strong> Mensaje de éxito o error.</p>
                     </details>
+                    <details>
+                        <summary>logout()</summary>
+                        <p>Cierra la sesión del usuario y redirige a la página de inicio de sesión.</p>
+                        <p><strong>Retorna:</strong> Redirección a la página de inicio de sesión.</p>
+                    </details>
                 </details>
                 
             </section>
@@ -168,6 +173,7 @@
                     <summary>API de usuarios</summary>
                     <ul>
                         <li><strong>/api/login</strong> - Endpoint para iniciar sesión.</li>
+                        <li><strong>/api/logout</strong> - Endpoint para cerrar sesión.</li>
                     </ul>
                 </details>
 
@@ -483,12 +489,20 @@
                     
                     <details>
                         <summary>loadContent(path)</summary>
-                        <p>Carga contenido dinámico en el elemento <code>#main</code> desde una ruta específica.</p>
+                        <p>Carga contenido dinámico en el elemento <code>#main</code> desde una ruta específica utilizando la API <code>fetch</code>.</p>
+                        <p><strong>Descripción:</strong> Esta función realiza una solicitud HTTP GET a la ruta especificada en el argumento <code>path</code>. Si la solicitud es exitosa, el contenido HTML obtenido se inserta en el elemento con ID <code>#main</code>. En caso de error, se muestra un mensaje en la consola.</p>
                         <p><strong>Argumentos:</strong></p>
                         <ul>
                             <li><code>path</code> (string) - Ruta del archivo HTML a cargar.</li>
                         </ul>
-                        <p><strong>Retorna:</strong> Actualiza el contenido del elemento <code>#main</code> o muestra un error en la consola si falla.</p>
+                        <p><strong>Funcionamiento:</strong></p>
+                        <ul>
+                            <li>Se utiliza <code>fetch(path)</code> para realizar la solicitud HTTP.</li>
+                            <li>El método <code>.then()</code> procesa la respuesta y convierte el contenido a texto con <code>response.text()</code>.</li>
+                            <li>El contenido obtenido se asigna al atributo <code>innerHTML</code> del elemento <code>#main</code>.</li>
+                            <li>Si ocurre un error, el método <code>.catch()</code> captura la excepción y la registra en la consola.</li>
+                        </ul>
+                        <p><strong>Retorna:</strong> Actualiza el contenido del elemento <code>#main</code> o muestra un error en la consola si la solicitud falla.</p>
                     </details>
                     
                     <details>
@@ -507,12 +521,18 @@
                 <!-- Navbar.js -->
                 <details>
                     <summary>navbar.js</summary>
-                    <p>Este script maneja la animación del menú de usuario.</p>
+                    <p>Este script maneja la animación del menú de usuario y el cierre de sesión.</p>
                     
                     <details>
                         <summary>toggleUserMenu()</summary>
                         <p>Alterna la visibilidad del menú de usuario.</p>
                         <p><strong>Función:</strong> Añade o quita las clases <code>hidden</code> y <code>visible</code> en el elemento con ID <code>userMenu</code>.</p>
+                    </details>
+
+                    <details>
+                        <summary>logout()</summary>
+                        <p>Cierra la sesión del usuario y redirige a la página de inicio de sesión.</p>
+                        <p><strong>Función:</strong> Realiza una solicitud <code>fetch</code> al endpoint <code>/api/logout</code>. Si la solicitud es exitosa, redirige al usuario a <code>/login</code>. En caso de error, muestra un mensaje en la consola.</p>
                     </details>
                 </details>
 
