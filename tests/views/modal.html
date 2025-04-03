@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ventana Modal</title>
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <!-- Botones para abrir el modal -->
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-content="form1"
+        >
+            Abrir Modal 1
+        </button>
+        <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            data-bs-content="form2"
+        >
+            Abrir Modal 2
+        </button>
+
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Título del Modal
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Contenido dinámico del formulario -->
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Cerrar
+                        </button>
+                        <button type="submit" class="btn btn-primary" form="dynamicForm">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Cambiar el contenido del modal dinámicamente con formularios
+            const exampleModal = document.getElementById('exampleModal');
+            exampleModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Botón que activó el modal
+                const content = button.getAttribute('data-bs-content'); // Obtener contenido
+                const modalBody = exampleModal.querySelector('.modal-body');
+
+                // Formularios dinámicos
+                const forms = {
+                    form1: `
+                        <form id="dynamicForm">
+                            <div class="mb-3">
+                                <label for="inputName1" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="inputName1" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputEmail1" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="inputEmail1" name="email" required>
+                            </div>
+                        </form>
+                    `,
+                    form2: `
+                        <form id="dynamicForm">
+                            <div class="mb-3">
+                                <label for="inputUsername" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="inputUsername" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputPassword" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="inputPassword" name="password" required>
+                            </div>
+                        </form>
+                    `
+                };
+
+                // Actualizar contenido del modal con el formulario correspondiente
+                modalBody.innerHTML = forms[content] || 'Contenido no disponible.';
+            });
+        </script>
+    </body>
+</html>
