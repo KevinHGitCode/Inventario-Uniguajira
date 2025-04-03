@@ -6,6 +6,8 @@ function runTests() {
     testGetAll();
     // Descomente las siguientes líneas para ejecutar pruebas adicionales
     // testCreate();
+    // testUpdateName();
+    // testUpdateGroup();
     // testUpdateConservation();
     // testUpdate();
     // testDeleteWithoutItems();
@@ -38,22 +40,9 @@ function testCreate() {
     }
 }
 
-function testUpdateConservation() {
-    $inventory = new Inventory();
-    $id = 5;
-    $newConservation = 2; // Regular
-    echo "Testing updateConservation()... <br>";
-    if ($inventory->updateConservation($id, $newConservation)) {
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
-    }
-}
 
-// TODO: Separar este metodo en tres
-// * 1. Cambiar nombre
-// * 2. Mover a otro grupo
-// * 3. Cambiar estado de conservacion
+
+/* Hay que ver que se hace con este
 function testUpdate() {
     $inventory = new Inventory();
     $updateId = 5;
@@ -62,6 +51,44 @@ function testUpdate() {
     $updateState = 3; // Malo
     echo "Testing update()... <br>";
     if ($inventory->update($updateId, $updateName, $updateGrupoId, $updateState)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+*/
+
+function testUpdateName() {
+    $inventory = new Inventory();
+    $updateId = 3;
+    $updateName = "3A";
+    echo "Testing updateName()... <br>";
+    if ($inventory->updateName($updateId, $updateName)) {
+        echo "PASSED: Nombre actualizado correctamente<br>";
+    } else {
+        echo "FAILED: No se pudo actualizar el nombre<br>";
+    }
+}
+
+function testUpdateGroup() {
+    $inventory = new Inventory();
+    $updateId = 3;
+    $newGroupId = 1;
+    echo "Testing updateGroup()... <br>";
+    if ($inventory->updateGroup($updateId, $newGroupId)) {
+        echo "PASSED: Grupo actualizado correctamente<br>";
+    } else {
+        echo "FAILED: No se pudo actualizar el grupo<br>";
+    }
+}
+
+
+function testUpdateConservation() {
+    $inventory = new Inventory();
+    $id = 5;
+    $newConservation = 2; // Regular
+    echo "Testing updateConservation()... <br>";
+    if ($inventory->updateConservation($id, $newConservation)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";

@@ -43,6 +43,36 @@ class Inventory extends Database {
     }
 
     /**
+     * Cambiar el nombre de un inventario.
+     * 
+     * @param int $id ID del inventario.
+     * @param string $name Nuevo nombre del inventario.
+     * @return bool True si la operación fue exitosa, false en caso contrario.
+     */
+    public function updateName($id, $name) {
+        $stmt = $this->connection->prepare("UPDATE inventarios SET nombre = ?, fecha_modificacion = NOW() WHERE id = ?");
+        $stmt->bind_param("si", $name, $id);
+        $stmt->execute();
+
+        return $stmt->affected_rows > 0;
+    }
+
+    /**
+     * Mover un inventario a otro grupo.
+     * 
+     * @param int $id ID del inventario.
+     * @param int $grupoId Nuevo ID del grupo al que pertenece.
+     * @return bool True si la operación fue exitosa, false en caso contrario.
+     */
+    public function updateGroup($id, $grupoId) {
+        $stmt = $this->connection->prepare("UPDATE inventarios SET grupo_id = ?, fecha_modificacion = NOW() WHERE id = ?");
+        $stmt->bind_param("ii", $grupoId, $id);
+        $stmt->execute();
+
+        return $stmt->affected_rows > 0;
+    }
+
+    /**
      * Actualizar el estado de conservación de un inventario.
      * 
      * @param int $id ID del inventario.
@@ -55,29 +85,13 @@ class Inventory extends Database {
             return false; // Estado no válido
         }
         
-        $stmt = $this->connection->prepare("UPDATE inventarios SET estado_conservacion = ? WHERE id = ?");
+        $stmt = $this->connection->prepare("UPDATE inventarios SET estado_conservacion = ?, fecha_modificacion = NOW() WHERE id = ?");
         $stmt->bind_param("ii", $conservation, $id);
         $stmt->execute();
     
         return $stmt->affected_rows > 0;
     }
 
-    /**
-     * Editar un inventario existente.
-     * 
-     * @param int $id ID del inventario.
-     * @param string $name Nuevo nombre del inventario.
-     * @param int $grupoId Nuevo ID del grupo al que pertenece.
-     * @param int $state_conservation Nuevo estado de conservación.
-     * @return bool True si la operación fue exitosa, false en caso contrario.
-     */
-    public function update($id, $name, $grupoId, $state_conservation) {
-        $stmt = $this->connection->prepare("UPDATE inventarios SET nombre = ?, estado_conservacion = ?, grupo_id = ?, fecha_modificacion = NOW() WHERE id = ?");
-        $stmt->bind_param("siii", $name, $state_conservation, $grupoId, $id);
-        $stmt->execute();
-    
-        return $stmt->affected_rows > 0;
-    }
 
     /**
      * Eliminar un inventario.
