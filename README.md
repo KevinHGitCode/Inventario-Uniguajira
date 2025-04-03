@@ -23,5 +23,5 @@ Sigue estos pasos para instalar el proyecto en tu entorno local:
 1. **Clona el repositorio**
 
    ```bash
-   git clone https://github.com/tu-usuario/inventario-uniguajira.git
-   cd inventario-uniguajira
+   git clone [https://github.com/KevinHGitCode/Inventario-Uniguajira.git](https://github.com/KevinHGitCode/Inventario-Uniguajira.git)
+   cd Inventario-Uniguajira
