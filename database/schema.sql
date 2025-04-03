@@ -10,7 +10,8 @@ CREATE TABLE usuarios (
     contraseña VARCHAR(255) NOT NULL,
     rol ENUM('administrador', 'consultor') NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_ultimo_acceso TIMESTAMP NULL
+    fecha_ultimo_acceso TIMESTAMP NULL,
+    foto_perfil VARCHAR(255) -- Campo para almacenar la ruta de la imagen de perfil
 );
 
 CREATE INDEX idx_usuarios_nombre_usuario ON usuarios(nombre_usuario);
@@ -91,7 +92,8 @@ CREATE INDEX idx_inventarios_estado_conservacion ON inventarios(estado_conservac
 CREATE TABLE bienes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    tipo ENUM('Cantidad', 'Serial') NOT NULL  -- ENUM para tipos de bienes
+    tipo ENUM('Cantidad', 'Serial') NOT NULL,  -- ENUM para tipos de bienes
+    imagen VARCHAR(255)  -- Campo para almacenar la ruta de la imagen
 );
 
 CREATE INDEX idx_bienes_nombre ON bienes(nombre);
@@ -197,6 +199,7 @@ CREATE INDEX idx_reportes_fecha_creacion ON reportes(fecha_creacion);
 -- VISTAS (TABLAS VIRTUALES) PARA OPTIMIZAR CONSULTAS
 
 
+-- Vista para obtener la cantidad de cada bien en un inventario, aunque sean bien tipo serial
 -- Vista para contar todos los bienes de un inventario, excluyendo los que tienen cantidad cero
 CREATE VIEW vista_cantidades_bienes_inventario AS
 SELECT 
@@ -237,3 +240,17 @@ FROM bienes b
 JOIN bienes_inventarios bi ON b.id = bi.bien_id
 JOIN inventarios i ON bi.inventario_id = i.id
 JOIN bienes_equipos be ON bi.id = be.bien_inventario_id;
+
+
+-- Vista para obtener el número total de los bienes en el sistema
+-- Incluye bienes con cantidad cero para identificar si un bien no tiene existencias en ningún inventario
+CREATE VIEW vista_total_bienes_sistema AS
+SELECT 
+    b.id AS bien_id,
+    b.nombre AS bien,
+    COALESCE(SUM(bc.cantidad), COUNT(be.id), 0) AS total_cantidad
+FROM bienes b
+LEFT JOIN bienes_inventarios bi ON b.id = bi.bien_id
+LEFT JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
+LEFT JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
+GROUP BY b.id, b.nombre;
