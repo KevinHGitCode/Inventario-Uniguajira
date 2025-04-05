@@ -10,7 +10,6 @@ menu.addEventListener('click',()=>{
     main.classList.toggle('menu-toggle');
 });
 
-
 function loadContent(path) {
     fetch(path)
         .then(response => response.text())
@@ -19,7 +18,7 @@ function loadContent(path) {
 }
 
 // asignar evento click a las etiquetas <a> del sidebar
-// para asignar la clase seleted al elemento clickeado
+// para asignar la clase selected al elemento clickeado
 // y eliminar la clase selected de los demás elementos
 const links = document.querySelectorAll('.sidebar a');
 links.forEach(link => {
@@ -27,16 +26,29 @@ links.forEach(link => {
         links.forEach(l => l.classList.remove('selected'));
         link.classList.add('selected');
 
-        // imprimir el atributo on click
-        console.log(link.getAttribute('onclick'));
+        // guardar la ruta del elemento seleccionado en localStorage
+        const path = link.getAttribute('onclick');
+        if (path) {
+            localStorage.setItem('lastSelected', path);
+        }
     });
 });
 
-// cuando se carga la pagina, hacer click en el elemento con id home
+// cuando se carga la pagina, cargar la última opción seleccionada
+// o hacer click en el elemento con id home si no hay nada guardado
 window.onload = () => {
-    const homeElement = document.getElementById('home');
-    if (homeElement) {
-        homeElement.click();
-        // console.log("click en home");
+    const lastSelected = localStorage.getItem('lastSelected');
+    if (lastSelected) {
+        const matchingLink = Array.from(links).find(link => link.getAttribute('onclick') === lastSelected);
+        if (matchingLink) {
+            console.log(`Cargando el elemento guardado: ${lastSelected}`);
+            matchingLink.click();
+        }
+    } else {
+        const homeElement = document.getElementById('home');
+        if (homeElement) {
+            console.log('No hay elemento guardado, cargando el elemento con id "home".');
+            homeElement.click();
+        }
     }
 };

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Grupos de Inventario -->
+    <div id="grupos" class="section active container py-5">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary" data-target="inventarios" onclick="navigateTo(this)">Siguiente</button>
+        </div>
+        <h1 class="mb-4">Grupos de Inventario</h1>
+        <div class="row">
+            <!-- Cartilla 1 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Grupo 1</h5>
+                        <button class="btn btn-primary" data-target="inventarios" onclick="navigateTo(this)">Ver Inventarios</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Cartilla 2 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Grupo 2</h5>
+                        <button class="btn btn-primary" data-target="inventarios" onclick="navigateTo(this)">Ver Inventarios</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Cartilla 3 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Grupo 3</h5>
+                        <button class="btn btn-primary" data-target="inventarios" onclick="navigateTo(this)">Ver Inventarios</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventarios -->
+    <div id="inventarios" class="section container py-5">
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" data-target="grupos" onclick="navigateTo(this)">Regresar</button>
+            <button class="btn btn-secondary" data-target="inventario" onclick="navigateTo(this)">Siguiente</button>
+        </div>
+        <h1 class="mb-4">Inventarios</h1>
+        <div class="row">
+            <!-- Cartilla 1 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Inventario 1</h5>
+                        <button class="btn btn-primary" data-target="inventario" onclick="navigateTo(this)">Ver Inventario</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Cartilla 2 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Inventario 2</h5>
+                        <button class="btn btn-primary" data-target="inventario" onclick="navigateTo(this)">Ver Inventario</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Cartilla 3 -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Inventario 3</h5>
+                        <button class="btn btn-primary" data-target="inventario" onclick="navigateTo(this)">Ver Inventario</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventario -->
+    <div id="inventario" class="section container py-5">
+        <div class="d-flex justify-content-start">
+            <button class="btn btn-secondary" data-target="inventarios" onclick="navigateTo(this)">Regresar</button>
+        </div>
+        <h1 class="mb-4">Inventario</h1>
+        <p>Detalles del inventario seleccionado.</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function navigateTo(button) {
+            const targetId = button.getAttribute('data-target');
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // Mostrar la sección seleccionada
+            document.getElementById(targetId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
