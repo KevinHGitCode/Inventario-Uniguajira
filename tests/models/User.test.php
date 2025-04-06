@@ -2,15 +2,15 @@
 require_once '../../app/models/User.php';
 
 function runTests() {
-    // testGetAllUsers();
+    testGetAllUsers();
     // testCreateUser();
     // testUpdateUser();
     // testUpdatePassword(1, "admin");
     // testUpdatePassword(6, "consul");
     // testDeleteUser();
    
-    testAuthentication("renzo", "1234");
-    testAuthentication("RENZO", "1234");
+    // testAuthentication("renzo", "1234");
+    // testAuthentication("RENZO", "1234");
 }
 
 function testGetAllUsers() {
@@ -42,7 +42,7 @@ function testCreateUser() {
         $contraseña = "1234";
         $rol = 1;
 
-        $resultado = $user->createUser($nombre, $email, $contraseña, $rol);
+        $resultado = $user->createUser($nombre, $email, $contraseña, $rol, null, null, null);   
         echo $resultado;
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
@@ -92,7 +92,7 @@ function testAuthentication($nombre, $contraseña) {
     
 $user = new User();
 try {
-    $resultado = $user->authenticate($nombre, $contraseña);
+    $resultado = $user->authentication($nombre, $contraseña);
 
     if ($resultado) {
         echo "Autenticación exitosa. Bienvenido, " . $resultado['nombre'] . "<br>";

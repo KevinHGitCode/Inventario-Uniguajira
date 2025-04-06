@@ -50,6 +50,7 @@ class ctlUser {
             $_SESSION['user_email'] = $dataUser['email'];
             $_SESSION['user_rol'] = $dataUser['rol'];
             // $_SESSION['user_img'] = $dataUser['img'];
+            $this->userModel->updateUltimoAcceso($dataUser['id']);
 
             header("Location: /");
         } else {

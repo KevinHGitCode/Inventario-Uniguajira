@@ -158,6 +158,18 @@ class User extends Database {
         }
     }
 
+    // TODO: validar
+    public function updateUltimoAcceso($id) {
+        try {
+            $query = "UPDATE usuarios SET fecha_ultimo_acceso = NOW() WHERE id = ?";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error al actualizar el último acceso: " . $e->getMessage());
+        }
+    }
+
     /**
      * Elimina un usuario por su ID.
      *
