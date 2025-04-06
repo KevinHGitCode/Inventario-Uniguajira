@@ -11,207 +11,70 @@
 /* TODO: Refactorizar los estilos del login */
 
 /*Colors*/
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Nunito Sans", sans-serif;
 
+h2 {
+   color: #a50029d5;
+   text-align: center;
+   margin-bottom: 20px;
 }
 
- body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #fff;
- }
-
- 
-
- .wrapper {
-    width: 420px;
-    background-color: orange;
-    border: 2px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 10 rgba(0, 0, 0, .2);
-    color: black;
-    border-radius: 20px;
-    padding: 30px 40px;
- }
-
- .wrapper h1 {
-    font-size: 36px;
-    text-align: center;
-
- }
-
- .wrapper .input-box {
-
-    width: 100%;
-    height: 50px;
-    margin: 30px 0;
- }
-
- .input-box input {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
-    border-radius: 40px;
-    font-size: 16px;
-    color: black;
-    padding: 20px 45px 20px 20px;
- }
-
- .input-box  input::placeholder {
-    color:black;
-
- }
-
- .input-box i {
-    position: absolute;
-    right: 60px;
-    top: 20;
-    transform: translateY(60%);
-    font-size: 20px;
- }
-
- .wrapper .remember-forgot {
-    display: flex;
-    justify-content:space-around;
-    margin: 3px;
- }
-
- .remember-forgot label input {
-  accent-color: #963f3f;
-  margin-right: 3px ;
-
- }
-
- .remember-forgot a{
-
-    color: black;
-    text-decoration: none;
- }
-.remember-forgot a:hover {
-    text-decoration: underline;
-
-}
-
-.wrapper .btn {
-    width: 100%;
-    height: 35px;
-    background-color: black;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px white(0, 0, 0, .1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    font-weight: 600;
-
-}
-
-.wrapper .space-1 {
-    color: orange;
-}
-.wrapper .space-2 {
-    color: orange;
-}
-
-/* Establecer el fondo blanco y el estilo general */
-
-
-/*body {
-   background-color: white;
-   margin: 0;
-   padding: 0;
+body {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    height: 100vh;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   font-family: Arial, sans-serif;
-   overflow: hidden; /* Evitar desplazamiento debido a las manchas * /
-} 
-
-
-
-
-
-p {
-   color: #666;
-}
-
-/* Estilo para las manchas naranjas * /
-body::before,
-body::after {
-   content: "";
-   position: absolute;
-   width: 300px;
-   height: 300px;
-   background-color: orange;
-   transform: translateX(-30);
-   transform: translateY(100);
-   border-radius: 40%;
-   opacity: 0.6;
-   animation: moverManchas 3s infinite ease-in-out;
-}
-
-body::before {
-   top: 10%;
-   left: 10%;
-}
-
-body::after {
-   bottom: 15%;
-   right: 15%;
-} */
- 
-/* Establecer un fondo blanco */
-html, body {
-   height: 100%;
    margin: 0;
-   padding: 0;
 }
 
-/* Fondo blanco */
-/*body {
-   background-color: white;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   overflow: hidden;
-}*/
+.background-image {
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+   position: fixed;
+   top: -20%;
+   left: 0;
+   width: 100%;
+   z-index: -1;
+}
 
-/* Estilo para las manchas de las células */
-.celula {
+
+.login-container {
    position: absolute;
-   background: #F4A300;  /* Naranja cálido */
-   border-radius: 50%;  /* Forma redonda para simular una célula */
-   
+   background-color: rgba(198, 198, 198, 0.684);
+   padding: 30px;
+   border-radius: 15px;
+   border: 2px solid #990127ba;
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+   width: 100%;
+   max-width: 400px;
 }
 
-/* Célula 1 en la esquina superior izquierda */
-.celula1 {
-   width: 350px;
-   height: 350px;
-   transform: translateY(70%);
-   top: 5%;
-   left: 120%;
-   
+.login-container h2 {
+   text-align: center;
+   margin-bottom: 20px;
 }
 
-/* Célula 2 en la esquina inferior derecha */
-.celula2 {
-   width: 400px;
-   height: 400px;
-   transform: translateY(-60%);
-   bottom: 5%;
-   right: 120%;
- 
+.form-group {
+   margin-bottom: 1.5rem;
+   font-weight: bold;
+   color: #9e0027d7;
+}
+
+.form-control {
+   border-radius: 10px;
+}
+
+#username::placeholder {
+   color: #9e0027d7;
+   
+}
+#password::placeholder {
+   color: #9e0027d7;
+  
+}
+
+.btn-custom {
+   border-radius: 10px;
+   background-color: #990227ce;
+   border: 2px solid #990227ce;
 }

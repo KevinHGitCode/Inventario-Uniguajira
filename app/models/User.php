@@ -22,7 +22,7 @@ class User extends Database {
      * @return array|null Datos del usuario o null si no se encuentra.
      */
     public function getById($id) {
-        $stmt = $this->connection->prepare("SELECT id, nombre, email, rol FROM usuarios WHERE id = ?");
+        $stmt = $this->connection->prepare("SELECT id, nombre, nombre_usuario, email, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil  FROM usuarios WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -37,7 +37,7 @@ class User extends Database {
      */
     public function getAllUsers() {
         try {
-            $query = "SELECT id, nombre, email, rol FROM usuarios";
+            $query = "SELECT id, nombre, nombre_usuario, email, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil  FROM usuarios";
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
 
@@ -58,9 +58,9 @@ class User extends Database {
      * @return string Mensaje de éxito.
      * @throws Exception Si ocurre un error al crear el usuario.
      */
-    public function createUser($nombre, $email, $contraseña, $rol) {
+    public function createUser($nombre, $email, $contraseña, $rol, $fecha_creacion, $fecha_ultimo_Acceso, $foto_perfil = null) {
         try {
-            $query = "INSERT INTO usuarios (nombre, email, contraseña, rol) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO usuarios (nombre, nombr_usuario,  email, contraseña, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil) VALUES (?, ?, ?, ?)";
             $stmt = $this->connection->prepare($query);
             $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT); // Encriptar la contraseña
             $stmt->bind_param("sssi", $nombre, $email, $hashedPassword, $rol);
@@ -86,7 +86,7 @@ class User extends Database {
      * @return string Mensaje de éxito o de que no hubo cambios.
      * @throws Exception Si ocurre un error al actualizar el usuario.
      */
-    public function updateUserR($id, $nombre, $email, $contraseña, $rol) {
+    public function updateUserRol($id, $nombre, $email, $contraseña, $rol) {
         try {
             $query = "UPDATE usuarios SET nombre = ?, email = ?, contraseña = ?, rol = ? WHERE id = ?";
             $stmt = $this->connection->prepare($query);
@@ -114,12 +114,11 @@ class User extends Database {
      * @return string Mensaje de éxito o de que no hubo cambios.
      * @throws Exception Si ocurre un error al actualizar el usuario.
      */
-    public function updateUser($id, $nombre, $email, $contraseña) {
+    public function updateUser($id, $nombre, $email) {
         try {
-            $query = "UPDATE usuarios SET nombre = ?, email = ?, contraseña = ? WHERE id = ?";
+            $query = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
             $stmt = $this->connection->prepare($query);
-            $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT); // Encriptar la contraseña
-            $stmt->bind_param("sssi", $nombre, $email, $hashedPassword, $id);
+            $stmt->bind_param("ssi", $nombre, $email, $id);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
@@ -198,26 +197,38 @@ class User extends Database {
     // TODO: Actualizar el metodo, a autenticacion debe ser con nombre de usuario o email
     // TODO: No debe regresar la contraseña
     // TODO: Debe distinguir entre mayusculas y minusculas
-    public function authentication($nombre, $contraseña) {
+       
+    
+    public function authentication($identificador, $contraseña) {
         try {
-            $query = "SELECT id, nombre, email, contraseña, rol FROM usuarios WHERE nombre = ?";
+            // Consulta para buscar al usuario por nombre (sensible a mayúsculas y minúsculas)
+            $query = "SELECT id, nombre, email, 
+                rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil,
+                 contraseña FROM usuarios WHERE BINARY nombre_usuario = ? OR BINARY email = ?";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param("s", $nombre);
+            $stmt->bind_param("ss", $identificador, $identificador);
             $stmt->execute();
             $result = $stmt->get_result();
             $usuario = $result->fetch_assoc();
-
+    
             if ($usuario) {
+                // Verificar si la contraseña coincide
                 if (password_verify($contraseña, $usuario['contraseña'])) {
-                    return $usuario;
+                    // Eliminar la contraseña antes de devolver los datos
+                    unset($usuario['contraseña']);
+                    return $usuario; // Devuelve los datos del usuario si las credenciales coinciden
                 } else {
-                    return false;
+                    return false; // Contraseña incorrecta
                 }
             } else {
-                return false;
+                return false; // Usuario no encontrado
             }
         } catch (Exception $e) {
             throw new Exception("Error al autenticar el usuario: " . $e->getMessage());
         }
     }
+    
+
+    
 }
+?>

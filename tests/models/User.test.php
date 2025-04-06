@@ -2,18 +2,15 @@
 require_once '../../app/models/User.php';
 
 function runTests() {
-    testGetAllUsers();
+    // testGetAllUsers();
     // testCreateUser();
     // testUpdateUser();
     // testUpdatePassword(1, "admin");
     // testUpdatePassword(6, "consul");
     // testDeleteUser();
-    testAuthentication("Administrador", "admin");
+   
     testAuthentication("renzo", "1234");
-    testAuthentication("luis", "1234");
-    testAuthentication("danil", "1234");
-    testAuthentication("kevin", "1234");
-    testAuthentication("Consultor", "consul");
+    testAuthentication("RENZO", "1234");
 }
 
 function testGetAllUsers() {
@@ -24,8 +21,12 @@ function testGetAllUsers() {
         foreach ($todosLosUsuarios as $usuario) {
             echo "ID: " . $usuario['id'] . "<br>";
             echo "Nombre: " . $usuario['nombre'] . "<br>";
+            echo "Nombre de usuario: " . $usuario['nombre_usuario'] . "<br>";
             echo "Email: " . $usuario['email'] . "<br>";
             echo "Rol: " . $usuario['rol'] . "<br>";
+            echo "Fecha de creación: " . $usuario['fecha_creacion'] . "<br>";
+            echo "Último acceso: " . $usuario['fecha_ultimo_acceso'] . "<br>";
+            echo "Foto de perfil: " . $usuario['foto_perfil'] . "<br>";
             echo "------------------------<br>";
         }
     } catch (Exception $e) {
@@ -86,15 +87,31 @@ function testDeleteUser() {
     }
 }
 
+
 function testAuthentication($nombre, $contraseña) {
-    $user = new User();
-    try {
-        echo "<pre>";
-        var_dump($user->authentication($nombre, $contraseña));
-        echo "</pre>";
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+    
+$user = new User();
+try {
+    $resultado = $user->authenticate($nombre, $contraseña);
+
+    if ($resultado) {
+        echo "Autenticación exitosa. Bienvenido, " . $resultado['nombre'] . "<br>";
+        echo "Datos del usuario:<br>";
+        echo "ID: " . $resultado['id'] . "<br>";
+        echo "Email: " . $resultado['email'] . "<br>";
+        echo "Rol: " . $resultado['rol'] . "<br>";
+        echo "Fecha de creación: " . $resultado['fecha_creacion'] . "<br>";
+        echo "Último acceso: " . $resultado['fecha_ultimo_acceso'] . "<br>";
+        echo "Foto de perfil: " . $resultado['foto_perfil'] . "<br>";
+    } else {
+        echo "Error: Usuario o contraseña incorrectos.<br>";
     }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "<br>";
 }
+}
+
+
+
 
 runTests();

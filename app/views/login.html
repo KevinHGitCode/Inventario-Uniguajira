@@ -1,56 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet" href="assets/css/login.css" />
-        <link
-            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-            rel="stylesheet"
-        />
-    </head>
-    <body>
-        <div class="wrapper">
-            <!-- solisitud http -->
-            <form action="/api/login" method="POST">
+<html lang="es">
 
-                <h1>iniciar sesion</h1>
-                <div class="input-box">
-                    <input name="username" type="text" placeholder="usuario" required />
-                    <i class="bx bxs-user-circle"></i>
-                </div>
-                <div class="input-box">
-                    <input
-                        name="password"
-                        type="password"
-                        placeholder="contraseña"
-                        required
-                    />
-                    <i class="bx bxs-lock-alt"></i>
-                </div>
-                <!-- <div class="remember-forgot">
-                    <label>¿olvido contraseña?</label>
-                    <a href="#"> ¿recuperar contraseña? </a>
-                </div> -->
-                <div class="space-1">.</div>
-                <button type="submit" class="btn">ingreso</button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    
+    <!-- Enlace al archivo CSS de Bootstrap desde el CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/login.css" />
 
-            </form>
+   
+</head>
 
-            <!-- Circulos y logo (se movieron fuera del formulario) -->
-            <!-- <label for="" class="brand">
-                <a href="">
-                    <img src="assets/images/logoUniguajira.png" />
-                </a>
-            </label>
+<body>
+    <!-- imagen de fondo -->
+    <img class="background-image" src="assets\images\fondo-auditorio-uniguajira.jpg"></img>
+    <!-- Contenedor del formulario -->
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form action="/api/login" method="POST">
+            <!-- Campo de Usuario -->
+            <div class="form-group">
+                <label for="username">usuario</label>
+                <input name="username" type="text" class="form-control" id="username" placeholder="Ingresa tu usuario" required>
+            </div>
 
-            <div class="space-2">.</div>
+            <!-- Campo de Contraseña -->
+            <div class="form-group">
+                <label for="password">contraseña</label>
+                <input name="password"  type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+            </div>
 
-            <div class="celula celula1"></div>
-            <div class="celula celula2"></div> -->
+            <!-- Botón de Ingreso -->
+            <button type="submit" class="btn btn-primary btn-block btn-custom">Ingresar</button>
+        </form>
+    </div>
+    
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 
-        </div>
-    </body>
 </html>
