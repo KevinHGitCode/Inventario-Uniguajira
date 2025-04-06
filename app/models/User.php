@@ -158,7 +158,8 @@ class User extends Database {
         }
     }
 
-    // TODO: validar
+    // TODO: Problema, el ultimo acceso no se guarda como la hora real
+    // explicaion: la fecha se guarda pero la hora es diferente
     public function updateUltimoAcceso($id) {
         try {
             $query = "UPDATE usuarios SET fecha_ultimo_acceso = NOW() WHERE id = ?";
@@ -209,8 +210,6 @@ class User extends Database {
     // TODO: Actualizar el metodo, a autenticacion debe ser con nombre de usuario o email
     // TODO: No debe regresar la contraseña
     // TODO: Debe distinguir entre mayusculas y minusculas
-       
-    
     public function authentication($identificador, $contraseña) {
         try {
             // Consulta para buscar al usuario por nombre (sensible a mayúsculas y minúsculas)
