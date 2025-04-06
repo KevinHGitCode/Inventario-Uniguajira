@@ -9,5 +9,7 @@ function toggleUserMenu() {
 }
 
 function logout() {
+    // Eliminar la última opción seleccionada antes de cerrar sesión
+    localStorage.removeItem('lastSelected');
     window.location.href = '/api/logout'; // Redirigir al endpoint correcto del backend
 }
