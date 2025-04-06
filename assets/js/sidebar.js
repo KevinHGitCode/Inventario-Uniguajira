@@ -33,7 +33,7 @@ links.forEach(link => {
 
         // guardar la ruta del elemento seleccionado en localStorage
         const path = link.getAttribute('onclick');
-        cosole.log(path)
+        console.log(path)
         if (path) {
             localStorage.setItem('lastSelected', path);
         }
