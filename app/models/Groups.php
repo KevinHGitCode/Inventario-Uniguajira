@@ -23,7 +23,7 @@ class Groups extends Database {
      * @return array Arreglo asociativo con todos los grupos.
      */
     public function getAllGroups() {
-        $stmt = $this->connection->prepare("SELECT * FROM grupos");
+        $stmt = $this->connection->prepare("SELECT id, nombre FROM grupos");
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }

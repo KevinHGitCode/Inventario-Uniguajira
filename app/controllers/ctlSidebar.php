@@ -47,13 +47,13 @@ class ctlSidebar {
      * @return void
      */
     public function inventary() {
-        require_once __DIR__ . '/../models/Inventory.php';
-        $inventory = new Inventory();
+        require_once __DIR__ . '/../models/Groups.php';
+        $groups = new Groups();
 
-        // Logic for inventary view
+        $dataGroups = $groups->getAllGroups(); // Get all groups from the model
+
+        // Pass $dataGroups to the view
         require __DIR__ . '/../views/inventary.php';
-
-        echo "Hola desde ctlSidebar - metodo inventory";
     }
 
     /**

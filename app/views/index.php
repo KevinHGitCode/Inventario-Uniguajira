@@ -42,5 +42,6 @@
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/goods.js"></script>
+    <script src="assets/js/inventory.js"></script>
 </body>
 </html>
