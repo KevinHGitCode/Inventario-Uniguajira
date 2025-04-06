@@ -20,6 +20,11 @@ $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/logout', 'ctlUser', 'logout');
 
 
+// Rutas para la API de bienes
+$router->add('/api/goods/create', 'ctlGoods', 'create');
+
+
+
 // Mas rutas...
 
 

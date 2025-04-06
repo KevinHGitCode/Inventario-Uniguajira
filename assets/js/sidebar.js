@@ -16,7 +16,9 @@ function loadContent(path) {
         .then(html => {
             document.getElementById('main').innerHTML = html;
             if (path === '/goods') {
-                iniciarBusqueda(); 
+                iniciarBusqueda();
+                inicializarModalBien();
+                inicializarFormularioBien();
             }
         });
 }

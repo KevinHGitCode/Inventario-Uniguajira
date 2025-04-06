@@ -37,11 +37,12 @@ class Goods extends Database {
      * @param int $tipo Tipo del bien (representado como un entero).
      * @return bool True si la operación fue exitosa, False en caso contrario.
      */
-    public function create($nombre, $tipo) {
-        $stmt = $this->connection->prepare("INSERT INTO bienes (nombre, tipo) VALUES (?, ?)");
-        $stmt->bind_param("si", $nombre, $tipo);
+    public function create($nombre, $tipo, $imagenRuta) {
+        $stmt = $this->connection->prepare("INSERT INTO bienes (nombre, tipo, imagen) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $nombre, $tipo, $imagenRuta);
         return $stmt->execute();
     }
+    
     
     /**
      * Modificar el nombre de un bien.
