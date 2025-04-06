@@ -248,6 +248,7 @@ CREATE VIEW vista_total_bienes_sistema AS
 SELECT 
     b.id AS bien_id,
     b.nombre AS bien,
+    b.imagen AS imagen, -- Agregar la columna para mostrar el campo "imagen"
     COALESCE(SUM(bc.cantidad), COUNT(be.id), 0) AS total_cantidad
 FROM bienes b
 LEFT JOIN bienes_inventarios bi ON b.id = bi.bien_id

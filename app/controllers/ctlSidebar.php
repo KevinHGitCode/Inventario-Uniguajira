@@ -35,11 +35,10 @@ class ctlSidebar {
     public function goods() {
         require_once __DIR__ . '/../models/Goods.php';
         $goods = new Goods();
+        $dataGoods = $goods->getAll(); // Get all goods from the model
 
         // Logic for goods view
         require __DIR__ . '/../views/goods.php';
-
-        echo "Hola desde ctlSidebar - metodo goods";
     }
 
     /**

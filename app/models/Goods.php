@@ -23,11 +23,12 @@ class Goods extends Database {
      * @return array Lista de bienes con sus campos 'id', 'nombre' y 'tipo'.
      */
     public function getAll() {
-        $stmt = $this->connection->prepare("SELECT id, nombre, tipo FROM bienes");
+        $stmt = $this->connection->prepare("SELECT bien_id, bien, total_cantidad, imagen FROM vista_total_bienes_sistema");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
 
     /**
      * Crear un nuevo bien.
