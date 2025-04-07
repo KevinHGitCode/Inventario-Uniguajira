@@ -23,7 +23,15 @@ class Inventory extends Database {
      * @return array Arreglo asociativo con todos los registros de la tabla 'inventarios'.
      */
     public function getAll() {
-        $stmt = $this->connection->prepare("SELECT * FROM inventarios");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                grupo_id, 
+                fecha_modificacion, 
+                estado_conservacion 
+            FROM inventarios
+        ");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);

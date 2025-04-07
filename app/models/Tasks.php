@@ -41,7 +41,16 @@ class Tasks extends Database {
      * @return array Arreglo asociativo con las tareas del usuario
      */
     public function getByUser($usuario_id) {
-        $stmt = $this->connection->prepare("SELECT id, nombre, descripcion, fecha, estado FROM tareas WHERE usuario_id = ?");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                descripcion, 
+                fecha, 
+                estado 
+            FROM tareas 
+            WHERE usuario_id = ?
+        ");
         $stmt->bind_param("i", $usuario_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -60,7 +69,14 @@ class Tasks extends Database {
         }
         // Obtener todas las tareas
         // Solo los administradores pueden ver todas las tareas
-        $stmt = $this->connection->prepare("SELECT id, nombre, descripcion, estado FROM tareas");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                descripcion, 
+                estado 
+            FROM tareas
+        ");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);

@@ -22,7 +22,19 @@ class User extends Database {
      * @return array|null Datos del usuario o null si no se encuentra.
      */
     public function getById($id) {
-        $stmt = $this->connection->prepare("SELECT id, nombre, nombre_usuario, email, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil  FROM usuarios WHERE id = ?");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                nombre_usuario, 
+                email, 
+                rol, 
+                fecha_creacion, 
+                fecha_ultimo_acceso, 
+                foto_perfil 
+            FROM usuarios 
+            WHERE id = ?
+        ");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -37,12 +49,20 @@ class User extends Database {
      */
     public function getAllUsers() {
         try {
-            $query = "SELECT id, nombre, nombre_usuario, email, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil  FROM usuarios";
-            $stmt = $this->connection->prepare($query);
+            $stmt = $this->connection->prepare("
+                SELECT 
+                    id, 
+                    nombre, 
+                    nombre_usuario, 
+                    email, 
+                    rol, 
+                    fecha_creacion, 
+                    fecha_ultimo_acceso, 
+                    foto_perfil 
+                FROM usuarios
+            ");
             $stmt->execute();
-
-            $usuarios = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-            return $usuarios;
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             throw new Exception("Error al obtener los usuarios: " . $e->getMessage());
         }

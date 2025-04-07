@@ -23,7 +23,12 @@ class Groups extends Database {
      * @return array Arreglo asociativo con todos los grupos.
      */
     public function getAllGroups() {
-        $stmt = $this->connection->prepare("SELECT id, nombre FROM grupos");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre 
+            FROM grupos
+        ");
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
@@ -35,7 +40,16 @@ class Groups extends Database {
      * @return array Arreglo asociativo con los inventarios del grupo.
      */
     public function getInventoriesByGroup($groupId) {
-        $stmt = $this->connection->prepare("SELECT * FROM inventarios WHERE grupo_id = ?");
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                responsable_id, 
+                fecha_modificacion, 
+                estado_conservacion 
+            FROM inventarios 
+            WHERE grupo_id = ?
+        ");
         $stmt->bind_param("i", $groupId);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
