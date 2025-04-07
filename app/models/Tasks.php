@@ -35,11 +35,31 @@ class Tasks extends Database {
     }
 
     /**
+     * Obtener todas las tareas de un usuario específico.
+     * 
+     * @param int $usuario_id ID del usuario cuyas tareas se quieren obtener
+     * @return array Arreglo asociativo con las tareas del usuario
+     */
+    public function getByUser($usuario_id) {
+        $stmt = $this->connection->prepare("SELECT id, nombre, descripcion, fecha, estado FROM tareas WHERE usuario_id = ?");
+        $stmt->bind_param("i", $usuario_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
      * Obtener la lista de todas las tareas.
      * 
      * @return array Devuelve un arreglo asociativo con las tareas (id, nombre, descripción, estado).
      */
     public function getAll() {
+        // Verificar si el usuario es administrador
+        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+            return []; // O podrías lanzar una excepción
+        }
+        // Obtener todas las tareas
+        // Solo los administradores pueden ver todas las tareas
         $stmt = $this->connection->prepare("SELECT id, nombre, descripcion, estado FROM tareas");
         $stmt->execute();
         $result = $stmt->get_result();
@@ -47,28 +67,28 @@ class Tasks extends Database {
     }
 
     /**
-     * Modificar una tarea.
+     * Modificar una tarea con verificación de propiedad.
      * 
      * @param int $id ID de la tarea a modificar.
      * @param string $name Nuevo nombre de la tarea.
      * @param string $description Nueva descripción de la tarea.
      * @return bool Devuelve true si la tarea se actualizó correctamente, false en caso contrario.
      */
-    public function updateName($id, $name, $description) {
-        $stmt = $this->connection->prepare("UPDATE tareas SET nombre = ?, descripcion = ? WHERE id = ?");
-        $stmt->bind_param("ssi", $name, $description, $id);
+    public function updateName($id, $name, $description, $usuario_id) {
+        $stmt = $this->connection->prepare("UPDATE tareas SET nombre = ?, descripcion = ? WHERE id = ? AND usuario_id = ?");
+        $stmt->bind_param("ssii", $name, $description, $id, $usuario_id);
         return $stmt->execute();
     }
 
     /**
-     * Eliminar una tarea.
+     * Eliminar una tarea con verificación de propiedad.
      * 
      * @param int $id ID de la tarea a eliminar.
      * @return bool Devuelve true si la tarea se eliminó correctamente, false en caso contrario.
      */
-    public function delete($id) {
-        $stmt = $this->connection->prepare("DELETE FROM tareas WHERE id = ?");
-        $stmt->bind_param("i", $id);
+    public function delete($id, $usuario_id) {
+        $stmt = $this->connection->prepare("DELETE FROM tareas WHERE id = ? AND usuario_id = ?");
+        $stmt->bind_param("ii", $id, $usuario_id);
         return $stmt->execute();
     }
 
@@ -80,10 +100,10 @@ class Tasks extends Database {
      * @param int $id ID de la tarea cuyo estado se desea cambiar.
      * @return bool Devuelve true si el estado se cambió correctamente, false en caso contrario.
      */
-    public function changeState($id) {
+    public function changeState($id, $usuario_id) {
         $stmt = $this->connection->prepare("UPDATE tareas SET estado = IF(estado = 'por hacer', 
-                                            'completado', 'por hacer') WHERE id = ?");
-        $stmt->bind_param("i", $id);
+                                            'completado', 'por hacer') WHERE id = ? AND usuario_id = ?");
+        $stmt->bind_param("ii", $id, $usuario_id);
         $stmt->execute();
 
         return $stmt->affected_rows > 0;

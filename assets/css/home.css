@@ -1,121 +1,82 @@
-/*Colors*/
-/* No se han definido los colores para estos estilos */
-/* :root {
+.task-card.completed {
+    opacity: 0.7;
+}
 
-} */
+.task-card.completed .task-title {
+    text-decoration: line-through;
+    color: #888;
+}
 
-/* DESCRIPCION: Este archivo tiene los estilos para la lista de tareas */
+.button.check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.button.check:hover {
+    border-color: #666;
+}
 
 .container-list-task {
     display: flex;
-    height: 100vh; /* Altura completa de la ventana */ 
-    /* ELEMENTOS CENTRADOS */
-    align-items: center; /* Centrar verticalmente */
-    justify-content: center; /* Centrar horizontalmente */
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
 }
 
-.contenedor-hijo {
-    /* flex: 1; Cada hijo ocupa una fracción igual del espacio */
-    background-color: #a2a7ac;
-    margin: 5px;
-}
-
-.tittle-list-task {
-    margin-top: 10px;
-}
-
-/* Contenedor principal de la tarjeta */
 .task-card {
     display: flex;
     align-items: center;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    gap: 12px;
+    padding: 12px;
+    background: #fff;
     border-radius: 8px;
-    padding: 16px;
-    margin: 10px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 40%; /* Ancho máximo de la tarjeta */
-    width: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Botón de check */
-.button.check {
-    background-color: #ffffff; /* Color verde */
-    color: white;
-    border: 1px solid #413e3ed2;
-    border-radius: 50%; /* Forma circular */
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    margin-right: 12px; /* Espacio entre el botón y el contenido */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Contenedor del título y la duración */
 .task-content {
-    flex: 1;
+    flex-grow: 1;
 }
 
-/* Estilo del título */
 .task-title {
     margin: 0;
-    font-size: 18px;
-    font-weight: bold;
-    color: #333333;
+    font-size: 16px;
 }
 
-/* Estilo de la duración */
 .task-duration {
     margin: 4px 0 0;
     font-size: 14px;
-    color: #666666;
+    color: #666;
 }
 
-/* Estilo de la fecha */
 .task-date {
     margin: 0;
     font-size: 14px;
-    color: #888888;
+    color: #666;
+    white-space: nowrap;
 }
 
-/* ESTILOS DEL BOTÓN AÑADIR */
-
-/* Estilos generales del botón */
 .add-task-button {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background-color: #4d79ff; /* Color de fondo azul */
-    color: white; /* Color del texto */
+    gap: 8px;
+    padding: 12px;
+    background: #f0f0f0;
     border: none;
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px 20px; /* Espacio interno */
-    font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Transición suave al hacer hover */
+    width: 100%;
+    justify-content: center;
+    margin-top: 12px;
 }
 
-/* Estilos del ícono "+" */
-.add-task-button .icon {
-    font-size: 20px;
-    margin-right: 8px; /* Espacio entre el ícono y el texto */
-}
-
-/* Estilos del texto */
-.add-task-button .text {
-    font-weight: bold;
-}
-
-/* Efecto hover */
 .add-task-button:hover {
-    background-color: #3a5fcc; /* Color de fondo más oscuro al hacer hover */
-}
-
-/* Efecto active (al hacer clic) */
-.add-task-button:active {
-    background-color: #2a4da6; /* Color de fondo aún más oscuro al hacer clic */
+    background: #e0e0e0;
 }

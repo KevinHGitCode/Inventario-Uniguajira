@@ -9,8 +9,11 @@ class ctlSidebar {
      * Constructor de la clase ctlSidebar.
      */
     public function __construct() {
-        // Constructor vacío, los modelos se cargarán en los métodos correspondientes.
-    }
+        // Verifica si la sesión está iniciada
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit();
+        }}
 
     /**
      * Muestra la vista principal (home).
@@ -21,7 +24,7 @@ class ctlSidebar {
     public function home() {
         require_once __DIR__ . '/../models/Tasks.php';
         $task = new Tasks();
-
+        $dataTasks = $task->getByUser($_SESSION['user_id']); // Get tasks for the logged-in user
         $username = $_SESSION['user_name'];
         // Pass $username to the view
         require __DIR__ . '/../views/home.php';
