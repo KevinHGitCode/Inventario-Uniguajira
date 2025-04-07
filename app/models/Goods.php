@@ -70,6 +70,27 @@ class Goods extends Database {
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
-}
 
+    /**
+     * Obtener la cantidad de un bien por su ID.
+     * 
+     * @param int $id ID del bien.
+     * @return int Cantidad del bien.
+     */
+    public function getQuantityById($id) {
+        $stmt = $this->connection->prepare("SELECT total_cantidad FROM vista_total_bienes_sistema WHERE bien_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($row = $result->fetch_assoc()) {
+            error_log("Buscando cantidad del bien $id");
+            return (int)$row['total_cantidad'];
+        } else {
+            error_log("Buscando cantidad del bien $id");
+            return 0; // Si no encontró nada, asumimos cantidad 0
+        }
+    }
+    
+}
 ?>

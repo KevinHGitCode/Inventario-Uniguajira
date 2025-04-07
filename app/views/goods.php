@@ -15,14 +15,14 @@
         <div class="bienes-grid">
             <?php foreach ($dataGoods as $bien): ?>
                 <div class="bien-card">
-                    <img src="<?= htmlspecialchars($bien['imagen']) ?>" class="bien-image">
+                    <img src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/default.jpg') ?>" class="bien-image">
                     <div class="bien-info">
                         <h3><?= htmlspecialchars($bien['bien']) ?></h3>
                         <p>Cantidad: <?= $bien['total_cantidad'] ?></p>
                     </div>
                     <div class="actions">
                         <a href="#"><i class="fas fa-edit"></i></a>
-                        <a href="#"><i class="fas fa-trash"></i></a>
+                        <a href="#" class="btn-eliminar" data-id="<?= $bien['bien_id'] ?>"><i class="fas fa-trash"></i></a>
                     </div>
                 </div>
             <?php endforeach; ?>

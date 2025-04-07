@@ -19,6 +19,7 @@ function loadContent(path) {
                 iniciarBusqueda();
                 inicializarModalBien();
                 inicializarFormularioBien();
+                inicializarBotonesEliminar();
             }
         });
 }

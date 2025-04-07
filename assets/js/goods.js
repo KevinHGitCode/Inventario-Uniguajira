@@ -52,41 +52,87 @@ function inicializarFormularioBien() {
 
         const formData = new FormData(form);
 
-        form.addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            const formData = new FormData(form);
-
-            fetch("/api/goods/create", {
-                method: "POST",
-                body: formData
-            })
-            .then(res => {
-                if (!res.ok) {
-                    // Aquí capturamos si el status no es 200
-                    throw new Error("Error HTTP: " + res.status);
-                }
-                return res.json(); // Ya es seguro hacer .json()
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    // Puedes cerrar el modal y recargar la lista
-                    document.getElementById("modalCrear").style.display = "none";
+        fetch("/api/goods/create", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Error HTTP: " + res.status);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Bien guardado!',
+                    text: data.message,
+                    confirmButtonColor: '#a31927',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    modal.style.display = "none";
                     loadContent('/goods');
-                } else {
-                    alert("No se pudo guardar el bien: " + data.message);
-                }
-            })
-            .catch(err => {
-                console.error("Error al crear el bien:", err);
-                alert("Hubo un error al enviar el formulario.");
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Error al crear el bien:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Hubo un error al enviar el formulario.'
             });
         });
-
     });
 }
 
+
+
+function inicializarBotonesEliminar() {
+    document.querySelectorAll('.btn-eliminar').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Esta acción no se puede deshacer!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/goods/delete/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('¡Eliminado!', data.message, 'success')
+                                .then(() => loadContent('/goods'));
+                        } else {
+                            Swal.fire('Error', data.message, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error al eliminar el bien:", err);
+                        Swal.fire('Oops...', 'Hubo un error al eliminar.', 'error');
+                    });
+                }
+            });
+        });
+    });
+}
 
 
 
