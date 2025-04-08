@@ -4,11 +4,10 @@ require_once '../../app/models/Groups.php';
 
 function runTests() {
     testGetAllGroups();
-    // Descomente las siguientes líneas para ejecutar pruebas adicionales
-    // testGetInventoriesByGroup();
-    // testCreateGroup();
-    // testUpdateGroup();
-    // testDeleteGroup();
+    // testGetInventoriesByGroup(1);
+    // testCreateGroup("Grupo de prueba2");
+    // testUpdateGroup(6, "Nombre Actualizado 3");
+    // testDeleteGroup(6);
 }
 
 function testGetAllGroups() {
@@ -25,9 +24,8 @@ function testGetAllGroups() {
     }
 }
 
-function testGetInventoriesByGroup() {
+function testGetInventoriesByGroup($groupId) {
     $group = new Groups();
-    $groupId = 1; // Cambia esto a un ID existente en la BD
     echo "Testing getInventoriesByGroup($groupId)...<br>";
     $groups = $group->getInventoriesByGroup($groupId);
     if (!empty($groups)) {
@@ -41,9 +39,8 @@ function testGetInventoriesByGroup() {
     }
 }
 
-function testCreateGroup() {
+function testCreateGroup($newGroupName) {
     $group = new Groups();
-    $newGroupName = "Grupo de prueba2";
     echo "Testing createGroup('$newGroupName')...<br>";
     if ($group->createGroup($newGroupName)) {
         echo "PASSED<br>";
@@ -54,10 +51,8 @@ function testCreateGroup() {
     }
 }
 
-function testUpdateGroup() {
+function testUpdateGroup($groupIdToUpdate, $newGroupName) {
     $group = new Groups();
-    $groupIdToUpdate = 6; // Cambia esto a un ID existente en la BD
-    $newGroupName = "Nombre Actualizado 3"; // Si se envia el mismo nombre no se actualiza
     echo "Testing updateGroup($groupIdToUpdate, '$newGroupName')...<br>";
     if ($group->updateGroup($groupIdToUpdate, $newGroupName)) {
         echo "PASSED<br>";
@@ -68,9 +63,8 @@ function testUpdateGroup() {
     }
 }
 
-function testDeleteGroup() {
+function testDeleteGroup($groupIdToDelete) {
     $group = new Groups();
-    $groupIdToDelete = 6; // Cambia esto a un ID sin inventarios asociados
     echo "Testing deleteGroup($groupIdToDelete)...<br>";
     if ($group->deleteGroup($groupIdToDelete)) {
         echo "PASSED<br>";

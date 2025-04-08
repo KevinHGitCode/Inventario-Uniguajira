@@ -4,10 +4,9 @@ require_once '../../app/models/Goods.php';
 
 function runTests() {
     testGetAll();
-    // Descomente las siguientes líneas para ejecutar pruebas adicionales
-    // testCreate();
-    // testUpdateName();
-    // testDelete();
+    // testCreate("Laptop", 2);
+    // testUpdateName(13, "PC Gamer");
+    // testDelete(13);
 }
 
 function testGetAll() {
@@ -24,23 +23,19 @@ function testGetAll() {
     }
 }
 
-function testCreate() {
+function testCreate($nombre, $tipo, $rutaImagen) {
     $goods = new Goods();
     echo "Testing create()... <br>";
-    $nombre = "Laptop";
-    $tipo = 2;
-    if ($goods->create($nombre, $tipo)) {
+    if ($goods->create($nombre, $tipo, $rutaImagen)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testUpdateName() {
+function testUpdateName($id, $nuevoNombre) {
     $goods = new Goods();
     echo "Testing updateName()... <br>";
-    $id = 13;  // Cambiar según un ID válido en la base de datos
-    $nuevoNombre = "PC Gamer";
     if ($goods->updateName($id, $nuevoNombre)) {
         echo "PASSED<br>";
     } else {
@@ -48,16 +43,14 @@ function testUpdateName() {
     }
 }
 
-function testDelete() {
+function testDelete($idEliminar) {
     $goods = new Goods();
     echo "Testing delete()... <br>";
-    $idEliminar = 13;  // Cambiar según un ID válido en la base de datos
     if ($goods->delete($idEliminar)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
-
 
 runTests();

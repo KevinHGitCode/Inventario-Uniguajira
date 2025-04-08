@@ -4,14 +4,12 @@ require_once '../../app/models/Tasks.php';
 
 function runTests() {
     testGetAll();
-    // Descomente las siguientes líneas para ejecutar pruebas adicionales
-    // testCreate();
-    // testUpdateName();
-    // testDelete();
-    // testChangeState();
+    // testCreate(1, "Barrer la cancha", "Ir a la cancha y barrerla", "por hacer");
+    // testUpdateName(2, "Poner un foco", "Poner foco en la sala 3");
+    // testDelete(5);
+    // testChangeState(6);
 }
 
-// TODO: Obtener las tareas de un usuario específico
 function testGetAll() {
     $tasks = new Tasks();
     echo "Testing getAll()... <br>";
@@ -27,13 +25,9 @@ function testGetAll() {
     }
 }
 
-function testCreate() {
+function testCreate($usuario_id, $nombre, $description, $estado) {
     $tasks = new Tasks();
     echo "Testing create()... <br>";
-    $usuario_id = 1;  // Cambiar según un ID válido en la base de datos
-    $nombre = "Barrer la cancha";
-    $description = "Ir a la cancha y barrerla";
-    $estado = "por hacer";
     if ($tasks->create($nombre, $description, $usuario_id, $estado)) {
         echo "PASSED<br>";
     } else {
@@ -41,40 +35,34 @@ function testCreate() {
     }
 }
 
-function testUpdateName() {
+function testUpdateName($id, $nombre, $descripcion, $idUsuario) {
     $tasks = new Tasks();
     echo "Testing updateName()... <br>";
-    $id = 2;  // Cambiar según un ID válido en la base de datos
-    $nuevoNombre = "Poner un foco";
-    $nuevoDescripcion = "Poner foco en la sala 3";
-    if ($tasks->updateName($id, $nuevoNombre, $nuevoDescripcion)) {
+    if ($tasks->updateName($id, $nombre, $descripcion, $idUsuario)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testDelete() {
+function testDelete($idTarea, $idUsuario) {
     $tasks = new Tasks();
     echo "Testing delete()... <br>";
-    $idEliminar = 5;  // Cambiar según un ID válido en la base de datos
-    if ($tasks->delete($idEliminar)) {
+    if ($tasks->delete($idTarea, $idUsuario)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testChangeState() {
+function testChangeState($idTarea, $idUsuario) {
     $tasks = new Tasks();
     echo "Testing changeState()... <br>";
-    $id = 6;  // Cambiar según un ID válido en la base de datos
-    if ($tasks->changeState($id)) {
+    if ($tasks->changeState($idTarea, $idUsuario)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
-
 
 runTests();

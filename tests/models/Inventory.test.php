@@ -4,14 +4,12 @@ require_once '../../app/models/Inventory.php';
 
 function runTests() {
     testGetAll();
-    // Descomente las siguientes líneas para ejecutar pruebas adicionales
-    // testCreate();
-    // testUpdateName();
-    // testUpdateGroup();
-    // testUpdateConservation();
-    // testUpdate();
-    // testDeleteWithoutItems();
-    // testDeleteWithItems();
+    // testCreate("Nuevo Inventario", 1);
+    // testUpdateName(3, "3A");
+    // testUpdateGroup(3, 1);
+    // testUpdateConservation(5, 2);
+    // testDeleteWithoutItems(5);
+    // testDeleteWithItems(1);
 }
 
 function testGetAll() {
@@ -28,10 +26,8 @@ function testGetAll() {
     }
 }
 
-function testCreate() {
+function testCreate($name, $grupoId) {
     $inventory = new Inventory();
-    $name = "Nuevo Inventario";
-    $grupoId = 1;
     echo "Testing create()... <br>";
     if ($inventory->create($name, $grupoId)) {
         echo "PASSED<br>";
@@ -40,28 +36,8 @@ function testCreate() {
     }
 }
 
-
-
-/* Hay que ver que se hace con este
-function testUpdate() {
+function testUpdateName($updateId, $updateName) {
     $inventory = new Inventory();
-    $updateId = 5;
-    $updateName = "Inventario Actualizado";
-    $updateGrupoId = 2;
-    $updateState = 3; // Malo
-    echo "Testing update()... <br>";
-    if ($inventory->update($updateId, $updateName, $updateGrupoId, $updateState)) {
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
-    }
-}
-*/
-
-function testUpdateName() {
-    $inventory = new Inventory();
-    $updateId = 3;
-    $updateName = "3A";
     echo "Testing updateName()... <br>";
     if ($inventory->updateName($updateId, $updateName)) {
         echo "PASSED: Nombre actualizado correctamente<br>";
@@ -70,10 +46,8 @@ function testUpdateName() {
     }
 }
 
-function testUpdateGroup() {
+function testUpdateGroup($updateId, $newGroupId) {
     $inventory = new Inventory();
-    $updateId = 3;
-    $newGroupId = 1;
     echo "Testing updateGroup()... <br>";
     if ($inventory->updateGroup($updateId, $newGroupId)) {
         echo "PASSED: Grupo actualizado correctamente<br>";
@@ -82,11 +56,8 @@ function testUpdateGroup() {
     }
 }
 
-
-function testUpdateConservation() {
+function testUpdateConservation($id, $newConservation) {
     $inventory = new Inventory();
-    $id = 5;
-    $newConservation = 2; // Regular
     echo "Testing updateConservation()... <br>";
     if ($inventory->updateConservation($id, $newConservation)) {
         echo "PASSED<br>";
@@ -95,20 +66,18 @@ function testUpdateConservation() {
     }
 }
 
-function testDeleteWithoutItems() {
+function testDeleteWithoutItems($deleteId) {
     $inventory = new Inventory();
-    $deleteId = 5;
     echo "Testing delete()... <br>";
     if ($inventory->delete($deleteId)) {
         echo "PASSED: Inventario eliminado <br>";
     } else {
-        echo "FAILED: El invetario tiene bienes, no se puede eliminar <br>";
+        echo "FAILED: El inventario tiene bienes, no se puede eliminar <br>";
     }
 }
 
-function testDeleteWithItems() {
+function testDeleteWithItems($deleteIdWithItems) {
     $inventory = new Inventory();
-    $deleteIdWithItems = 1;
     echo "Testing delete() with associated goods... <br>";
     if ($inventory->delete($deleteIdWithItems)) {
         echo "PASSED<br>";
@@ -116,6 +85,5 @@ function testDeleteWithItems() {
         echo "FAILED<br>";
     }
 }
-
 
 runTests();
