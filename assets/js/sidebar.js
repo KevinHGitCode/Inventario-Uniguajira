@@ -12,16 +12,16 @@ menu.addEventListener('click',()=>{
 
 function loadContent(path) {
     fetch(path)
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('main').innerHTML = html;
-            if (path === '/goods') {
-                iniciarBusqueda();
-                inicializarModalBien();
-                inicializarFormularioBien();
-                inicializarBotonesEliminar();
-            }
-        });
+    .then(res => res.text())
+    .then(html => {
+        document.getElementById('main').innerHTML = html;
+        if (path === '/goods') {
+            iniciarBusqueda();
+            inicializarModalBien();
+            inicializarFormularioBien();
+            inicializarBotonesEliminar();
+        }
+    });
 }
 
 

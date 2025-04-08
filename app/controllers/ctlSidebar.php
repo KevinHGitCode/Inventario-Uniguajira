@@ -49,14 +49,14 @@ class ctlSidebar {
      *
      * @return void
      */
-    public function inventary() {
+    public function inventory() {
         require_once __DIR__ . '/../models/Groups.php';
         $groups = new Groups();
 
         $dataGroups = $groups->getAllGroups(); // Get all groups from the model
 
         // Pass $dataGroups to the view
-        require __DIR__ . '/../views/inventary.php';
+        require __DIR__ . '/../views/inventory.php';
     }
 
     /**
