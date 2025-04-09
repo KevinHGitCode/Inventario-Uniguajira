@@ -17,7 +17,7 @@ function testGetAllGoodsByInventory($inventoryId) {
         if (!empty($goods)) {
             echo "PASSED<br>";
             foreach ($goods as $good) {
-                echo "Inventario ID: {$good['inventario_id']}, Bien ID: {$good['bien_id']}, Cantidad: {$good['cantidad']}<br>";
+                echo "Inventario ID: {$good['inventario_id']}, Bien ID: {$good['bien_id']}, Cantidad: {$good['cantidad']}, Cantidad: {$good['bien']}<br>";
             }
         } else {
             echo "FAILED: No goods found for inventory ID $inventoryId<br>";
