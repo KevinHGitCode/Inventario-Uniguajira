@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="assets/css/userMenu.css">
     <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="assets/css/goods.css">
+    <link rel="stylesheet" href="assets/css/inventory.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
 
