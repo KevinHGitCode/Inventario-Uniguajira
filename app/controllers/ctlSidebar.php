@@ -56,7 +56,7 @@ class ctlSidebar {
         $dataGroups = $groups->getAllGroups(); // Get all groups from the model
 
         // Pass $dataGroups to the view
-        require __DIR__ . '/../views/inventory.php';
+        require __DIR__ . '/../views/inventory/inventory.php';
     }
 
     /**
