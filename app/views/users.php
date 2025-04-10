@@ -2,6 +2,18 @@
 
 <div class="container">
     <h2>Lista de Usuarios</h2>
+
+    <div class="top-bar">
+        <div class="search-container">
+            <input type="text" id="searchuUserInput" placeholder="Buscar o agregar usuario" class="search-bar">
+            <i class="search-icon fas fa-search"></i>
+        </div>
+        <button id="btnCrear" class="create-btn">Crear</button>
+    </div>
+
+
+
+
     <table class="table table-bordered">
         <thead>
             <tr>
