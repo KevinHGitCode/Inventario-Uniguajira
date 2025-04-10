@@ -35,12 +35,6 @@ function inicializarModalBien() {
     const btnCrear = document.getElementById("btnCrear");
     const spanClose = modal?.querySelector(".close");
 
-    if (!modal || !btnCrear || !spanClose) {
-        // Muestra una advertencia si no se encuentran los elementos necesarios
-        console.warn("Elementos del modal no encontrados.");
-        return;
-    }
-
     // Agrega un evento para abrir el modal al hacer clic en el botón
     btnCrear.addEventListener("click", () => {
         modal.style.display = "flex";
@@ -63,60 +57,36 @@ function inicializarModalBien() {
  * Configura el formulario para la creación de bienes, manejando el envío y la respuesta del servidor.
  */
 function inicializarFormularioBien() {
-    // Obtiene el formulario y el modal relacionado
     const form = document.getElementById("formCrearBien");
     const modal = document.getElementById("modalCrear");
 
     if (!form) return;
 
-    // Agrega un evento para manejar el envío del formulario
-    form.addEventListener("submit", function (e) {
-        e.preventDefault(); // Evita que la página se recargue
-
-        // Crea un objeto FormData con los datos del formulario
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
         const formData = new FormData(form);
 
-        // Envía los datos al servidor mediante una solicitud fetch
         fetch("/api/goods/create", {
             method: "POST",
             body: formData
         })
         .then(res => {
-            if (!res.ok) {
-                // Lanza un error si la respuesta no es exitosa
-                throw new Error("Error HTTP: " + res.status);
-            }
+            if (!res.ok) throw new Error("Error HTTP: " + res.status);
             return res.json();
         })
-        .then(data => {
-            if (data.success) {
-                // Muestra un mensaje de éxito y recarga el contenido
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Bien guardado!',
-                    text: data.message,
-                    confirmButtonColor: '#a31927',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    modal.style.display = "none";
-                    loadContent('/goods');
-                });
-            } else {
-                // Muestra un mensaje de error si la respuesta no es exitosa
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message
-                });
+        .then(response => {
+            showToast(response);
+
+            if (response.success) {
+                modal.style.display = "none";
+                setTimeout(() => loadContent('/goods'), 1500); // Recarga después de 1.5 segundos
             }
         })
         .catch(err => {
-            // Maneja errores en la solicitud
-            console.error("Error al crear el bien:", err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Hubo un error al enviar el formulario.'
+            console.error("Error:", err);
+            showToast({
+                success: false,
+                message: 'Error al enviar el formulario'
             });
         });
     });
@@ -143,36 +113,22 @@ function inicializarBotonesEliminar() {
                 cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Envía una solicitud para eliminar el bien
-                    fetch(`/api/goods/delete/${id}`, {
-                        method: 'DELETE'
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Muestra un mensaje de éxito y recarga el contenido
-                            Swal.fire('¡Eliminado!', data.message, 'success')
-                                .then(() => loadContent('/goods'));
-                        } else {
-                            // Muestra un mensaje de error si la eliminación falla
-                            Swal.fire('Error', data.message, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        // Maneja errores en la solicitud
-                        console.error("Error al eliminar el bien:", err);
-                        Swal.fire('Oops...', 'Hubo un error al eliminar.', 'error');
-                    });
-                }
+            }).then((result) => { 
+                if (!result.isConfirmed) return; // Si el usuario cancela, no hace nada  
+
+                // Envía una solicitud para eliminar el bien y muestra el resultado
+                fetch(`/api/goods/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success) {
+                        loadContent('/goods')
+                    }
+                    showToast(response)
+                }).catch(err => { showToast(err) });
             });
         });
     });
 }
-
-
-
-
-
 

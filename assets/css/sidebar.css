@@ -30,7 +30,7 @@
 }
 .sidebar.menu-toggle {
     /* Cambia el ancho del sidebar cuando se activa el toggle del menú */
-    width: 18rem;
+    width: 14rem;
 }
 .sidebar a {
     /* Estilo de los enlaces dentro del sidebar */
