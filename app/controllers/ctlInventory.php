@@ -22,16 +22,15 @@ class ctlInventory  {
 
     public function getInventoriesOfGroup($id_group) {
         $dataInventories = $this->group->getInventoriesByGroup($id_group);
-
-        // echo json_encode($dataInventories);
-        // echo __DIR__;
-        require 'app/views/inventory/inventories.php';
+        header('Content-Type: application/json');
+        echo json_encode($dataInventories);
+        exit;
     }
 
     public function getGoodsOfInventory($id_inventory) {
         $dataGoodsInventory = $this->goodsInventory->getAllGoodsByInventory($id_inventory);
-        // echo json_encode($dataInventory);
-        // echo __DIR__;
-        require 'app/views/inventory/goods-inventory.php';
+        header('Content-Type: application/json');
+        echo json_encode($dataGoodsInventory);
+        exit;
     }
 }

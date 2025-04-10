@@ -1,52 +1,165 @@
+// Función para abrir grupo y cargar inventarios
 function abrirGrupo(idGroup) {
+    const divGroups = document.getElementById('groups');
+    const divInventories = document.getElementById('inventories');
+    
+    // Mostrar loader
+    divInventories.innerHTML = '<p>Cargando inventarios...</p>';
+    divGroups.classList.add('hidden');
+    divInventories.classList.remove('hidden');
+
     fetch(`/api/get/inventories/${idGroup}`)
-    .then(res => res.text())
-    .then(html => {
-        divGroups = document.getElementById('groups');
-        divInventories = document.getElementById('inventories');
-        // divGoodsInventory = document.getElementById('goods-inventory');
-
-        divInventories.innerHTML = html;
-
-        // toggle class hidden
-        divGroups.classList.toggle('hidden');
-        divInventories.classList.toggle('hidden');
-    });
+        .then(res => res.json())
+        .then(inventories => {
+            renderInventoriesToContainer(divInventories, inventories);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            divInventories.innerHTML = '<p>Error al cargar los inventarios</p>';
+        });
 }
 
-// cerrar grupo
+// Función para renderizar inventarios en el contenedor
+function renderInventoriesToContainer(container, inventories) {
+    // Crear elementos base
+    const header = document.createElement('h2');
+    header.textContent = 'Lista de Inventarios';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'create-btn';
+    closeBtn.textContent = 'Cerrar';
+    closeBtn.onclick = cerrarGrupo;
+    
+    const searchHTML = `<?php include 'app/views/inventory/searchInventory.html' ?>`;
+    
+    const grid = document.createElement('div');
+    grid.className = 'bienes-grid';
+    
+    // Limpiar contenedor
+    container.innerHTML = '';
+    
+    // Agregar elementos al contenedor
+    container.appendChild(header);
+    container.appendChild(closeBtn);
+    container.insertAdjacentHTML('beforeend', searchHTML);
+    container.appendChild(grid);
+    
+    // Renderizar cada inventario
+    if (inventories && inventories.length > 0) {
+        inventories.forEach(inventory => {
+            const card = document.createElement('div');
+            card.className = 'bien-card';
+            
+            card.innerHTML = `
+                <div class="bien-info">
+                    <h3>${escapeHtml(inventory.nombre)}</h3>
+                </div>
+                <div class="actions">
+                    <button class="create-btn" data-inventory-id="${inventory.id}">Abrir</button>
+                </div>
+            `;
+            
+            // Asignar evento de click dinámicamente
+            const btn = card.querySelector('.create-btn');
+            btn.addEventListener('click', () => {
+                abrirInventario(inventory.id);
+            });
+            
+            grid.appendChild(card);
+        });
+    } else {
+        grid.innerHTML = '<p>No hay inventarios disponibles.</p>';
+    }
+}
+
+// Función para cerrar grupo (mejorada)
 function cerrarGrupo() {
-    divGroups = document.getElementById('groups');
-    divInventories = document.getElementById('inventories');
-
-    // toggle class hidden
-    divGroups.classList.toggle('hidden');
-    divInventories.classList.toggle('hidden');
+    document.getElementById('groups').classList.remove('hidden');
+    document.getElementById('inventories').classList.add('hidden');
+    document.getElementById('goods-inventory').classList.add('hidden');
 }
 
 
-// abrir inventario
 function abrirInventario(idInventory) {
+    const divGoodsInventory = document.getElementById('goods-inventory');
+    const divInventories = document.getElementById('inventories');
+    
+    // Mostrar loader mientras carga
+    divGoodsInventory.innerHTML = '<p>Cargando bienes...</p>';
+    divGoodsInventory.classList.remove('hidden');
+    divInventories.classList.add('hidden');
+
     fetch(`/api/get/goodsInventory/${idInventory}`)
-    .then(res => res.text())
-    .then(html => {
-        divInventories = document.getElementById('inventories');
-        divGoodsInventory = document.getElementById('goods-inventory');
-
-        divGoodsInventory.innerHTML = html;
-
-        // toggle class hidden
-        divInventories.classList.toggle('hidden');
-        divGoodsInventory.classList.toggle('hidden');
-    });
+        .then(res => res.json())
+        .then(goods => {
+            renderGoodsToContainer(divGoodsInventory, goods);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            divGoodsInventory.innerHTML = '<p>Error al cargar los bienes</p>';
+        });
 }
 
 // cerrar inventario
 function cerrarInventario() {
-    divInventories = document.getElementById('inventories');
-    divGoodsInventory = document.getElementById('goods-inventory');
+    document.getElementById('goods-inventory').classList.add('hidden');
+    document.getElementById('inventories').classList.remove('hidden');
+}
 
-    // toggle class hidden
-    divInventories.classList.toggle('hidden');
-    divGoodsInventory.classList.toggle('hidden');
+
+function renderGoodsToContainer(container, goods) {
+    // Crear elementos base
+    const header = document.createElement('h2');
+    header.textContent = 'Bienes en el Inventario';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'create-btn';
+    closeBtn.textContent = 'Cerrar';
+    closeBtn.onclick = cerrarInventario;
+    
+    const searchHTML = `<?php include 'app/views/inventory/searchInventory.html' ?>`;
+    
+    const grid = document.createElement('div');
+    grid.className = 'bienes-grid';
+    
+    // Limpiar contenedor
+    container.innerHTML = '';
+    
+    // Agregar elementos al contenedor
+    container.appendChild(header);
+    container.appendChild(closeBtn);
+    container.insertAdjacentHTML('beforeend', searchHTML);
+    container.appendChild(grid);
+    
+    // Renderizar cada bien
+    if (goods && goods.length > 0) {
+        goods.forEach(good => {
+            const card = document.createElement('div');
+            card.className = 'bien-card';
+            
+            card.innerHTML = `
+                <div class="bien-info">
+                    <h3>${escapeHtml(good.bien)}</h3>
+                    <p><strong>Cantidad:</strong> ${escapeHtml(good.cantidad)}</p>
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    } else {
+        grid.innerHTML = '<p>No hay bienes disponibles en este inventario.</p>';
+    }
+}
+
+// Función helper para seguridad XSS
+function escapeHtml(unsafe) {
+    return unsafe?.toString().replace(/[&<"'>]/g, match => {
+        switch(match) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case "'": return '&#039;';
+        }
+    }) || '';
 }
