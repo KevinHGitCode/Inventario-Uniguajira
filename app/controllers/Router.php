@@ -33,7 +33,7 @@ class Router {
         }
 
         // Si no se encuentra ninguna ruta
-        require 'app/views/not-found.html';
+        require 'app/views/errors/not-found.html';
     }
 }
 

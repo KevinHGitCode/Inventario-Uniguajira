@@ -30,7 +30,7 @@ class ctlView {
      * @return void
      */
     public function doc() {
-        include 'app/views/doc.html';
+        include 'documentation/doc.php';
     }
 
     /**

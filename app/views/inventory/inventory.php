@@ -1,24 +1,3 @@
-<style>
-    .group-card {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-    }
-    .group-card button {
-        margin-top: 10px;
-        padding: 5px 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-    .group-card button:hover {
-        background-color: #0056b3;
-    }
-</style>
-
 <div class="container">
     <h1>Inventario</h1>
     <div id="groups">
