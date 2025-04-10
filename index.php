@@ -23,6 +23,7 @@ $router->add('/api/logout', 'ctlUser', 'logout');
 // Rutas para la API de bienes
 $router->add('/api/goods/create', 'ctlGoods', 'create');
 $router->add('/api/goods/delete/:id', 'ctlGoods', 'delete');
+$router->add('/api/goods/update', 'ctlGoods', 'update');
 
 
 // Rutas para la API de inventarios

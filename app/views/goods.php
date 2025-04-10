@@ -21,7 +21,7 @@
                         <p>Cantidad: <?= $bien['total_cantidad'] ?></p>
                     </div>
                     <div class="actions">
-                        <a href="#"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="btn-editar" data-id="<?= $bien['bien_id'] ?>" data-nombre="<?= htmlspecialchars($bien['bien']) ?>"><i class="fas fa-edit"></i></a>
                         <a href="#" class="btn-eliminar" data-id="<?= $bien['bien_id'] ?>"><i class="fas fa-trash"></i></a>
                     </div>
                 </div>
@@ -55,6 +55,32 @@
                 </form>
             </div>
         </div>
+
+        <!-- Modal Actualizar -->
+        <div id="modalActualizarBien" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span id="cerrarModalActualizarBien" class="close">&times;</span>
+                <h2>Actualizar Bien</h2>
+                <form id="formActualizarBien" enctype="multipart/form-data">
+                    <input type="hidden" name="id" id="actualizarId">
+                    
+                    <div>
+                        <label>Nombre:</label>
+                        <input type="text" name="nombre" id="actualizarNombre" required>
+                    </div>
+                    
+                    <div>
+                        <label>Imagen (opcional):</label>
+                        <input type="file" name="imagen" id="actualizarImagen" accept="image/*">
+                    </div>
+                    
+                    <div style="margin-top: 10px;">
+                        <button type="submit" class="create-btn">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
 </body>

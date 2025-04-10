@@ -58,9 +58,14 @@ class Goods extends Database {
      * @param string $nombre Nuevo nombre del bien.
      * @return bool True si la operación fue exitosa, False en caso contrario.
      */
-    public function updateName($id, $nombre) {
-        $stmt = $this->connection->prepare("UPDATE bienes SET nombre = ? WHERE id = ?");
-        $stmt->bind_param("si", $nombre, $id);
+    public function update($id, $nombre, $nuevaRuta = null) {
+        if ($nuevaRuta) {
+            $stmt = $this->connection->prepare("UPDATE bienes SET nombre = ?, imagen = ? WHERE id = ?");
+            $stmt->bind_param("ssi", $nombre, $nuevaRuta, $id);
+        } else {
+            $stmt = $this->connection->prepare("UPDATE bienes SET nombre = ? WHERE id = ?");
+            $stmt->bind_param("si", $nombre, $id);
+        }
         return $stmt->execute();
     }
 
@@ -97,6 +102,15 @@ class Goods extends Database {
             error_log("Buscando cantidad del bien $id");
             return 0; // Si no encontró nada, asumimos cantidad 0
         }
+    }
+
+    public function getImageById($id) {
+        $stmt = $this->connection->prepare("SELECT imagen FROM bienes WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['imagen'] ?? null;
     }
     
 }
