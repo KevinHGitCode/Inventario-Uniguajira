@@ -166,30 +166,26 @@ function inicializarFormularioActualizarBien() {
             body: formData
         })
         .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire("Éxito", data.message, "success").then(() => {
-                    modal.style.display = "none";
-                    loadContent("/goods");
-                });
-            } else {
-                Swal.fire("Error", data.message, "error");
+        .then(response => {
+            if (response.success) {
+                modal.style.display = "none";
+                loadContent('/goods')
             }
+            showToast(response)
         })
         .catch(err => {
             console.error("Error:", err);
-            Swal.fire("Oops...", "Ocurrió un error al actualizar.", "error");
+            showToast({
+                success: false,
+                message: 'Error al enviar el formulario'
+            });
         });
+
     });
 
     cerrar.addEventListener("click", () => {
         modal.style.display = "none";
     });
 }
-
-
-
-
-
 
 
