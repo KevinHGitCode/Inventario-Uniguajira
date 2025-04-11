@@ -132,3 +132,64 @@ function inicializarBotonesEliminar() {
     });
 }
 
+function activarModalActualizarBien() {
+    document.querySelectorAll('.btn-editar').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+
+            const id = btn.dataset.id;
+            const nombre = btn.dataset.nombre;
+
+            document.getElementById("actualizarId").value = id;
+            document.getElementById("actualizarNombre").value = nombre;
+            document.getElementById("actualizarImagen").value = ""; // Limpiar imagen seleccionada
+
+            document.getElementById("modalActualizarBien").style.display = "flex";
+        });
+    });
+}
+
+
+
+function inicializarFormularioActualizarBien() {
+    const form = document.getElementById("formActualizarBien");
+    const modal = document.getElementById("modalActualizarBien");
+    const cerrar = document.getElementById("cerrarModalActualizarBien");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch("/api/goods/update", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire("Éxito", data.message, "success").then(() => {
+                    modal.style.display = "none";
+                    loadContent("/goods");
+                });
+            } else {
+                Swal.fire("Error", data.message, "error");
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            Swal.fire("Oops...", "Ocurrió un error al actualizar.", "error");
+        });
+    });
+
+    cerrar.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+}
+
+
+
+
+
+
+

@@ -118,6 +118,61 @@ class ctlGoods {
         }
     }
     
+
+    public function update() {
+        header('Content-Type: application/json');
+    
+        $id = $_POST['id'] ?? null;
+        $nombre = trim($_POST['nombre'] ?? '');
+        $imagen = $_FILES['imagen'] ?? null;
+    
+        if (!is_numeric($id) || $nombre === '') {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Datos inválidos.']);
+            return;
+        }
+    
+        $goodsModel = new Goods();
+    
+        // Procesar imagen si se subió una nueva
+        $nuevaRuta = null;
+        if ($imagen && $imagen['error'] === UPLOAD_ERR_OK) {
+            $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $extension = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
+            $mimeType = mime_content_type($imagen['tmp_name']);
+    
+            if (!in_array($extension, $permitidas) || strpos($mimeType, 'image/') !== 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Formato de imagen no permitido.']);
+                return;
+            }
+    
+            // Eliminar imagen anterior
+            $rutaAnterior = $goodsModel->getImageById((int)$id);
+            if ($rutaAnterior && file_exists($rutaAnterior)) {
+                unlink($rutaAnterior);
+            }
+    
+            $fileName = uniqid('bien_') . '.' . $extension;
+            $nuevaRuta = 'assets/uploads/img/' . $fileName;
+            if (!move_uploaded_file($imagen['tmp_name'], $nuevaRuta)) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'No se pudo guardar la nueva imagen.']);
+                return;
+            }
+        }
+    
+        // Actualizar en la base de datos
+        $resultado = $goodsModel->update($id, $nombre, $nuevaRuta);
+    
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Bien actualizado correctamente.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el bien.']);
+        }
+    }
+    
     
     
 

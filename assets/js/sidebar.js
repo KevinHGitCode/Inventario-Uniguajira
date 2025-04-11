@@ -20,6 +20,8 @@ function loadContent(path) {
             inicializarModalBien();
             inicializarFormularioBien();
             inicializarBotonesEliminar();
+            activarModalActualizarBien();
+            inicializarFormularioActualizarBien();
         }
     });
 }
