@@ -114,8 +114,13 @@ class Tasks extends Database {
      * @return bool Devuelve true si la tarea se eliminó correctamente, false en caso contrario.
      */
     public function delete($id, $usuario_id) {
-        $stmt = $this->connection->prepare("DELETE FROM tareas WHERE id = ? AND usuario_id = ?");
-        $stmt->bind_param("ii", $id, $usuario_id);
+        // Verificar que el usuario sea administrador o dueño de la tarea
+        $stmt = $this->connection->prepare("
+            DELETE FROM tareas 
+            WHERE id = ? 
+            AND (usuario_id = ? OR ? IN (SELECT id FROM usuarios WHERE rol = 'administrador'))
+        ");
+        $stmt->bind_param("iii", $id, $usuario_id, $usuario_id);
         return $stmt->execute();
     }
 

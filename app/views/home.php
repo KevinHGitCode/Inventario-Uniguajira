@@ -14,12 +14,15 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
             <div class="task-card">
                 <button class="button check" onclick="toggleTask(<?= $task['id'] ?>, this)">✓</button>
                 <div class="task-content">
-                    <h3 class="task-title"><?= htmlspecialchars($task['nombre']) ?></h3>
+                    <h3 class="task-title"><?= htmlspecialchars($task['nombre'], ENT_QUOTES, 'UTF-8') ?></h3>
                     <?php if (!empty($task['descripcion'])): ?>
-                        <p class="task-duration"><?= htmlspecialchars($task['descripcion']) ?></p>
+                        <p class="task-duration"><?= htmlspecialchars($task['descripcion'], ENT_QUOTES, 'UTF-8') ?></p>
                     <?php endif; ?>
                 </div>
                 <p class="task-date"><?= formatDate($task['fecha']) ?></p>
+                <button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
+                    <i class="fas fa-trash"></i>
+                </button>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>

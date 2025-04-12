@@ -64,4 +64,41 @@ class ctlTasks {
             exit();
         }
     }
+
+    public function delete($id) {
+        header('Content-Type: application/json');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+                throw new Exception('Método no permitido', 405);
+            }
+    
+            if (!isset($_SESSION['user_id'])) {
+                throw new Exception('No autorizado', 401);
+            }
+    
+            $taskId = filter_var($id, FILTER_VALIDATE_INT);
+            if ($taskId === false) {
+                throw new Exception('ID de tarea inválido', 400);
+            }
+    
+            $result = $this->tasksModel->delete($taskId, $_SESSION['user_id']);
+    
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Tarea eliminada exitosamente'
+                ]);
+            } else {
+                throw new Exception('No se pudo eliminar la tarea o no tienes permisos', 403);
+            }
+        } catch (Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+            exit();
+        }
+    }
 }
