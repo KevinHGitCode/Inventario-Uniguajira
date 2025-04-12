@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../app/models/Inventory.php';
+require '.tableHelper.php';
 
 function runTests() {
     testGetAll();
@@ -15,16 +16,16 @@ function runTests() {
 function testGetAll() {
     $inventory = new Inventory();
     echo "Testing getAll()... <br>";
+
     $allInventories = $inventory->getAll();
     if (is_array($allInventories)) {
-        foreach ($allInventories as $inv) {
-            echo "ID: {$inv['id']}, Nombre: {$inv['nombre']}, Estado: {$inv['estado_conservacion']}, Grupo ID: {$inv['grupo_id']}<br>";
-        }
+        renderTable($allInventories);
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
+    
 
 function testCreate($name, $grupoId) {
     $inventory = new Inventory();

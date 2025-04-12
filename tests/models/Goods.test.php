@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../app/models/Goods.php';
+require '.tableHelper.php';
 
 function runTests() {
     testGetAll();
@@ -12,16 +13,16 @@ function runTests() {
 function testGetAll() {
     $goods = new Goods();
     echo "Testing getAll()... <br>";
+
     $allGoods = $goods->getAll();
     if (is_array($allGoods)) {
+        renderTable($allGoods);
         echo "PASSED<br>";
-        foreach ($allGoods as $good) {
-            echo "ID: {$good['id']}, Nombre: {$good['nombre']}, Tipo: {$good['tipo']}<br>";
-        }
     } else {
         echo "FAILED<br>";
     }
 }
+
 
 function testCreate($nombre, $tipo, $rutaImagen) {
     $goods = new Goods();
@@ -36,7 +37,7 @@ function testCreate($nombre, $tipo, $rutaImagen) {
 function testUpdateName($id, $nuevoNombre) {
     $goods = new Goods();
     echo "Testing updateName()... <br>";
-    if ($goods->updateName($id, $nuevoNombre)) {
+    if ($goods->update($id, $nuevoNombre)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";

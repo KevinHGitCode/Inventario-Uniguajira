@@ -1,10 +1,11 @@
 <?php
 
 require_once '../../app/models/GoodsInventory.php';
+require '.tableHelper.php';
 
 function runTests() {
-    testGetAllGoodsByInventory();
-    // testGetAllQuantityGoodsByInventory();
+    // testGetAllGoodsByInventory();
+    testGetAllQuantityGoodsByInventory(1);
     // testGetAllSerialGoodsByInventory();
     // testAddQuantityGoodToInventory();
     // testAddSerialGoodToInventory();
@@ -19,42 +20,38 @@ function runTests() {
     // testDelete();
 }
 
-function testGetAllGoodsByInventory() {
+function testGetAllGoodsByInventory($inventoryId ) {
     $goodsInventory = new GoodsInventory();
     echo "Testing getAllGoodsByInventory()... <br>";
-    $inventoryId = 1; // Replace with a valid inventory ID from your database
+
     $result = $goodsInventory->getAllGoodsByInventory($inventoryId);
-    
+
     if (is_array($result)) {
+        renderTable($result);
         echo "PASSED<br>";
-        foreach ($result as $item) {
-            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Name: {$item['bien']}, Quantity: {$item['cantidad']}<br>";
-        }
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testGetAllQuantityGoodsByInventory() {
+function testGetAllQuantityGoodsByInventory($inventoryId) {
     $goodsInventory = new GoodsInventory();
     echo "Testing getAllQuantityGoodsByInventory()... <br>";
-    $inventoryId = 1; // Replace with a valid inventory ID from your database
+
     $result = $goodsInventory->getAllQuantityGoodsByInventory($inventoryId);
-    
+
     if (is_array($result)) {
+        renderTable($result);
         echo "PASSED<br>";
-        foreach ($result as $item) {
-            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Name: {$item['bien']}, Quantity: {$item['cantidad']}<br>";
-        }
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testGetAllSerialGoodsByInventory() {
+
+function testGetAllSerialGoodsByInventory($inventoryId) {
     $goodsInventory = new GoodsInventory();
     echo "Testing getAllSerialGoodsByInventory()... <br>";
-    $inventoryId = 1; // Replace with a valid inventory ID from your database
     $result = $goodsInventory->getAllSerialGoodsByInventory($inventoryId);
     
     if (is_array($result)) {

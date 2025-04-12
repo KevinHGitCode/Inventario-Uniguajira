@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../app/models/Groups.php';
+require '.tableHelper.php';
 
 function runTests() {
     testGetAllGroups();
@@ -13,16 +14,16 @@ function runTests() {
 function testGetAllGroups() {
     $group = new Groups();
     echo "Testing getAllGroups()...<br>";
+
     $groups = $group->getAllGroups();
     if (!empty($groups)) {
+        renderTable($groups);
         echo "PASSED<br>";
-        foreach ($groups as $group) {
-            echo "ID: {$group['id']}, Nombre: {$group['nombre']}<br>";
-        }
     } else {
         echo "No hay grupos registrados.<br>";
     }
 }
+
 
 function testGetInventoriesByGroup($groupId) {
     $group = new Groups();

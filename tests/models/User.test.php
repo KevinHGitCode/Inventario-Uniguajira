@@ -1,9 +1,10 @@
 <?php
 require_once '../../app/models/User.php';
+require '.tableHelper.php';
 
 function runTests() {
-   //testGetAllUsers();
-     testCreateUser("tralelotralala", "trale", "tralelotralala@email.com", "1234", 1, null);
+    testGetAllUsers();
+    // testCreateUser("tralelotralala", "trale", "tralelotralala@email.com", "1234", 1, null);
     // testUpdateUser(4, "Updated Name", "updated@email.com", "newPassword123");
     // testUpdatePassword(1, "newPassword");
     // testDeleteUser(2);
@@ -14,22 +15,17 @@ function testGetAllUsers() {
     $user = new User();
     try {
         $todosLosUsuarios = $user->getAllUsers();
-        echo "Usuarios registrados:<br>";
-        foreach ($todosLosUsuarios as $usuario) {
-            echo "ID: " . $usuario['id'] . "<br>";
-            echo "Nombre: " . $usuario['nombre'] . "<br>";
-            echo "Nombre de usuario: " . $usuario['nombre_usuario'] . "<br>";
-            echo "Email: " . $usuario['email'] . "<br>";
-            echo "Rol: " . $usuario['rol'] . "<br>";
-            echo "Fecha de creación: " . $usuario['fecha_creacion'] . "<br>";
-            echo "Último acceso: " . $usuario['fecha_ultimo_acceso'] . "<br>";
-            echo "Foto de perfil: " . $usuario['foto_perfil'] . "<br>";
-            echo "------------------------<br>";
+        if (!empty($todosLosUsuarios)) {
+            echo "Usuarios registrados:<br>";
+            renderTable($todosLosUsuarios);
+        } else {
+            echo "No hay usuarios registrados.<br>";
         }
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
+
 
 function testCreateUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil){
     $user = new User();
