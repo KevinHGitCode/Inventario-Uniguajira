@@ -20,7 +20,7 @@
         <?php foreach ($dataGoods as $bien): ?>
         <div class="bien-card">
             <img
-                src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/default.jpg') ?>"
+                src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/goods/default.jpg') ?>"
                 class="bien-image"
             />
             <div class="bien-info">

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'app/models/Goods.php';
+require_once 'app/helpers/imageHelper.php';
 
 class ctlGoods {
     public function create() {
@@ -10,7 +11,6 @@ class ctlGoods {
             $imagen = $_FILES['imagen'] ?? null;
             $rutaDestino = null;
     
-            require_once __DIR__ . '/../models/Goods.php';
             $goodsModel = new Goods();
     
             // Validar si ya existe un bien con el mismo nombre
@@ -32,43 +32,15 @@ class ctlGoods {
     
             // Validaciones de imagen (opcional)
             if ($imagen && $imagen['error'] === UPLOAD_ERR_OK) {
-                $maxSize = 2 * 1024 * 1024; // 2MB
-                $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-                $mimePermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                $resultadoImagen = validarYGuardarImagen($imagen, 'assets/uploads/img/goods/', 2); // 2MB para bienes
     
-                $extension = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-                $mimeType = mime_content_type($imagen['tmp_name']);
-                $fileSize = $imagen['size'];
-    
-                if (!in_array($extension, $extensionesPermitidas) || !in_array($mimeType, $mimePermitidos)) {
+                if (!$resultadoImagen['success']) {
                     http_response_code(400);
-                    echo json_encode([
-                        'success' => false,
-                        'message' => 'Formato de imagen no permitido.'
-                    ]);
+                    echo json_encode(['success' => false, 'message' => $resultadoImagen['message']]);
                     return;
                 }
     
-                if ($fileSize > $maxSize) {
-                    http_response_code(400);
-                    echo json_encode([
-                        'success' => false,
-                        'message' => 'La imagen excede el tamaño máximo permitido (2MB).'
-                    ]);
-                    return;
-                }
-    
-                $fileName = uniqid('bien_') . '.' . $extension;
-                $rutaDestino = 'assets/uploads/img/' . $fileName;
-    
-                if (!move_uploaded_file($imagen['tmp_name'], $rutaDestino)) {
-                    http_response_code(500);
-                    echo json_encode([
-                        'success' => false,
-                        'message' => 'No se pudo guardar la imagen.'
-                    ]);
-                    return;
-                }
+                $rutaDestino = $resultadoImagen['path'];
             }
     
             $resultado = $goodsModel->create($nombre, $tipo, $rutaDestino);
@@ -147,29 +119,21 @@ class ctlGoods {
         // Procesar imagen si se subió una nueva
         $nuevaRuta = null;
         if ($imagen && $imagen['error'] === UPLOAD_ERR_OK) {
-            $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            $extension = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
-            $mimeType = mime_content_type($imagen['tmp_name']);
+            $resultadoImagen = validarYGuardarImagen($imagen, 'assets/uploads/img/goods/', 2); // 2MB para bienes
     
-            if (!in_array($extension, $permitidas) || strpos($mimeType, 'image/') !== 0) {
+            if (!$resultadoImagen['success']) {
                 http_response_code(400);
-                echo json_encode(['success' => false, 'message' => 'Formato de imagen no permitido.']);
+                echo json_encode(['success' => false, 'message' => $resultadoImagen['message']]);
                 return;
             }
     
-            // Eliminar imagen anterior
+            // Eliminar imagen anterior si existe
             $rutaAnterior = $goodsModel->getImageById((int)$id);
             if ($rutaAnterior && file_exists($rutaAnterior)) {
                 unlink($rutaAnterior);
             }
     
-            $fileName = uniqid('bien_') . '.' . $extension;
-            $nuevaRuta = 'assets/uploads/img/' . $fileName;
-            if (!move_uploaded_file($imagen['tmp_name'], $nuevaRuta)) {
-                http_response_code(500);
-                echo json_encode(['success' => false, 'message' => 'No se pudo guardar la nueva imagen.']);
-                return;
-            }
+            $nuevaRuta = $resultadoImagen['path'];
         }
     
         // Actualizar en la base de datos
@@ -182,8 +146,5 @@ class ctlGoods {
             echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el bien.']);
         }
     }
-    
-    
-    
 
 }
