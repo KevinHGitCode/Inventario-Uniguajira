@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="assets/css/goods.css">
     <link rel="stylesheet" href="assets/css/inventory.css">
+    <link rel="stylesheet" href="assets/css/tasks.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
 
@@ -50,9 +51,24 @@
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/toast.js"></script>
+    <script src="assets/js/tasks.js"></script>
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
+
+    <script>
+         // Asegurar que las funciones estén disponibles globalmente
+         document.addEventListener('DOMContentLoaded', () => {
+             if (window.taskFunctions) {
+                 window.showTaskModal = window.taskFunctions.showTaskModal;
+                 window.hideTaskModal = window.taskFunctions.hideTaskModal;
+                 window.createTask = window.taskFunctions.createTask;
+                 window.toggleTask = window.taskFunctions.toggleTask;
+                 window.deleteTask = window.taskFunctions.deleteTask;
+                 window.showNotification = window.taskFunctions.showNotification;
+             }
+         });
+     </script>
 </body>
 
 </html>
