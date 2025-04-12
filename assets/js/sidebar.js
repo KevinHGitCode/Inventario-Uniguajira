@@ -26,7 +26,7 @@ function loadContent(path) {
         if (path === '/users') {
             activarBusquedaEnTabla();
             inicializarModalUser();
-            inicializarFormularioCrearUsuario();
+            inicializarCrearUsuario();
             inicializarBotonesEliminar();
             
         }

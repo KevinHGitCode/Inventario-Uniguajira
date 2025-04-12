@@ -103,9 +103,6 @@ function inicializarModalUser() {
         });
     }
 
-    // Llama a la función para inicializar el evento
-    inicializarCrearUsuario();
-
 
 /**
  * Configura los botones de eliminación para manejar la eliminación de bienes con confirmación.
