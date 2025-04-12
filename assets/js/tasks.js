@@ -1,0 +1,109 @@
+// Funciones para el modal de tareas
+const showTaskModal = () => {
+    document.getElementById('taskModal').style.display = 'flex';
+    document.getElementById('taskName').focus();
+};
+
+const hideTaskModal = () => {
+    document.getElementById('taskModal').style.display = 'none';
+};
+
+// Función para crear tareas
+const createTask = (event) => {
+    event.preventDefault();
+    
+    const taskData = {
+        name: document.getElementById('taskName').value,
+        description: document.getElementById('taskDesc').value
+    };
+
+    fetch('/api/tasks/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(taskData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Error al crear tarea'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error en la conexión');
+    });
+};
+
+// Función para alternar estado de tarea
+const toggleTask = (taskId, element) => {
+    fetch('/api/tasks/toggle', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: taskId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo actualizar la tarea'));
+        }
+    });
+};
+
+// Función para eliminar tarea
+const deleteTask = (taskId, element) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+        return;
+    }
+
+    fetch(`/api/tasks/delete/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            element.closest('.task-card').remove();
+            showNotification('Tarea eliminada correctamente', 'success');
+        } else {
+            throw new Error(data.error || 'Error al eliminar la tarea');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification(error.message, 'error');
+    });
+};
+
+// Función para mostrar notificaciones
+const showNotification = (message, type) => {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+};
+
+// Exportar funciones al ámbito global
+window.taskFunctions = {
+    showTaskModal,
+    hideTaskModal,
+    createTask,
+    toggleTask,
+    deleteTask,
+    showNotification
+};

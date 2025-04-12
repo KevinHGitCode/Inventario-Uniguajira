@@ -26,35 +26,43 @@ class Tasks extends Database {
      * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
      * @return bool Devuelve true si la tarea se creó correctamente, false en caso contrario.
      */
+
     // TODO: El estado al crear una tarea debería ser 'por hacer' por defecto.
     // TODO: Solo crear la tarea si el usuario es administrador.
-    public function create($name, $description, $usuario_id, $estado) {
-        $stmt = $this->connection->prepare("INSERT INTO tareas (nombre, descripcion, usuario_id, estado) VALUES (?, ?, ?, ?)");
+    //
+    public function create($name, $description, $usuario_id, $estado = 'por hacer') {
+        if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
+            throw new Exception('No tienes permisos para crear tareas');
+        }
+        
+        $stmt = $this->connection->prepare("
+            INSERT INTO tareas 
+            (nombre, descripcion, usuario_id, estado, fecha) 
+            VALUES (?, ?, ?, ?, NOW())
+        ");
         $stmt->bind_param("ssis", $name, $description, $usuario_id, $estado);
         return $stmt->execute();
     }
 
     /**
-     * Obtener todas las tareas de un usuario específico.
+     * Obtener todas las tareas de un usuario separadas por estado
      * 
      * @param int $usuario_id ID del usuario cuyas tareas se quieren obtener
-     * @return array Arreglo asociativo con las tareas del usuario
+     * @return array Array asociativo con dos keys: 'por_hacer' y 'completadas'
      */
     public function getByUser($usuario_id) {
         $stmt = $this->connection->prepare("
-            SELECT 
-                id, 
-                nombre, 
-                descripcion, 
-                fecha, 
-                estado 
+            SELECT id, nombre, descripcion, fecha, estado 
             FROM tareas 
             WHERE usuario_id = ?
+            ORDER BY 
+            CASE WHEN estado = 'por hacer' THEN 0 ELSE 1 END, -- Ordena por hacer primero
+            fecha DESC
         ");
         $stmt->bind_param("i", $usuario_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $result->fetch_all(MYSQLI_ASSOC); // Devuelve todas las tareas juntas
     }
 
     /**
@@ -63,10 +71,12 @@ class Tasks extends Database {
      * @return array Devuelve un arreglo asociativo con las tareas (id, nombre, descripción, estado).
      */
     public function getAll() {
+
         // Verificar si el usuario es administrador
-        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+        if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
             return []; // O podrías lanzar una excepción
         }
+
         // Obtener todas las tareas
         // Solo los administradores pueden ver todas las tareas
         $stmt = $this->connection->prepare("
@@ -77,6 +87,7 @@ class Tasks extends Database {
                 estado 
             FROM tareas
         ");
+
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
@@ -103,8 +114,13 @@ class Tasks extends Database {
      * @return bool Devuelve true si la tarea se eliminó correctamente, false en caso contrario.
      */
     public function delete($id, $usuario_id) {
-        $stmt = $this->connection->prepare("DELETE FROM tareas WHERE id = ? AND usuario_id = ?");
-        $stmt->bind_param("ii", $id, $usuario_id);
+        // Verificar que el usuario sea administrador o dueño de la tarea
+        $stmt = $this->connection->prepare("
+            DELETE FROM tareas 
+            WHERE id = ? 
+            AND (usuario_id = ? OR ? IN (SELECT id FROM usuarios WHERE rol = 'administrador'))
+        ");
+        $stmt->bind_param("iii", $id, $usuario_id, $usuario_id);
         return $stmt->execute();
     }
 
