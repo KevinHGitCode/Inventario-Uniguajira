@@ -4,10 +4,44 @@ const menu = document.getElementById('menu');
 const sidebar = document.getElementById('sidebar');
 const main = document.getElementById('main');
 
-menu.addEventListener('click',()=>{
+// Función para verificar si es móvil
+const isMobile = () => window.matchMedia('(max-width: 500px)').matches;
+
+// Función para alternar el menú
+const toggleMenu = () => {
     sidebar.classList.toggle('menu-toggle');
     menu.classList.toggle('menu-toggle');
     main.classList.toggle('menu-toggle');
+};
+
+// Evento del menú (toggle)
+menu.addEventListener('click', (e) => {
+    e.stopPropagation(); // Evita que el evento se propague al documento
+    toggleMenu();
+});
+
+// Cerrar menú al hacer clic fuera (solo en móviles)
+document.addEventListener('click', (e) => {
+    if (isMobile() && sidebar.classList.contains('menu-toggle')) {
+        // Verifica si el clic fue fuera del sidebar y del botón del menú
+        if (!sidebar.contains(e.target) && e.target !== menu && !menu.contains(e.target)) {
+            toggleMenu();
+        }
+    }
+});
+
+// Cerrar sidebar al hacer clic en opciones (solo móvil)
+document.querySelectorAll('#sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (isMobile() && sidebar.classList.contains('menu-toggle')) {
+            toggleMenu();
+        }
+    });
+});
+
+// Opcional: Prevenir el cierre al hacer clic dentro del sidebar
+sidebar.addEventListener('click', (e) => {
+    e.stopPropagation();
 });
 
 function loadContent(path) {
