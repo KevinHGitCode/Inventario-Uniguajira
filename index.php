@@ -18,6 +18,7 @@ $router->add('/users', 'ctlSidebar', 'users');
 // Rutas para la API de usuarios
 $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/logout', 'ctlUser', 'logout');
+$router->add('/api/users/create', 'ctlUser', 'create');
 
 
 // Rutas para la API de bienes

@@ -57,6 +57,8 @@
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/toast.js"></script>
     <script src="assets/js/goods.js"></script>
+
+    <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
 </body>
 </html>

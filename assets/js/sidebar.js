@@ -23,6 +23,13 @@ function loadContent(path) {
             activarModalActualizarBien();
             inicializarFormularioActualizarBien();
         }
+        if (path === '/users') {
+            activarBusquedaEnTabla();
+            inicializarModalUser();
+            inicializarFormularioCrearUsuario();
+            inicializarBotonesEliminar();
+            
+        }
     });
 }
 
