@@ -18,6 +18,7 @@ $router->add('/users', 'ctlSidebar', 'users');
 // Rutas para la API de usuarios
 $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/logout', 'ctlUser', 'logout');
+$router->add('/api/users/create', 'ctlUser', 'create');
 
 // Rutas para la API de tareas
 $router->add('/api/tasks/create', 'ctlTasks', 'create');
@@ -25,6 +26,7 @@ $router->add('/api/tasks/create', 'ctlTasks', 'create');
 // Rutas para la API de bienes
 $router->add('/api/goods/create', 'ctlGoods', 'create');
 $router->add('/api/goods/delete/:id', 'ctlGoods', 'delete');
+$router->add('/api/goods/update', 'ctlGoods', 'update');
 
 
 // Rutas para la API de inventarios

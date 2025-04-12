@@ -8,6 +8,7 @@
     }
     main{
         margin-left: 0;
+        width: 100vw;
     }
     main.menu-toggle{
         margin-left: 0;

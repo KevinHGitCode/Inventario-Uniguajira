@@ -134,4 +134,29 @@ class ctlUser {
         header("Location: /login");
         exit();
     }
+
+    public function create(){
+        // Validar si existen los parámetros necesarios
+        if (!isset($_POST['nombre']) || !isset($_POST['email']) || !isset($_POST['contraseña']) || !isset($_POST['rol'])) {
+            echo "Error: Parámetros faltantes para crear un usuario.";
+            return;
+        }
+
+        // Obtener parámetros desde $_POST
+        $nombre = $_POST['nombre'];
+        $nombre_usuario = $_POST['nombre_usuario'];
+        $email = $_POST['email'];
+        $contraseña = $_POST['contraseña'];
+        $rol =(int) $_POST['rol'];
+
+
+        // Crear el nuevo usuario
+        $result = $this->userModel->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol );
+        
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Usuario creado exitosamente.']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al crear el usuario.']);
+        }
+    }
 }

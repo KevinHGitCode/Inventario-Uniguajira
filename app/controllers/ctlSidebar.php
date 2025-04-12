@@ -68,7 +68,7 @@ class ctlSidebar {
         $dataGroups = $groups->getAllGroups(); // Get all groups from the model
 
         // Pass $dataGroups to the view
-        require __DIR__ . '/../views/inventory/inventory.php';
+        require __DIR__ . '/../views/inventory.php';
     }
 
     /**
@@ -79,13 +79,12 @@ class ctlSidebar {
     public function users() {
         require_once __DIR__ . '/../models/User.php';
         $user = new User();
-        // variables 
-        $num = 1000;
-        $name   = "Juanito Perez";
+      
+       $dataUsers = $user->getAllUsers(); // Get all users from the model
 
         // Logic for users view
         require __DIR__ . '/../views/users.php';
 
-        echo "Hola desde ctlSidebar - metodo users";
+       
     }
 }

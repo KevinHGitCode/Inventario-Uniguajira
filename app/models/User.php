@@ -78,12 +78,12 @@ class User extends Database {
      * @return string Mensaje de éxito.
      * @throws Exception Si ocurre un error al crear el usuario.
      */
-    public function createUser($nombre, $email, $contraseña, $rol, $fecha_creacion, $fecha_ultimo_Acceso, $foto_perfil = null) {
+    public function createUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil = null) {
         try {
-            $query = "INSERT INTO usuarios (nombre, nombr_usuario,  email, contraseña, rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil) VALUES (?, ?, ?, ?)";
+            $query = "INSERT INTO usuarios (nombre, nombre_usuario,  email, contraseña, rol, foto_perfil) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $this->connection->prepare($query);
             $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT); // Encriptar la contraseña
-            $stmt->bind_param("sssi", $nombre, $email, $hashedPassword, $rol);
+            $stmt->bind_param("ssssis", $nombre, $nombre_usuario, $email, $hashedPassword, $rol, $foto_perfil);
             $stmt->execute();
             if ($stmt->affected_rows > 0) {
                 return "Usuario creado exitosamente.";

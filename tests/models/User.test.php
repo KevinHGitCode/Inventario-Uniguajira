@@ -2,8 +2,8 @@
 require_once '../../app/models/User.php';
 
 function runTests() {
-    testGetAllUsers();
-    // testCreateUser("Kevin", "kevin@email.com", "1234", 1);
+   //testGetAllUsers();
+     testCreateUser("tralelotralala", "trale", "tralelotralala@email.com", "1234", 1, null);
     // testUpdateUser(4, "Updated Name", "updated@email.com", "newPassword123");
     // testUpdatePassword(1, "newPassword");
     // testDeleteUser(2);
@@ -31,10 +31,10 @@ function testGetAllUsers() {
     }
 }
 
-function testCreateUser($nombre, $email, $contraseña, $rol) {
+function testCreateUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil){
     $user = new User();
     try {
-        $resultado = $user->createUser($nombre, $email, $contraseña, $rol, null, null, null);   
+        $resultado = $user->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil);   
         echo $resultado;
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();

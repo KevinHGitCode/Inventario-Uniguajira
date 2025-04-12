@@ -1,0 +1,12 @@
+.toast-success {
+    border-left: 6px solid #198754; /* Verde para éxito */
+}
+.toast-fail {
+    border-left: 6px solid #dc3545; /* Rojo para fallo */
+}
+.toast-container {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    z-index: 1050;
+}

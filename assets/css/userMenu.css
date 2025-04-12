@@ -12,7 +12,7 @@
 
 /*Menu de Usuario*/
 .user-menu {
-    border: 2px solid red;
+    /* border: 2px solid red; */
     position: fixed;
     top: 3.8rem;
     right: 3.4rem;
@@ -33,6 +33,7 @@
 }
 
 /* Actualización: Usar solo la clase 'hidden' */
+/* TODO: Actualizar la clase hidden por otro nombre */
 .user-menu-content.hidden {
     transform: scale(0.2);
     opacity: 0;
