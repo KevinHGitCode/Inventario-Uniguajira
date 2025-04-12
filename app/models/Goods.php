@@ -112,6 +112,15 @@ class Goods extends Database {
         $row = $result->fetch_assoc();
         return $row['imagen'] ?? null;
     }
+
+    public function existsByName($nombre) {
+        $stmt = $this->connection->prepare("SELECT id FROM bienes WHERE nombre = ?");
+        $stmt->bind_param("s", $nombre);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
+    }
+    
     
 }
 ?>

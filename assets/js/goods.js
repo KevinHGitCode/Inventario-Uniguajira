@@ -86,7 +86,7 @@ function inicializarFormularioBien() {
             console.error("Error:", err);
             showToast({
                 success: false,
-                message: 'Error al enviar el formulario'
+                message: 'Error al enviar el formulario ' + err.message 
             });
         });
     });

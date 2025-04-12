@@ -9,7 +9,17 @@ class ctlGoods {
             $tipo = (int) $_POST['tipo'];
             $imagen = $_FILES['imagen'] ?? null;
             $rutaDestino = null;
-
+    
+            require_once __DIR__ . '/../models/Goods.php';
+            $goodsModel = new Goods();
+    
+            // Validar si ya existe un bien con el mismo nombre
+            if ($goodsModel->existsByName($nombre)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'Ya existe un bien con ese nombre.']);
+                return;
+            }
+    
             // Validar tipo ENUM
             if (!in_array($tipo, [1, 2])) {
                 http_response_code(400);
@@ -19,18 +29,17 @@ class ctlGoods {
                 ]);
                 return;
             }
-
-            // Validaciones de la imagen (solo si se envió)
+    
+            // Validaciones de imagen (opcional)
             if ($imagen && $imagen['error'] === UPLOAD_ERR_OK) {
                 $maxSize = 2 * 1024 * 1024; // 2MB
                 $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 $mimePermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
+    
                 $extension = strtolower(pathinfo($imagen['name'], PATHINFO_EXTENSION));
                 $mimeType = mime_content_type($imagen['tmp_name']);
                 $fileSize = $imagen['size'];
-
-                // Validar extensión y MIME
+    
                 if (!in_array($extension, $extensionesPermitidas) || !in_array($mimeType, $mimePermitidos)) {
                     http_response_code(400);
                     echo json_encode([
@@ -39,8 +48,7 @@ class ctlGoods {
                     ]);
                     return;
                 }
-
-                // Validar tamaño
+    
                 if ($fileSize > $maxSize) {
                     http_response_code(400);
                     echo json_encode([
@@ -49,11 +57,10 @@ class ctlGoods {
                     ]);
                     return;
                 }
-
-                // Guardar imagen
+    
                 $fileName = uniqid('bien_') . '.' . $extension;
                 $rutaDestino = 'assets/uploads/img/' . $fileName;
-
+    
                 if (!move_uploaded_file($imagen['tmp_name'], $rutaDestino)) {
                     http_response_code(500);
                     echo json_encode([
@@ -63,12 +70,9 @@ class ctlGoods {
                     return;
                 }
             }
-
-            // Guardar en la base de datos (con imagen o sin ella)
-            require_once __DIR__ . '/../models/Goods.php';
-            $goodsModel = new Goods();
+    
             $resultado = $goodsModel->create($nombre, $tipo, $rutaDestino);
-
+    
             if ($resultado) {
                 header('Content-Type: application/json');
                 echo json_encode([
@@ -88,6 +92,7 @@ class ctlGoods {
             echo "Método no permitido.";
         }
     }
+    
 
 
     public function delete($id) {
@@ -103,6 +108,10 @@ class ctlGoods {
         $cantidad = $goodsModel->getQuantityById((int)$id);
 
         if ($cantidad === 0) {
+            $rutaImagen = $goodsModel->getImageById((int)$id);
+            if ($rutaImagen && file_exists($rutaImagen)) {
+                unlink($rutaImagen);
+            }
             $resultado = $goodsModel->delete((int)$id);
         } else {
             http_response_code(400);
@@ -117,6 +126,7 @@ class ctlGoods {
             echo json_encode(['success' => false, 'message' => 'Error al eliminar el bien.']);
         }
     }
+    
     
 
     public function update() {
