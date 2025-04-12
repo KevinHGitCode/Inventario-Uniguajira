@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="assets/css/goods.css">
     <link rel="stylesheet" href="assets/css/inventory.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
-    <link rel="stylesheet" href="assets/css/responsive/goodsResponssive.css">
+    <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
 
 </head>
     
