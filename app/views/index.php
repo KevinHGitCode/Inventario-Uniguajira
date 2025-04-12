@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="assets/css/goods.css">
     <link rel="stylesheet" href="assets/css/inventory.css">
+    <link rel="stylesheet" href="assets/css/tasks.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
 
@@ -46,5 +47,6 @@
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/inventory.js"></script>
+    <script src="assets/js/tasks.js"></script>
 </body>
 </html>
