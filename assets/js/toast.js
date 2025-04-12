@@ -33,16 +33,16 @@ function showToast(msg) {
 }
 
 // Ejemplos de uso
-document.getElementById('successBtn').addEventListener('click', () => {
-    showToast({
-        success: true,
-        message: 'Los datos se guardaron correctamente'
-    });
-});
+// document.getElementById('successBtn').addEventListener('click', () => {
+//     showToast({
+//         success: true,
+//         message: 'Los datos se guardaron correctamente'
+//     });
+// });
 
-document.getElementById('errorBtn').addEventListener('click', () => {
-    showToast({
-        success: false,
-        message: 'No se pudo conectar al servidor'
-    });
-});
+// document.getElementById('errorBtn').addEventListener('click', () => {
+//     showToast({
+//         success: false,
+//         message: 'No se pudo conectar al servidor'
+//     });
+// });
