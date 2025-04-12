@@ -70,10 +70,7 @@ function inicializarFormularioBien() {
             method: "POST",
             body: formData
         })
-        .then(res => {
-            if (!res.ok) throw new Error("Error HTTP: " + res.status);
-            return res.json();
-        })
+        .then(res =>  res.json())
         .then(response => {
             showToast(response);
 
@@ -86,7 +83,7 @@ function inicializarFormularioBien() {
             console.error("Error:", err);
             showToast({
                 success: false,
-                message: 'Error al enviar el formulario'
+                message: 'Error: El registro ya existe. No se pueden crear duplicados.'
             });
         });
     });
