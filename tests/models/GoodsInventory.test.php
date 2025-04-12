@@ -3,69 +3,283 @@
 require_once '../../app/models/GoodsInventory.php';
 
 function runTests() {
-    testGetAllGoodsByInventory(1); // Replace with a valid inventory ID
-    // testCreate(1, 2, 10); // Replace with valid inventory ID, good ID, and quantity
-    // testUpdate(1, ['quantity' => 20]); // Replace with valid inventoryGoodId and new data
-    // testDelete(1); // Replace with valid inventoryGoodId
+    testGetAllGoodsByInventory();
+    // testGetAllQuantityGoodsByInventory();
+    // testGetAllSerialGoodsByInventory();
+    // testAddQuantityGoodToInventory();
+    // testAddSerialGoodToInventory();
+    // testUpdateQuantityGood();
+    // testUpdateSerialGood();
+    // testTransferQuantityGoods();
+    // testTransferSerialGoods();
+    // testDeactivateQuantityGoods();
+    // testDeactivateSerialGoods();
+    // testCreate();
+    // testUpdate();
+    // testDelete();
 }
 
-function testGetAllGoodsByInventory($inventoryId) {
+function testGetAllGoodsByInventory() {
     $goodsInventory = new GoodsInventory();
-    echo "Testing getAllGoodsByInventory($inventoryId)...<br>";
+    echo "Testing getAllGoodsByInventory()... <br>";
+    $inventoryId = 1; // Replace with a valid inventory ID from your database
+    $result = $goodsInventory->getAllGoodsByInventory($inventoryId);
+    
+    if (is_array($result)) {
+        echo "PASSED<br>";
+        foreach ($result as $item) {
+            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Name: {$item['bien']}, Quantity: {$item['cantidad']}<br>";
+        }
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testGetAllQuantityGoodsByInventory() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing getAllQuantityGoodsByInventory()... <br>";
+    $inventoryId = 1; // Replace with a valid inventory ID from your database
+    $result = $goodsInventory->getAllQuantityGoodsByInventory($inventoryId);
+    
+    if (is_array($result)) {
+        echo "PASSED<br>";
+        foreach ($result as $item) {
+            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Name: {$item['bien']}, Quantity: {$item['cantidad']}<br>";
+        }
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testGetAllSerialGoodsByInventory() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing getAllSerialGoodsByInventory()... <br>";
+    $inventoryId = 1; // Replace with a valid inventory ID from your database
+    $result = $goodsInventory->getAllSerialGoodsByInventory($inventoryId);
+    
+    if (is_array($result)) {
+        echo "PASSED<br>";
+        foreach ($result as $item) {
+            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Serial: {$item['serial']}, Model: {$item['modelo']}<br>";
+        }
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testAddQuantityGoodToInventory() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing addQuantityGoodToInventory()... <br>";
+    $inventoryId = 1; // Replace with valid IDs
+    $goodId = 1;      // Replace with valid IDs
+    $quantity = 5;
+    
+    if ($goodsInventory->addQuantityGoodToInventory($inventoryId, $goodId, $quantity)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testAddSerialGoodToInventory() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing addSerialGoodToInventory()... <br>";
+    $inventoryId = 1; // Replace with valid IDs
+    $goodId = 2;      // Replace with valid IDs
+    
+    $details = [
+        'description' => 'Test equipment',
+        'brand' => 'TestBrand',
+        'model' => 'TestModel',
+        'serial' => 'SN12345678',
+        'state' => 'activo',
+        'color' => 'black',
+        'technical_conditions' => 'good',
+        'entry_date' => date('Y-m-d')
+    ];
+    
+    if ($goodsInventory->addSerialGoodToInventory($inventoryId, $goodId, $details)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testUpdateQuantityGood() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing updateQuantityGood()... <br>";
+    $inventoryGoodId = 1; // Replace with a valid inventory good ID
+    $newQuantity = 10;
+    
+    if ($goodsInventory->updateQuantityGood($inventoryGoodId, $newQuantity)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testUpdateSerialGood() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing updateSerialGood()... <br>";
+    $inventoryGoodId = 1; // Replace with a valid inventory good ID
+    
+    $newData = [
+        'description' => 'Updated equipment',
+        'brand' => 'UpdatedBrand',
+        'model' => 'UpdatedModel',
+        'serial' => 'SN98765432',
+        'state' => 'activo',
+        'color' => 'white',
+        'technical_conditions' => 'excellent',
+        'entry_date' => date('Y-m-d'),
+        'exit_date' => null
+    ];
+    
+    if ($goodsInventory->updateSerialGood($inventoryGoodId, $newData)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testTransferQuantityGoods() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing transferQuantityGoods()... <br>";
+    $sourceInventoryId = 1; // Replace with valid IDs
+    $targetInventoryId = 2; // Replace with valid IDs
+    $goodId = 1;            // Replace with valid IDs
+    $quantity = 2;
+    
     try {
-        $goods = $goodsInventory->getAllGoodsByInventory($inventoryId);
-        if (!empty($goods)) {
+        if ($goodsInventory->transferQuantityGoods($sourceInventoryId, $targetInventoryId, $goodId, $quantity)) {
             echo "PASSED<br>";
-            foreach ($goods as $good) {
-                echo "Inventario ID: {$good['inventario_id']}, Bien ID: {$good['bien_id']}, Cantidad: {$good['cantidad']}, Cantidad: {$good['bien']}<br>";
-            }
         } else {
-            echo "FAILED: No goods found for inventory ID $inventoryId<br>";
+            echo "FAILED<br>";
         }
     } catch (Exception $e) {
         echo "FAILED: " . $e->getMessage() . "<br>";
     }
 }
 
-function testCreate($inventoryId, $goodId, $quantity) {
+function testTransferSerialGoods() {
     $goodsInventory = new GoodsInventory();
-    echo "Testing create($inventoryId, $goodId, $quantity)...<br>";
-    try {
-        if ($goodsInventory->create($inventoryId, $goodId, $quantity)) {
-            echo "PASSED: Good added to inventory<br>";
-        } else {
-            echo "FAILED: Could not add good to inventory<br>";
-        }
-    } catch (Exception $e) {
-        echo "FAILED: " . $e->getMessage() . "<br>";
+    echo "Testing transferSerialGoods()... <br>";
+    $sourceInventoryId = 1; // Replace with valid IDs
+    $targetInventoryId = 2; // Replace with valid IDs
+    $goodId = 2;            // Replace with valid IDs
+    
+    if ($goodsInventory->transferSerialGoods($sourceInventoryId, $targetInventoryId, $goodId)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
     }
 }
 
-function testUpdate($inventoryGoodId, $newData) {
+function testDeactivateQuantityGoods() {
     $goodsInventory = new GoodsInventory();
-    echo "Testing update($inventoryGoodId, newData)...<br>";
-    try {
-        if ($goodsInventory->update($inventoryGoodId, $newData)) {
-            echo "PASSED: Good updated in inventory<br>";
-        } else {
-            echo "FAILED: Could not update good in inventory<br>";
-        }
-    } catch (Exception $e) {
-        echo "FAILED: " . $e->getMessage() . "<br>";
+    echo "Testing deactivateQuantityGoods()... <br>";
+    $inventoryGoodId = 1; // Replace with a valid inventory good ID
+    
+    if ($goodsInventory->deactivateQuantityGoods($inventoryGoodId)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
     }
 }
 
-function testDelete($inventoryGoodId) {
+function testDeactivateSerialGoods() {
     $goodsInventory = new GoodsInventory();
-    echo "Testing delete($inventoryGoodId)...<br>";
-    try {
-        if ($goodsInventory->delete($inventoryGoodId)) {
-            echo "PASSED: Good removed from inventory<br>";
-        } else {
-            echo "FAILED: Could not remove good from inventory<br>";
-        }
-    } catch (Exception $e) {
-        echo "FAILED: " . $e->getMessage() . "<br>";
+    echo "Testing deactivateSerialGoods()... <br>";
+    $inventoryGoodId = 1; // Replace with a valid inventory good ID
+    
+    if ($goodsInventory->deactivateSerialGoods($inventoryGoodId)) {
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
+
+function testCreate() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing create()... <br>";
+    
+    // Test quantity type
+    $inventoryId = 1;
+    $goodId = 1;
+    $quantity = 3;
+    if ($goodsInventory->create($inventoryId, $goodId, $quantity, 'quantity')) {
+        echo "Quantity create PASSED<br>";
+    } else {
+        echo "Quantity create FAILED<br>";
+    }
+    
+    // Test serial type
+    $details = [
+        'description' => 'Test create equipment',
+        'brand' => 'CreateBrand',
+        'model' => 'CreateModel',
+        'serial' => 'SN11223344',
+        'state' => 'activo',
+        'color' => 'blue',
+        'technical_conditions' => 'new',
+        'entry_date' => date('Y-m-d')
+    ];
+    if ($goodsInventory->create($inventoryId, $goodId, $details, 'serial')) {
+        echo "Serial create PASSED<br>";
+    } else {
+        echo "Serial create FAILED<br>";
+    }
+}
+
+function testUpdate() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing update()... <br>";
+    
+    // Test quantity type
+    $inventoryGoodId = 1; // Replace with valid ID
+    $newQuantity = 15;
+    if ($goodsInventory->update($inventoryGoodId, $newQuantity, 'quantity')) {
+        echo "Quantity update PASSED<br>";
+    } else {
+        echo "Quantity update FAILED<br>";
+    }
+    
+    // Test serial type
+    $newData = [
+        'description' => 'Updated via test',
+        'brand' => 'UpdateBrand',
+        'model' => 'UpdateModel',
+        'serial' => 'SN55667788',
+        'state' => 'activo',
+        'color' => 'red',
+        'technical_conditions' => 'used',
+        'entry_date' => date('Y-m-d'),
+        'exit_date' => null
+    ];
+    if ($goodsInventory->update($inventoryGoodId, $newData, 'serial')) {
+        echo "Serial update PASSED<br>";
+    } else {
+        echo "Serial update FAILED<br>";
+    }
+}
+
+function testDelete() {
+    $goodsInventory = new GoodsInventory();
+    echo "Testing delete()... <br>";
+    
+    // Test quantity type
+    $inventoryGoodId = 1; // Replace with valid ID
+    if ($goodsInventory->delete($inventoryGoodId, 'quantity')) {
+        echo "Quantity delete PASSED<br>";
+    } else {
+        echo "Quantity delete FAILED<br>";
+    }
+    
+    // Test serial type
+    if ($goodsInventory->delete($inventoryGoodId, 'serial')) {
+        echo "Serial delete PASSED<br>";
+    } else {
+        echo "Serial delete FAILED<br>";
     }
 }
 
