@@ -39,7 +39,7 @@ class ctlView {
      * @return void
      */
     public function notFound() {
-        include 'app/views/not-found.html';
+        include 'app/views/errors/not-found.html';
     }
 
     /**
