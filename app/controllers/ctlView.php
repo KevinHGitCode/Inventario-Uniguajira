@@ -42,6 +42,10 @@ class ctlView {
         include 'app/views/errors/not-found.html';
     }
 
+    public function test() {
+        include 'tests/views/diseño-inventario.html';
+    }
+
     /**
      * Envía una respuesta en formato JSON.
      *

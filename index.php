@@ -8,6 +8,8 @@ $router->add('/', 'ctlView', 'index');
 $router->add('/login', 'ctlView', 'login');
 $router->add('/doc', 'ctlView', 'doc');
 $router->add('/404', 'ctlView', 'notFound');
+$router->add('/inv', 'ctlView', 'test');
+
 
 // Rutas para el sidebar
 $router->add('/home', 'ctlSidebar', 'home');
