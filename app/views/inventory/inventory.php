@@ -16,28 +16,38 @@
             <button id="btnCrear" class="create-btn">Crear</button>
         </div>
 
-        <div class="bienes-grid">
+        <div class="card-grid">
             <?php if (isset($dataGroups)): ?>
-
-                <!-- Por cada grupo de inventarios -->
                 <?php foreach ($dataGroups as $group): ?>
-                    <div class="bien-card">
-                        <div class="bien-info">
-                            <h3 id="group-name<?=$group['id']?>" ><?= htmlspecialchars($group['nombre']) ?></h3>
+                    <div class="card">
+                        <div class="card-left">
+                            <i class="fas fa-layer-group icon-folder"></i>
                         </div>
-                        <div class="actions">
-                            <button
-                                class="create-btn"
-                                onclick="abrirGrupo(<?= htmlspecialchars($group['id']) ?>)"
-                            >
-                                Abrir
+                        
+                        <div class="card-center">
+                            <div class="title" id="group-name<?=$group['id']?>">
+                                <?= htmlspecialchars($group['nombre']) ?>
+                            </div>
+                            <div class="stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-folder"></i>
+                                    <?= $group['total_inventarios'] ?? 0 ?> inventarios
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-right">
+                            <button class="btn-open" onclick="abrirGrupo(<?= htmlspecialchars($group['id']) ?>)">
+                                <i class="fas fa-external-link-alt"></i> Abrir
                             </button>
                         </div>
                     </div>
                 <?php endforeach; ?>
-
             <?php else: ?>
-            <p>No hay grupos disponibles.</p>
+                <div class="empty-state">
+                    <i class="fas fa-layer-group fa-3x"></i>
+                    <p>No hay grupos disponibles</p>
+                </div>
             <?php endif; ?>
         </div>
     </div>

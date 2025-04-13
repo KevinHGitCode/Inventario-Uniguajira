@@ -95,3 +95,174 @@
     margin-bottom: 1.6rem;
     padding-bottom: 0.5rem;
 }
+
+/* ------------------------ */
+/* Contenedor principal de la cuadrícula */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+/* Estilos para las tarjetas individuales */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e0e0e0;
+    padding: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Sección izquierda - Icono */
+.card-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-folder {
+    font-size: 28px;
+    color: #a3333d;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sección central - Información */
+.card-center {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #555555d5;
+    font-size: 14px;
+}
+
+.stat-item i {
+    color: #a3333d;
+    opacity: 0.8;
+    font-size: 12px;
+}
+
+/* Sección derecha - Botón */
+.card-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-open {
+    background-color: #a3333d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-open:hover {
+    background-color: #8c2b32;
+}
+
+.btn-open i {
+    font-size: 12px;
+}
+
+/* Estado vacío */
+.empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    border: 2px dashed #e0e0e0;
+    text-align: center;
+}
+
+.empty-state i {
+    color: #a3333d;
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+.empty-state p {
+    color: #555;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "left"
+            "center"
+            "right";
+        text-align: center;
+        gap: 12px;
+    }
+    
+    .card-left {
+        grid-area: left;
+    }
+    
+    .card-center {
+        grid-area: center;
+    }
+    
+    .card-right {
+        grid-area: right;
+        justify-content: center;
+    }
+    
+    .stats {
+        justify-content: center;
+    }
+}
