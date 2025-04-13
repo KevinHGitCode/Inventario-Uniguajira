@@ -9,68 +9,68 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
     gap: 15px;
-}
 
-.bien-card {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid #e0e0e0; /* Borde sutil y elegante */
-    transition: transform 0.2s, box-shadow 0.2s;
-}
+    .bien-card {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 2px solid #e0e0e0; /* Borde sutil y elegante */
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-.bien-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
+    .bien-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
 
-.bien-image{
-    width: 120px;
-    height: 100px;
-    /* border-radius: 12px; */
-    object-fit: cover;
-    margin-right: 16px;
-    border-radius: 8px;
-}
+    .bien-image{
+        width: 120px;
+        height: 100px;
+        /* border-radius: 12px; */
+        object-fit: cover;
+        margin-right: 16px;
+        border-radius: 8px;
+    }
 
-/* Información del bien */
-.bien-info {
-    flex-grow: 1;
-}
+    /* Información del bien */
+    .bien-info {
+        flex-grow: 1;
 
-.bien-info h3 {
-    font-size: 20px;
-    margin: 0;
-    font-weight: bold;
-}
+        h3 {
+            font-size: 20px;
+            margin: 0;
+            font-weight: bold;
+        }
 
-.bien-info p {
-    margin: 5px 0;
-    color: #555555d5;
+        p {
+            margin: 5px 0;
+            color: #555555d5;
+        }
+    }
+
 }
 
 /* Contenedor de botones de acción */
 .actions {
     display: flex;
     gap: 10px;
-}
 
-/* Estilo de los botones */
-.actions a {
-    text-decoration: none;
-    font-size: 20px;
-    color: #555;
-    transition: color 0.3s ease-in-out;
-}
+    /* Estilo de los botones */
+    a {
+        text-decoration: none;
+        font-size: 20px;
+        color: #555;
+        transition: color 0.3s ease-in-out;
+    }
 
-.actions a:hover {
-    color: #a3333d;
+    a:hover {
+        color: #a3333d;
+    }
 }
-
 
 
 /* Estilo del modal */
