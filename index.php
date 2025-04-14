@@ -19,8 +19,8 @@ $router->add('/inventory', 'ctlSidebar', 'inventory');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para la API de usuarios
-$router->add('/login', 'ctlUser', 'login');
-$router->add('/logout', 'ctlUser', 'logout');
+$router->add('/api/login', 'ctlUser', 'login');
+$router->add('/api/logout', 'ctlUser', 'logout');
 $router->add('/api/users/create', 'ctlUser', 'create');
 $router->add('/api/users/edit', 'ctlUser', 'edit');
 

@@ -24,3 +24,15 @@ function editProfile() {
     loadContent('/profile'); 
     
 }
+
+// Cerrar el menú al hacer clic fuera de él
+document.addEventListener('click', function (event) {
+    const userMenu = document.getElementById('userMenu');
+    const userImage = document.querySelector('.user');
+
+    // Si el menú está visible y el clic no fue dentro del menú ni sobre la imagen del usuario
+    if (userMenu && !userMenu.classList.contains('hidden') &&
+        !userMenu.contains(event.target) && !userImage.contains(event.target)) {
+        userMenu.classList.add('hidden');
+    }
+});
