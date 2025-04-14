@@ -68,6 +68,9 @@ function loadContent(path) {
             inicializarFormularioEditarPerfil();
             inicializarModalEditUser();
         }
+
+        // Hacer scroll hacia arriba
+        window.scrollTo(0, 0);
     });
 }
 
