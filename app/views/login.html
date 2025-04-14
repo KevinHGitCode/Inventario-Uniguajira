@@ -2,8 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login | Inventario-Uniguajira</title>
+    <link rel="preload" href="assets/images/fondounigua.jpeg" as="image">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Estilos base y reset */
@@ -37,6 +38,15 @@
             object-position: center;
             filter: brightness(100%) blur(3px); /* Brillo reducido y desenfoque */
             z-index: -10;
+        }
+
+        /* Técnica de carga progresiva para la imagen de fondo */
+        .background-image {
+            transition: opacity 0.3s ease;
+            opacity: 0.6;
+        }
+        .background-image.loaded {
+            opacity: 1;
         }
         
         /* Contenedor del formulario de login */
@@ -219,9 +229,22 @@
         </form>
     </div>
     
+    <script>
+        // Manejar la carga de la imagen de fondo
+        const bgImage = document.querySelector('.background-image');
+        if (bgImage.complete) {
+            bgImage.classList.add('loaded');
+        } else {
+            bgImage.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+        }
+    </script>
+    
     <!-- Scripts de Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 </body>
 </html>
