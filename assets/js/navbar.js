@@ -13,3 +13,14 @@ function logout() {
     localStorage.removeItem('lastSelected');
     window.location.href = '/api/logout'; // Redirigir al endpoint correcto del backend
 }
+
+function editProfile() {
+
+    var menu = document.getElementById('userMenu');
+    if (menu) {
+        menu.classList.add('hidden');
+    }
+    // Redirigir a la página de edición de perfil
+    loadContent('/profile'); 
+    
+}
