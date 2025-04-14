@@ -56,4 +56,22 @@ class ctlView {
         header('Content-Type: application/json');
         echo json_encode($response);
     }
+
+    /**
+     * Muestra la vista de perfil de usuario (Profile).
+     *
+     * @return void
+     */
+    public function Profile() {
+        //obtener datos de la sesión, incluyendo todos los atributos del usuario
+        session_start();
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $user_name = $_SESSION['user_name'];
+            $user_email = $_SESSION['user_email'];
+            $user_rol = $_SESSION['user_rol'];
+            // $user_img = $_SESSION['user_img']; // Uncomment if needed
+            include 'app/views/editProfile.php';
+        }
+    }
 }

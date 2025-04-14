@@ -6,6 +6,7 @@ $router = new Router();
 // Rutas para vistas principales
 $router->add('/', 'ctlView', 'index');
 $router->add('/login', 'ctlView', 'login');
+$router->add('/profile', 'ctlView', 'Profile');
 $router->add('/doc', 'ctlView', 'doc');
 $router->add('/404', 'ctlView', 'notFound');
 $router->add('/inv', 'ctlView', 'test');
@@ -21,6 +22,7 @@ $router->add('/users', 'ctlSidebar', 'users');
 $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/logout', 'ctlUser', 'logout');
 $router->add('/api/users/create', 'ctlUser', 'create');
+$router->add('/api/users/edit', 'ctlUser', 'edit');
 
 // Rutas para la API de tareas
 $router->add('/api/tasks/create', 'ctlTasks', 'create');

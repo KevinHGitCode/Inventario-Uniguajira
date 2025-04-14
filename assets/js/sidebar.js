@@ -61,8 +61,12 @@ function loadContent(path) {
             activarBusquedaEnTabla();
             inicializarModalUser();
             inicializarCrearUsuario();
-            inicializarBotonesEliminar();
-            
+            inicializarBotonesEliminar();   
+        }
+
+        if (path === '/profile') {
+            inicializarFormularioEditarPerfil();
+            inicializarModalEditUser();
         }
     });
 }
