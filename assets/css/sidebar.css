@@ -1,13 +1,13 @@
 /*Colors*/
 :root {
-    --background-color: white;
-    --text-color: #32363B;
+    --background-color: #F8FAFC;
+    --text-color: #4A5568;
 
-    --text-selected-color: #355CC0;
-    --background-selected: #EBF0FF;
-    --background-hover: #F7F9FA;
+    --text-selected-color: #434395d2;
+    --background-selected: #e1e3ec;
+    --background-hover: #e4edf765;
 
-    --border-color: #E6E9ED;
+    --border-color: #7d7f82;
 }
 
 /* DESCRIPCION: Este archivo tiene los estilos para el sidebar */
@@ -23,7 +23,7 @@
     left: 0;
     z-index: 100;
     padding: 1.1rem 0;
-    border-right: 1px solid var(--border-color);
+    border-right: 1px dashed #7d7f82;
     overflow-y: auto;
     background-color: var(--background-color);
     transition: width 0.5s ease;
@@ -53,11 +53,12 @@
     /* Estilo de los enlaces seleccionados */
     color: var(--text-selected-color);
     background-color: var(--background-selected);
+    font-weight: 500;
 }
 .sidebar a.search {
     /* Estilo del enlace de búsqueda */
     padding: 1rem 0.7rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
     margin-bottom: 0.2rem;
 }
 .sidebar img {

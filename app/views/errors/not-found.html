@@ -1,14 +1,190 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>404 - No Encontrado</title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada | Inventario-Unigujira</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            z-index: 10;
+        }
+        
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #ad3728;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #ad3728;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(173, 55, 40, 0.3);
+        }
+        
+        .btn:hover {
+            background-color: #a3333d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(173, 55, 40, 0.4);
+        }
+        
+        .illustration-container {
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .bg-shape {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.05;
+        }
+        
+        .shape-1 {
+            top: 10%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background-color: #ad3728;
+        }
+        
+        .shape-2 {
+            bottom: 10%;
+            right: 5%;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background-color: #a3333d;
+        }
+        
+        .shape-3 {
+            top: 40%;
+            right: 15%;
+            width: 150px;
+            height: 150px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background-color: #ad3728;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                margin: 0 1rem;
+            }
+            
+            h1 {
+                font-size: 4rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>404 - Página No Encontrada</h1>
-    <p>esta es un pagina personizada del proyeco Inventario-Unigujira</p>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    
+    <div class="container">
+        <h1>404</h1>
+        <h2>Página no encontrada</h2>
+        
+        <div class="illustration-container">
+            <div class="floating">
+                <svg class="illustration" width="280" height="180" viewBox="0 0 280 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Monitor/Pantalla -->
+                    <rect x="60" y="20" width="160" height="110" rx="8" fill="#ad3728" />
+                    <rect x="65" y="25" width="150" height="100" rx="4" fill="#fff" />
+                    
+                    <!-- Base del monitor -->
+                    <path d="M140 130 L120 150 L160 150 L140 130" fill="#ad3728" />
+                    <rect x="110" y="150" width="60" height="10" rx="2" fill="#a3333d" />
+                    
+                    <!-- Símbolo de error en la pantalla -->
+                    <text x="140" y="75" font-family="Arial" font-size="40" font-weight="bold" fill="#ad3728" text-anchor="middle">404</text>
+                    
+                    <!-- Líneas de código rotas -->
+                    <line x1="85" y1="95" x2="115" y2="95" stroke="#a3333d" stroke-width="3" stroke-linecap="round" />
+                    <line x1="125" y1="95" x2="145" y2="95" stroke="#ad3728" stroke-width="3" stroke-linecap="round" />
+                    <line x1="85" y1="105" x2="105" y2="105" stroke="#ad3728" stroke-width="3" stroke-linecap="round" />
+                    <line x1="115" y1="105" x2="165" y2="105" stroke="#a3333d" stroke-width="3" stroke-linecap="round" />
+                    
+                    <!-- Signos de error -->
+                    <path d="M190 50 L200 60 L190 70 L180 60 Z" fill="#a3333d" />
+                    <circle cx="190" y="85" r="8" fill="#ad3728" />
+                </svg>
+            </div>
+        </div>
+        
+        <p>Lo sentimos, la página que estás buscando no existe o ha sido movida a otra ubicación en el sistema de Inventario-Unigujira.</p>
 
-    <script src="/assets/js/scripts.js"></script>
+        <a href="/" class="btn">Volver al inicio</a>
+    </div>
 </body>
 </html>

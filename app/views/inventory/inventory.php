@@ -2,24 +2,51 @@
     <h1>Inventario</h1>
 
     <div id="groups">
-        <h2>Grupos</h2>
+        <h2 class="text-secondary fs-5 fw-normal mb-4">Grupos</h2>
 
-        <?php include 'app/views/inventory/searchInventory.html' ?>
-        
-        <div class="bienes-grid">
+        <div class="top-bar">
+            <div class="search-container">
+                <input
+                    class="search-bar"
+                    type="text"
+                    placeholder="Buscar o agregar grupos..."
+                />
+                <i class="search-icon fas fa-search"></i>
+            </div>
+            <button id="btnCrear" class="create-btn">Crear</button>
+        </div>
+
+        <div class="card-grid">
             <?php if (isset($dataGroups)): ?>
                 <?php foreach ($dataGroups as $group): ?>
-                    <div class="bien-card">
-                        <div class="bien-info">
-                            <h3><?= htmlspecialchars($group['nombre']) ?></h3>
+                    <div class="card">
+                        <div class="card-left">
+                            <i class="fas fa-layer-group icon-folder"></i>
                         </div>
-                        <div class="actions">
-                            <button class="create-btn" onclick="abrirGrupo(<?= htmlspecialchars($group['id']) ?>)">Abrir</button>
+                        
+                        <div class="card-center">
+                            <div id="group-name<?=$group['id']?>" 
+                            class="title"> <?= htmlspecialchars($group['nombre']) ?> </div>
+                            <div class="stats">
+                                <span class="stat-item">
+                                    <i class="fas fa-folder"></i>
+                                    <?= $group['total_inventarios'] ?? 0 ?> inventarios
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-right">
+                            <button class="btn-open" onclick="abrirGrupo(<?= htmlspecialchars($group['id']) ?>)">
+                                <i class="fas fa-external-link-alt"></i> Abrir
+                            </button>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No hay grupos disponibles.</p>
+                <div class="empty-state">
+                    <i class="fas fa-layer-group fa-3x"></i>
+                    <p>No hay grupos disponibles</p>
+                </div>
             <?php endif; ?>
         </div>
     </div>

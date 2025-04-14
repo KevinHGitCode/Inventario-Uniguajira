@@ -27,7 +27,8 @@ class User extends Database {
                 id, 
                 nombre, 
                 nombre_usuario, 
-                email, 
+                email,
+                contraseña,
                 rol, 
                 fecha_creacion, 
                 fecha_ultimo_acceso, 
@@ -114,7 +115,6 @@ class User extends Database {
             $stmt->bind_param("sssii", $nombre, $email, $hashedPassword, $rol, $id);
             $stmt->execute();
             if ($stmt->affected_rows > 0) {
-                echo ": <br>";
                 return "Usuario actualizado exitosamente.";
             } else {
                 return "No se realizaron cambios en los datos del usuario.";
@@ -142,7 +142,6 @@ class User extends Database {
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
-                echo ": <br>";
                 return "Usuario actualizado exitosamente.";
             } else {
                 return "No se realizaron cambios en los datos del usuario.";
@@ -259,6 +258,13 @@ class User extends Database {
         }
     }
     
+    public function updateUserImage($id, $ruta){
+        $query = "UPDATE usuarios SET foto_perfil = ? WHERE id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("si", $ruta, $id);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
 
     
 }
