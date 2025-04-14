@@ -25,9 +25,8 @@
                         </div>
                         
                         <div class="card-center">
-                            <div class="title" id="group-name<?=$group['id']?>">
-                                <?= htmlspecialchars($group['nombre']) ?>
-                            </div>
+                            <div id="group-name<?=$group['id']?>" 
+                            class="title"> <?= htmlspecialchars($group['nombre']) ?> </div>
                             <div class="stats">
                                 <span class="stat-item">
                                     <i class="fas fa-folder"></i>

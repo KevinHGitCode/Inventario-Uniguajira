@@ -63,12 +63,12 @@
     background-color: transparent;
     color: #6c757d;
     border: none;
-    padding: 8px 15px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 500;
     display: flex;
     align-items: center;
+    bottom: 0;
     transition: all 0.5s ease;
 }
 
@@ -102,13 +102,14 @@
 }
 
 .location {
-    color: #6c757d;      /* text-secondary */
-    font-size: 1.25rem;  /* fs-5 */
-    font-weight: 400;   /* fw-normal */
-    margin-bottom: 0;    /* mb-0 */
-    text-align: center;  /* text-center */
-    height: auto;
+    color: #6c757d;
+    font-size: 1.25rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    line-height: 1.25;
 }
+
 
 /* ------------------------ */
 /* Contenedor principal de la cuadrícula */
@@ -129,7 +130,7 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border: 2px solid #e0e0e0;
     padding: 16px;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -137,8 +138,8 @@
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Sección izquierda - Icono */

@@ -30,9 +30,8 @@
                 </div>
 
                 <div class="card-center">
-                    <div id="inventory-name<?= htmlspecialchars($inventory['id']) ?>" class="title">
-                        <?= htmlspecialchars($inventory['nombre']) ?>
-                    </div>
+                    <div id="inventory-name<?= htmlspecialchars($inventory['id']) ?>" 
+                    class="title"> <?= htmlspecialchars($inventory['nombre']) ?> </div>
                     <div class="stats">
                         <span class="stat-item">
                             <i class="fas fa-shapes"></i>
