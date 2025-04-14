@@ -132,14 +132,38 @@ class Tasks extends Database {
      * @param int $id ID de la tarea cuyo estado se desea cambiar.
      * @return bool Devuelve true si el estado se cambió correctamente, false en caso contrario.
      */
+    /**
+     * Cambiar el estado de una tarea (versión mejorada)
+     */
     public function changeState($id, $usuario_id) {
-        $stmt = $this->connection->prepare("UPDATE tareas SET estado = IF(estado = 'por hacer', 
-                                            'completado', 'por hacer') WHERE id = ? AND usuario_id = ?");
+        // Verificar primero si la tarea existe y pertenece al usuario
+        $stmt = $this->connection->prepare("
+            SELECT estado FROM tareas 
+            WHERE id = ? AND usuario_id = ?
+        ");
+        $stmt->bind_param("ii", $id, $usuario_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            return false;
+        }
+
+        // Actualizar el estado
+        $stmt = $this->connection->prepare("
+            UPDATE tareas 
+            SET estado = CASE 
+                WHEN estado = 'por hacer' THEN 'completado' 
+                ELSE 'por hacer' 
+            END 
+            WHERE id = ? AND usuario_id = ?
+        ");
         $stmt->bind_param("ii", $id, $usuario_id);
         $stmt->execute();
 
         return $stmt->affected_rows > 0;
     }
+
 }
 
 ?>

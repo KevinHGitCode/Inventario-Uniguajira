@@ -39,22 +39,32 @@ const createTask = (event) => {
     });
 };
 
-// Función para alternar estado de tarea
+// Función para alternar estado de tarea (versión mejorada)
 const toggleTask = (taskId, element) => {
     fetch('/api/tasks/toggle', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({ id: taskId })
     })
-    .then(response => response.json())
+    .then(async response => {
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Error al actualizar la tarea');
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
+            // Recargar la página para mostrar los cambios
             window.location.reload();
-        } else {
-            alert('Error: ' + (data.error || 'No se pudo actualizar la tarea'));
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification(error.message, 'error');
     });
 };
 

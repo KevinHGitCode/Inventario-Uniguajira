@@ -101,4 +101,66 @@ class ctlTasks {
             exit();
         }
     }
+
+    /**
+     * Endpoint: PATCH /api/tasks/toggle
+     */
+    public function toggle() {
+        header('Content-Type: application/json');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
+                throw new Exception('Método no permitido', 405);
+            }
+
+            if (!isset($_SESSION['user_id'])) {
+                throw new Exception('No autorizado', 401);
+            }
+
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            if (empty($data['id'])) {
+                throw new Exception("ID de tarea es requerido", 400);
+            }
+
+            $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
+            
+            // Alternar estado
+            $result = $this->tasksModel->changeState($taskId, $_SESSION['user_id']);
+
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Estado de tarea actualizado'
+                ]);
+            } else {
+                throw new Exception('Error al actualizar la tarea o no tienes permisos', 403);
+            }
+        } catch (Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+            exit();
+        }
+    }
+
+    public function home() {
+        $tasksModel = new Tasks();
+        $dataTasks = $tasksModel->getByUser($_SESSION['user_id']);
+        
+        // Separar tareas por estado
+        $tasks = [
+            'pendientes' => array_filter($dataTasks, function($task) {
+                return $task['estado'] === 'por hacer';
+            }),
+            'completadas' => array_filter($dataTasks, function($task) {
+                return $task['estado'] === 'completado';
+            })
+        ];
+        
+        include __DIR__ . '/../views/home.php';
+    }
+    
 }

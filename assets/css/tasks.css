@@ -192,3 +192,74 @@
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
+
+/* Añadir estas reglas */
+.container-list-task {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-card {
+    transition: all 0.3s ease;
+    order: 0; /* Por defecto las no completadas primero */
+}
+
+.task-card.completed {
+    order: 1; /* Las completadas al final */
+    background-color: #f8f9fa;
+}
+
+.check.completed {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+/* Animación para el cambio de estado */
+@keyframes fadeIn {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+.task-card {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Añadir estos estilos */
+.completed-tasks-title {
+    margin-top: 30px;
+    color: #666;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.completed-tasks .task-card {
+    opacity: 0.8;
+    background-color: #f9f9f9;
+}
+
+.completed-tasks .task-card:hover {
+    opacity: 1;
+}
+
+.completed-tasks .task-title {
+    color: #666;
+    text-decoration: line-through;
+}
+
+/* Mantener los estilos existentes y añadir */
+.container-list-task {
+    margin-bottom: 20px;
+}
+
+.task-card {
+    /* Tus estilos existentes */
+    transition: all 0.3s ease;
+}
+
+.task-card.completed {
+    /* Estilos específicos para tareas completadas */
+    background-color: #f8f9fa;
+}
