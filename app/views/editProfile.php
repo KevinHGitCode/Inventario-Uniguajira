@@ -2,19 +2,22 @@
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Mi perfil</h2>
 
-    <div class="card perfil-card mx-auto p-4 shadow rounded-4">
+    <div class="card perfil-card mx-auto p-4 rounded-4">
         <div class="text-center">
-            <img
-                id="userImage"
-                src="<?= htmlspecialchars($_SESSION['user_img'] ?? 'assets/uploads/img/users/defaultProfile.jpg') ?>"
-                class="perfil-img img-thumbnail rounded-circle mb-3"
-                alt="Foto de perfil"
-            >
-            <h3 id="userName"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?></h3>
-            <h5 id="userEmail" class="text-muted"><?= htmlspecialchars($_SESSION['user_email'] ?? 'Email no definido') ?></h5>
-            <h5 id="userRol" class="text-muted"><?= htmlspecialchars($_SESSION['user_rol'] ?? 'Rol no definido') ?></h5>
-
-            <button id="btnEditar" class="create-btn">Editar</button>
+            <div class = "perfil-img rounded-circle">
+                <img
+                    id="userImage"
+                    src="<?=htmlspecialchars($_SESSION['user_img'] ?? 'assets/uploads/img/users/defaultProfile.jpg')?>"
+                    alt="Foto de perfil"
+                    class = "perfil-img rounded-circle"
+                >
+            </div>
+            <div class="perfil-info mt-3">
+                <h3 id="userName"><?=htmlspecialchars($_SESSION['user_name'] ?? 'Usuario')?></h3>
+                <h5 id="userEmail"><?=htmlspecialchars($_SESSION['user_email'] ?? 'Email no definido')?></h5>
+                <h5 id="userRol"><?=htmlspecialchars($_SESSION['user_rol'] ?? 'Rol no definido')?></h5>
+                <button id="btnEditar" class="create-btn">Editar</button>
+            </div>
         </div>
     </div>
 </div>
