@@ -94,12 +94,20 @@
 }
 
 /* Ajuste para el contenedor del título y botón */
-.d-flex.justify-content-between {
-    margin-bottom: 1.6rem;
-    padding-bottom: 0.5rem;
+.back-and-title {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.location {
+    color: #6c757d;      /* text-secondary */
+    font-size: 1.25rem;  /* fs-5 */
+    font-weight: 400;   /* fw-normal */
+    margin-bottom: 0;    /* mb-0 */
+    text-align: center;  /* text-center */
+    height: auto;
 }
 
 /* ------------------------ */

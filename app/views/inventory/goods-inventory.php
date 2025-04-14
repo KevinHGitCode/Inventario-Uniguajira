@@ -1,6 +1,6 @@
 <!-- En este h2 se insertara el nombre del inventario (inventory.js) -->
-<div class="d-flex justify-content-between align-items-center">
-    <h2 id="inventory-name" class="text-secondary fs-5 fw-normal mb-0">Bienes en el Inventario</h2>
+<div class="back-and-title">
+    <span id="inventory-name" class="location">Bienes en el Inventario</span>
     <button class="btn-back" onclick="cerrarInventario()">
         <i class="fas fa-arrow-left me-2"></i>
         <span>Volver</span>
