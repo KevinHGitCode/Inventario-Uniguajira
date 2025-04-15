@@ -49,6 +49,8 @@ function loadContent(path) {
     .then(res => res.text())
     .then(html => {
         document.getElementById('main-content').innerHTML = html;
+        activarModalActualizarContraseña();
+        inicializarFormularioActualizarContraseña();
         if (path === '/goods') {
             iniciarBusqueda();
             inicializarModalBien();

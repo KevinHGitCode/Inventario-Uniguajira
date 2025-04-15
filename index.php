@@ -18,9 +18,13 @@ $router->add('/goods', 'ctlSidebar', 'goods');
 $router->add('/inventory', 'ctlSidebar', 'inventory');
 $router->add('/users', 'ctlSidebar', 'users');
 
+// Rutas para el navbar
+$router->add('/api/users/edit', 'ctlUser', 'edit');
+$router->add('/api/users/update', 'ctlUser', 'updatePassword');
+$router->add('/api/logout', 'ctlUser', 'logout');
+
 // Rutas para la API de usuarios
 $router->add('/api/login', 'ctlUser', 'login');
-$router->add('/api/logout', 'ctlUser', 'logout');
 $router->add('/api/users/create', 'ctlUser', 'create');
 $router->add('/api/users/edit', 'ctlUser', 'edit');
 

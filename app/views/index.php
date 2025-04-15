@@ -29,7 +29,7 @@
 
 <body>
 
-    <?php include 'app/views/navbar.html'; ?>
+    <?php include 'app/views/navbar.php'; ?>
 
     <?php include 'app/views/sidebar.html'; ?>
 
