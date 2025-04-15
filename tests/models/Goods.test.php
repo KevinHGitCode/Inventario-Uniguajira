@@ -5,6 +5,7 @@ require '.tableHelper.php';
 
 function runTests() {
     testGetAll();
+    // testGetAllGoods();
     // testCreate("Laptop", 2);
     // testUpdateName(13, "PC Gamer");
     // testDelete(13);
@@ -23,6 +24,18 @@ function testGetAll() {
     }
 }
 
+function testGetAllGoods() {
+    $goods = new Goods();
+    echo "Testing getAll()... <br>";
+
+    $allGoods = $goods->getAllGoods();
+    if (is_array($allGoods)) {
+        renderTable($allGoods);
+        echo "PASSED<br>";
+    } else {
+        echo "FAILED<br>";
+    }
+}
 
 function testCreate($nombre, $tipo, $rutaImagen) {
     $goods = new Goods();

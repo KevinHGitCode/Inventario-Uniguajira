@@ -94,6 +94,7 @@ class GoodsInventory extends Database {
      * @param int $quantity Cantidad a añadir.
      * @return bool Resultado de la operación.
      */
+    // TODO: Primero a de confirmar si extente la relacion bien inventario
     public function addQuantityGoodToInventory($inventoryId, $goodId, $quantity) {
         $stmt = $this->connection->prepare("
             INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
