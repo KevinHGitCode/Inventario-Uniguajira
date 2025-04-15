@@ -35,11 +35,11 @@
                     <div class="stats">
                         <span class="stat-item">
                             <i class="fas fa-shapes"></i>
-                            <?= $inventory['tipos_bienes'] ?? 0 ?> tipos
+                            <?= $inventory['cantidad_tipos_bienes'] ?? 0 ?> tipos
                         </span>
                         <span class="stat-item">
                             <i class="fas fa-boxes"></i>
-                            <?= $inventory['total_bienes'] ?? 0 ?> bienes
+                            <?= $inventory['cantidad_total_bienes'] ?? 0 ?> bienes
                         </span>
                     </div>
                 </div>
