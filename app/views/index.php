@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="assets/css/tasks.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
+    <link rel="stylesheet" href="assets/css/responsive/inventoryResponsive.css">
 
 </head>
 
