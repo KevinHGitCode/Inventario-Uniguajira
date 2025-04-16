@@ -20,12 +20,34 @@
     <button id="btnCrear" class="create-btn">Crear</button>
 </div>
 
+<!-- Barra de control para bienes -->
+<div id="control-bar-goods" class="control-bar">
+    <div class="selected-name">1 seleccionado</div>
+    <div class="control-actions">
+        <button class="control-btn" title="Renombrar">
+            <i class="fas fa-pen"></i>
+        </button>
+        <button class="control-btn" title="Cambiar cantidad">
+            <i class="fas fa-sort-numeric-up"></i>
+        </button>
+        <button class="control-btn" title="Mover">
+            <i class="fas fa-exchange-alt"></i>
+        </button>
+        <button class="control-btn" title="Eliminar">
+            <i class="fas fa-trash"></i>
+        </button>
+        <button class="control-btn" title="Más acciones">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+    </div>
+</div>
+
 <div class="bienes-grid">
     <?php if (isset($dataGoodsInventory)): ?>
 
         <!-- Por cada bien del inventario -->
         <?php foreach ($dataGoodsInventory as $good): ?>
-            <div class="bien-card card-item">
+            <div class="bien-card card-item" data-id="<?= htmlspecialchars($good['id'] ?? '') ?>" data-name="<?= htmlspecialchars($good['bien']) ?>" onclick="toggleSelectItem(this, 'good')">
                 <img
                     src="<?= htmlspecialchars($good['imagen']) ?>"
                     class="bien-image"

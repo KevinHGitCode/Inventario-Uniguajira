@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/css/goods.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/tasks.css">
+    <link rel="stylesheet" href="assets/css/selection.css">
     <link rel="stylesheet" href="assets/css/responsive/responsive.css">
     <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
     <link rel="stylesheet" href="assets/css/responsive/inventoryResponsive.css">
@@ -58,6 +59,7 @@
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
+    <script src="assets/js/selection.js"></script>
 
     <script>
          // Asegurar que las funciones estén disponibles globalmente
