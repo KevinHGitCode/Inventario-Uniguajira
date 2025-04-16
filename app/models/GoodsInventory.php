@@ -20,6 +20,7 @@ class GoodsInventory extends Database {
                 bien_id, 
                 inventario, 
                 bien, 
+                imagen, 
                 cantidad
             FROM vista_cantidades_bienes_inventario 
             WHERE inventario_id = ?

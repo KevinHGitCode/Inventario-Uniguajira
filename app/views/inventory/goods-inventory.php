@@ -10,7 +10,8 @@
 <div class="top-bar">
     <div class="search-container">
         <input
-            class="search-bar"
+            id="searchGoodInventory"
+            class="search-bar searchInput"
             type="text"
             placeholder="Buscar o agregar bienes"
         />
@@ -24,12 +25,16 @@
 
         <!-- Por cada bien del inventario -->
         <?php foreach ($dataGoodsInventory as $good): ?>
-            <div class="bien-card">
+            <div class="bien-card card-item">
+                <img
+                    src="<?= htmlspecialchars($good['imagen']) ?>"
+                    class="bien-image"
+                />
                 <div class="bien-info">
-                    <h3><?= htmlspecialchars($good['bien']) ?></h3>
+                    <h3 class="name-item"><?= htmlspecialchars($good['bien']) ?></h3>
                     <p>
-                        <strong>Cantidad:</strong>
-                        <?= htmlspecialchars($good['cantidad']) ?>
+                        <b>Cantidad:</b>
+                        <?= $good['cantidad'] ?>
                     </p>
                 </div>
             </div>

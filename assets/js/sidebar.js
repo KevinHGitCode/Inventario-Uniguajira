@@ -49,15 +49,21 @@ function loadContent(path) {
     .then(res => res.text())
     .then(html => {
         document.getElementById('main-content').innerHTML = html;
+
+        // TODO: convertir a onclick
         activarModalActualizarContraseña();
         inicializarFormularioActualizarContraseña();
+
         if (path === '/goods') {
-            iniciarBusqueda();
+            iniciarBusqueda('searchGood');
             inicializarModalBien();
             inicializarFormularioBien();
             inicializarBotonesEliminar();
             activarModalActualizarBien();
             inicializarFormularioActualizarBien();
+        }
+        if (path === '/inventory') {
+            iniciarBusqueda('searchGroup');
         }
         if (path === '/users') {
             activarBusquedaEnTabla();
@@ -66,7 +72,6 @@ function loadContent(path) {
             inicializarBotonesEliminarUser();  
             inicializarBotonesEdicion(); 
         }
-
         if (path === '/profile') {
             inicializarFormularioEditarPerfil();
             inicializarModalEditUser();

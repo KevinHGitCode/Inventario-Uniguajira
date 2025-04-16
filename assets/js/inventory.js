@@ -14,6 +14,8 @@ function abrirGrupo(idGroup) {
         divInventories.innerHTML = html;
         const grupoName = document.getElementById(`group-name${idGroup}`).textContent;
         document.getElementById('group-name').innerText = grupoName;
+
+        iniciarBusqueda('searchInventory');
     })
     .catch(error => {
         console.error('Error:', error);
@@ -96,7 +98,11 @@ function abrirGrupo(idGroup) {
 function cerrarGrupo() {
     document.getElementById('groups').classList.remove('hidden');
     document.getElementById('inventories').classList.add('hidden');
-    document.getElementById('goods-inventory').classList.add('hidden');
+
+    const input = document.getElementById('searchGroup');
+    input.value = ''; // Borra el valor
+    input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
 }
 
 
@@ -115,6 +121,8 @@ function abrirInventario(idInventory) {
         divGoodsInventory.innerHTML = html;
         const inventoryName = document.getElementById(`inventory-name${idInventory}`).textContent;
         document.getElementById('inventory-name').innerText = inventoryName;
+
+        iniciarBusqueda('searchGoodInventory');
     })
     .catch(error => {
         console.error('Error:', error);
@@ -136,6 +144,12 @@ function abrirInventario(idInventory) {
 function cerrarInventario() {
     document.getElementById('goods-inventory').classList.add('hidden');
     document.getElementById('inventories').classList.remove('hidden');
+
+    const input = document.getElementById('searchInventory');
+    input.value = ''; // Borra el valor
+    input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', code: 'Backspace' }));
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
 }
 
 

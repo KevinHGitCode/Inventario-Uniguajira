@@ -74,8 +74,6 @@
             <span id="cerrarModalCambiarContraseña" class="close">&times;</span>
             <h2>Cambiar Contraseña</h2>
             <form id="formCambiarContraseña" enctype="multipart/form-data">
-                <input type="hidden" name="id" id="actualizarId" />
-
                 <div>
                     <label>Nueva Contraseña:</label>
                     <input

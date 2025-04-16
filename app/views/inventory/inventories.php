@@ -10,7 +10,8 @@
 <div class="top-bar">
     <div class="search-container">
         <input
-            class="search-bar"
+            id="searchInventory"
+            class="search-bar searchInput"
             type="text"
             placeholder="Buscar o agregar inventarios"
         />
@@ -23,7 +24,7 @@
 <div class="card-grid">
     <?php if (isset($dataInventories)): ?>
         <?php foreach ($dataInventories as $inventory): ?>
-            <div class="card">
+            <div class="card card-item">
 
                 <div class="card-left">
                     <i class="fas fa-folder icon-folder"></i>
@@ -31,7 +32,7 @@
 
                 <div class="card-center">
                     <div id="inventory-name<?= htmlspecialchars($inventory['id']) ?>" 
-                    class="title"> <?= htmlspecialchars($inventory['nombre']) ?> </div>
+                    class="title name-item"> <?= htmlspecialchars($inventory['nombre']) ?> </div>
                     <div class="stats">
                         <span class="stat-item">
                             <i class="fas fa-shapes"></i>

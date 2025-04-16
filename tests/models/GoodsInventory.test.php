@@ -4,7 +4,7 @@ require_once '../../app/models/GoodsInventory.php';
 require '.tableHelper.php';
 
 function runTests() {
-    // testGetAllGoodsByInventory(5); // passed
+    testGetAllGoodsByInventory(5); // passed
     // testGetAllQuantityGoodsByInventory(5); // passed
     // testGetAllSerialGoodsByInventory(5); // passed
 
