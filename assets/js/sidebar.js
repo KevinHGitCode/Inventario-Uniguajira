@@ -56,11 +56,11 @@ function loadContent(path) {
 
         if (path === '/goods') {
             iniciarBusqueda('searchGood');
-            inicializarModalBien();
-            inicializarFormularioBien();
-            inicializarBotonesEliminar();
-            activarModalActualizarBien();
-            inicializarFormularioActualizarBien();
+            if (typeof inicializarModalBien === 'function') inicializarModalBien();
+            if (typeof inicializarFormularioBien === 'function') inicializarFormularioBien();
+            if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
+            if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
+            if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
         }
         if (path === '/inventory') {
             iniciarBusqueda('searchGroup');

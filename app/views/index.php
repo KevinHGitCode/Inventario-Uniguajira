@@ -57,9 +57,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/search.js"></script>
     <script src="assets/js/toast.js"></script>
     <script src="assets/js/tasks.js"></script>
+
+    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/goods.js"></script>
+    <?php endif; ?>
+
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
 

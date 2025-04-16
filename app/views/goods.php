@@ -57,6 +57,8 @@
         <?php endforeach; ?>
     </div>
 
+    <!-- Los formularios solo se cargan para el administrador -->
+    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <!-- Modal -->
     <div id="modalCrear" class="modal" style="display: none">
         <div class="modal-content">
@@ -126,4 +128,6 @@
             </form>
         </div>
     </div>
+    <?php endif; ?>
+
 </div>
