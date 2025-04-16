@@ -1,2 +1,8 @@
 .vscode
 .qodo
+
+# Archivos de prueba no autorizados aun
+.TestRunner.php
+TestRunner.php
+.test.test.php
+Goods.2.test.php
