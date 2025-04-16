@@ -7,29 +7,37 @@ let selectedItems = {
 
 // Función para alternar la selección de un elemento
 function toggleSelectItem(element, type) {
+    // Evitar que se active la funcionalidad de "Abrir" al hacer clic en botones dentro del card
+    if (event && event.target.closest('.btn-open')) {
+        return; // No hacer nada si se hizo clic en el botón Abrir
+    }
+
     // Prevenir la navegación si estamos seleccionando
-    if (event && event.target.tagName !== 'BUTTON') {
+    if (event) {
+        event.preventDefault();
         event.stopPropagation();
-        
-        // Si ya hay elementos seleccionados, prevenir la navegación
-        if (selectedItems[type].length > 0) {
-            event.preventDefault();
-        }
     }
 
     const itemId = element.dataset.id;
     const itemName = element.dataset.name;
-    const isSelected = element.classList.toggle('selected');
     
-    // Determinar qué barra de control mostrar
-    const controlBarId = `control-bar-${type}s`;
-    
-    if (isSelected) {
-        // Agregar a seleccionados
-        selectedItems[type].push({ id: itemId, name: itemName, element: element });
+    // Si el elemento ya está seleccionado, lo deseleccionamos
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        selectedItems[type] = [];
     } else {
-        // Remover de seleccionados
-        selectedItems[type] = selectedItems[type].filter(item => item.id !== itemId);
+        // Deseleccionar todos los demás elementos del mismo tipo
+        const allSelectedItems = document.querySelectorAll(`.card-item.selected[data-id]`);
+        allSelectedItems.forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        // Limpiar la matriz de elementos seleccionados
+        selectedItems[type] = [];
+        
+        // Seleccionar este elemento
+        element.classList.add('selected');
+        selectedItems[type].push({ id: itemId, name: itemName, element: element });
     }
     
     updateControlBar(type);
@@ -37,22 +45,27 @@ function toggleSelectItem(element, type) {
 
 // Función para actualizar la barra de control
 function updateControlBar(type) {
-    const controlBarId = `control-bar-${type}s`;
+    // Para "inventory", necesitamos usar "inventories" en el ID
+    let controlBarId;
+    if (type === 'inventory') {
+        controlBarId = 'control-bar-inventories';
+    } else {
+        controlBarId = `control-bar-${type}s`;
+    }
+    
     const controlBar = document.getElementById(controlBarId);
     
-    if (!controlBar) return;
+    if (!controlBar) {
+        console.warn(`Control bar not found: ${controlBarId}`);
+        return;
+    }
     
     const count = selectedItems[type].length;
     
     if (count > 0) {
         controlBar.classList.add('visible');
         const nameElement = controlBar.querySelector('.selected-name');
-        
-        if (count === 1) {
-            nameElement.textContent = selectedItems[type][0].name;
-        } else {
-            nameElement.textContent = `${count} seleccionados`;
-        }
+        nameElement.textContent = selectedItems[type][0].name;
     } else {
         controlBar.classList.remove('visible');
     }
@@ -63,24 +76,27 @@ function clearSelection(type) {
     if (!type) {
         // Limpiar todas las selecciones
         Object.keys(selectedItems).forEach(key => {
-            selectedItems[key].forEach(item => {
-                if (item.element) {
-                    item.element.classList.remove('selected');
-                }
-            });
-            selectedItems[key] = [];
-            updateControlBar(key);
+            clearSelectionByType(key);
         });
     } else {
         // Limpiar solo el tipo especificado
-        selectedItems[type].forEach(item => {
-            if (item.element) {
-                item.element.classList.remove('selected');
-            }
-        });
-        selectedItems[type] = [];
-        updateControlBar(type);
+        clearSelectionByType(type);
     }
+}
+
+// Helper function para limpiar por tipo
+function clearSelectionByType(type) {
+    // Deseleccionar todos los elementos del DOM con esta clase
+    const allSelectedItems = document.querySelectorAll(`.card-item.selected[data-id]`);
+    allSelectedItems.forEach(item => {
+        item.classList.remove('selected');
+    });
+    
+    // Limpiar el array
+    selectedItems[type] = [];
+    
+    // Actualizar la barra de control
+    updateControlBar(type);
 }
 
 // Modificar las funciones de navegación existentes para limpiar la selección
@@ -110,9 +126,16 @@ cerrarInventario = function() {
 
 // Agregar evento para detectar clics fuera de los elementos seleccionables
 document.addEventListener('click', function(event) {
+    // Si se hace clic en un botón dentro de un card o en la barra de control, no desseleccionar
+    if (event.target.closest('.btn-open') || 
+        event.target.closest('.control-btn') || 
+        event.target.closest('.control-bar')) {
+        return;
+    }
+    
     const cardItem = event.target.closest('.card-item');
     if (!cardItem) {
-        // Si se hizo clic fuera de un item, limpiar todas las selecciones
+        // Si se hizo clic fuera de un item y fuera de la barra de control, limpiar todas las selecciones
         clearSelection();
     }
 });
