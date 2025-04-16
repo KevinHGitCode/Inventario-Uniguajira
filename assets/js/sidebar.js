@@ -63,7 +63,8 @@ function loadContent(path) {
             activarBusquedaEnTabla();
             inicializarModalUser();
             inicializarCrearUsuario();
-            inicializarBotonesEliminar();   
+            inicializarBotonesEliminarUser();  
+            inicializarBotonesEdicion(); 
         }
 
         if (path === '/profile') {

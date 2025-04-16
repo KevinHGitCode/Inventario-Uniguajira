@@ -108,72 +108,115 @@ function inicializarCrearUsuario() {
  * Configura los botones de eliminación para manejar la eliminación de bienes con confirmación.
  */
 function inicializarBotonesEliminarUser() {
-   
-}
-
-function inicializarFormularioEditarPerfil() {
-    const form = document.getElementById("formEditarPerfil");
-    const modal = document.getElementById("modalEditarPerfil");
-    const cerrar = document.getElementById("cerrarModalEditarPerfil");
-
-    if (!form || !modal || !cerrar) {
-        console.warn("Formulario de editar perfil no está completamente cargado.");
-        return;
-    }
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-
-        fetch("/api/users/edit", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(response => {
-            showToast(response);
-            if (response.success) {
-                modal.style.display = "none";
-                loadContent('/profile');
-            }
+    const deleteLinks = document.querySelectorAll('.delete-user');
+    const modalConfirmar = document.getElementById('modalConfirmarEliminar');
+    const closeConfirmModal = modalConfirmar.querySelector('.close');
+    const btnCancelar = document.getElementById('btnCancelarEliminar');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminar');
+    
+    deleteLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
             
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            showToast({
-                success: false,
-                message: 'Error al enviar el formulario'
-            });
+            // Guardar ID del usuario a eliminar
+            const userId = this.getAttribute('data-id');
+            document.getElementById('delete-user-id').value = userId;
+            
+            // Mostrar modal de confirmación
+            modalConfirmar.style.display = 'block';
         });
-
     });
-
-    cerrar.addEventListener("click", () => {
-        modal.style.display = "none";
+    
+    // Cerrar modal con X
+    closeConfirmModal.addEventListener('click', function() {
+        modalConfirmar.style.display = 'none';
     });
-}
-
-function inicializarModalEditUser() {
-    // Obtiene el modal y los elementos relacionados (botón de abrir y cerrar)
-    const modal = document.getElementById("modalEditarPerfil");
-    const btnCrear = document.getElementById("btnEditar");
-    const spanClose = document.getElementById("cerrarModalEditarPerfil");
-
-    // Agrega un evento para abrir el modal al hacer clic en el botón
-    btnCrear.addEventListener("click", () => {
-        modal.style.display = "flex";
+    
+    // Cerrar modal con botón Cancelar
+    btnCancelar.addEventListener('click', function() {
+        modalConfirmar.style.display = 'none';
     });
-
-    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
-    spanClose.addEventListener("click", () => {
-        modal.style.display = "none";
+    
+    // Confirmar eliminación
+    btnConfirmar.addEventListener('click', function() {
+        const userId = document.getElementById('delete-user-id').value;
+        
+        // Realizar petición AJAX para eliminar usuario
+        fetch(`/api/users/delete/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Recargar página para reflejar cambios
+                window.location.reload();
+            } else {
+                alert('Error al eliminar el usuario: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el usuario');
+        })
+        .finally(() => {
+            modalConfirmar.style.display = 'none';
+        });
     });
-
-    // Agrega un evento para cerrar el modal al hacer clic fuera de él
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
+    
+    // Cerrar modal al hacer clic fuera
+    window.addEventListener('click', function(e) {
+        if (e.target == modalConfirmar) {
+            modalConfirmar.style.display = 'none';
         }
     });
 }
+
+
+
+
+function inicializarBotonesEdicion() {
+    const botonesEditar = document.querySelectorAll('.edit-user');
+    const modalEditar = document.getElementById('modalEditar');
+    const closeBtn = modalEditar.querySelector('.close');
+
+    botonesEditar.forEach(boton => {
+        boton.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            // Obtén los datos del usuario desde los atributos del botón
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const nombreUsuario = this.getAttribute('data-nombre-usuario');
+            const email = this.getAttribute('data-email');
+            const rol = this.getAttribute('data-rol');
+            console.log (id);
+            // Llena los campos del formulario con los datos del usuario
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-nombre').value = nombre;
+            document.getElementById('edit-nombre_usuario').value = nombreUsuario;
+            document.getElementById('edit-email').value = email;
+            // document.getElementById('edit-rol').value = rol;
+
+            // Muestra el modal
+            modalEditar.style.display = 'block';
+            
+        });
+    });
+
+    // Cierra el modal al hacer clic en el botón de cerrar
+    closeBtn.addEventListener('click', function () {
+        modalEditar.style.display = 'none';
+    });
+
+    // Cierra el modal al hacer clic fuera del contenido del modal
+    window.addEventListener('click', function (event) {
+        if (event.target === modalEditar) {
+            modalEditar.style.display = 'none';
+        }
+    });
+}
+
