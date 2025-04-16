@@ -176,8 +176,6 @@ function inicializarBotonesEliminarUser() {
 }
 
 
-
-
 function inicializarBotonesEdicion() {
     const botonesEditar = document.querySelectorAll('.edit-user');
     const modalEditar = document.getElementById('modalEditar');
@@ -220,3 +218,70 @@ function inicializarBotonesEdicion() {
     });
 }
 
+
+function inicializarFormularioEditarPerfil() {
+    const form = document.getElementById("formEditarPerfil");
+    const modal = document.getElementById("modalEditarPerfil");
+    const cerrar = document.getElementById("cerrarModalEditarPerfil");
+
+    if (!form || !modal || !cerrar) {
+        console.warn("Formulario de editar perfil no está completamente cargado.");
+        return;
+    }
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch("/api/users/edit", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(response => {
+            showToast(response);
+            if (response.success) {
+                modal.style.display = "none";
+                loadContent('/profile');
+            }
+            
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            showToast({
+                success: false,
+                message: 'Error al enviar el formulario'
+            });
+        });
+
+    });
+
+    cerrar.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+}
+
+function inicializarModalEditUser() {
+    // Obtiene el modal y los elementos relacionados (botón de abrir y cerrar)
+    const modal = document.getElementById("modalEditarPerfil");
+    const btnCrear = document.getElementById("btnEditar");
+    const spanClose = document.getElementById("cerrarModalEditarPerfil");
+
+    // Agrega un evento para abrir el modal al hacer clic en el botón
+    btnCrear.addEventListener("click", () => {
+        modal.style.display = "flex";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
+    spanClose.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic fuera de él
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
