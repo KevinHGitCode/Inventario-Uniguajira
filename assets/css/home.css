@@ -16,24 +16,46 @@ h1, h2 {
     padding-right: 20px;
 }
 
+/* Header con título y botón */
+.header-tasks {
+    display: flex;
+    align-items: center; /* Cambio a center para mejor alineación vertical */
+    justify-content: flex-start; /* Alineación al inicio */
+    width: 40%;
+    max-width: 350px;
+    gap: 15px; /* Espacio entre elementos */
+}
+
+/* Título de secciones */
+.tittle-list-task {
+    margin-top: 20px;
+    padding-bottom: 8px;
+    margin-bottom: 0;
+    margin-right: auto; /* Empuja el botón hacia la derecha */
+}
+
+.completed-tasks-title {
+    margin-top: 30px;
+    padding-bottom: 8px;
+}
+
 /* Botón de añadir tareas */
 .add-task-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 15px 0;
+    display: inline;
 }
 
 .add-task-button {
-    display: inline-flex;
+    width: 50px;
+    height: 40px;
+    border-radius: 30%; /* Cambio a círculo perfecto */
+    background: #ee6e6e34;
+    border: none;
+    font-size: 24px; /* Aumentar tamaño de fuente */
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px; 
-    padding: 10px 16px; 
-    font-size: 0.9rem; 
-    border: none;
-    background: #ee6e6e34;
-    border-radius: 10px;
     cursor: pointer;
+    margin-left: 10px; /* Espacio desde el título */
 }
 
 .add-task-button:hover {
@@ -42,17 +64,7 @@ h1, h2 {
 
 .add-task-button .icon {
     font-weight: bold;
-}
-
-/* Título de secciones */
-.tittle-list-task {
-    margin-top: 20px;
-    padding-bottom: 8px;
-}
-
-.completed-tasks-title {
-    margin-top: 30px;
-    padding-bottom: 8px;
+    margin: 0;
 }
 
 /* Modal para crear tareas */
