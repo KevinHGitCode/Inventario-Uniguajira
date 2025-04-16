@@ -46,3 +46,25 @@ function showToast(msg) {
 //         message: 'No se pudo conectar al servidor'
 //     });
 // });
+
+// ------------ TODO: Probar este alternativa a showToast
+// /**
+//  * Función auxiliar para mostrar notificaciones
+//  * @param {Object} response - Respuesta del servidor
+//  */
+// function showToast(response) {
+//     // Esta función asume que existe alguna librería de notificaciones
+//     // Si estás usando SweetAlert2:
+//     if (typeof Swal !== 'undefined') {
+//         Swal.fire({
+//             icon: response.success !== false ? 'success' : 'error',
+//             title: response.success !== false ? 'Éxito' : 'Error',
+//             text: response.message || (response.success !== false ? 'Operación completada' : 'Ha ocurrido un error'),
+//             timer: 3000,
+//             timerProgressBar: true
+//         });
+//     } else {
+//         // Alternativa básica si no hay librería de notificaciones
+//         alert(response.message || (response.success !== false ? 'Operación completada' : 'Ha ocurrido un error'));
+//     }
+// }
