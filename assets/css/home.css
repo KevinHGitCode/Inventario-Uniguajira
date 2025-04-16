@@ -1,69 +1,181 @@
-.task-card.completed {
-    opacity: 0.7;
+/* Estilos básicos para la página principal */
+h1, h2 {
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.task-card.completed .task-title {
-    text-decoration: line-through;
-    color: #888;
-}
-
-.button.check {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-}
-
-.button.check:hover {
-    border-color: #666;
-}
-
+/* Contenedor de tareas */
 .container-list-task {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 20px;
+    width: 40%;
+    max-width: 600px;
+    margin-left: 0;
+    margin-bottom: 20px;
+    padding-right: 20px;
 }
 
-.task-card {
+/* Header con título y botón */
+.header-tasks {
+    display: flex;
+    align-items: center; /* Cambio a center para mejor alineación vertical */
+    justify-content: flex-start; /* Alineación al inicio */
+    width: 40%;
+    max-width: 350px;
+    gap: 15px; /* Espacio entre elementos */
+}
+
+/* Título de secciones */
+.tittle-list-task {
+    margin-top: 20px;
+    padding-bottom: 8px;
+    margin-bottom: 0;
+    margin-right: auto; /* Empuja el botón hacia la derecha */
+}
+
+.completed-tasks-title {
+    margin-top: 30px;
+    padding-bottom: 8px;
+}
+
+/* Botón de añadir tareas */
+.add-task-container {
+    display: inline;
+}
+
+.add-task-button {
+    width: 50px;
+    height: 40px;
+    border-radius: 30%; /* Cambio a círculo perfecto */
+    background: #ee6e6e34;
+    border: none;
+    font-size: 24px; /* Aumentar tamaño de fuente */
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px; /* Espacio desde el título */
 }
 
-.task-content {
-    flex-grow: 1;
+.add-task-button:hover {
+    background: #d67272a2;
 }
 
-.task-title {
-    margin: 0 30px 4px 0;
-    font-size: 16px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.task-duration {
-    margin: 4px 0 0;
-    font-size: 14px;
-    color: #666;
-}
-
-.task-date {
+.add-task-button .icon {
+    font-weight: bold;
     margin: 0;
-    font-size: 14px;
+}
+
+/* Modal para crear tareas */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.modal h2 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Formulario del modal */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#taskDate {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
     color: #666;
-    white-space: nowrap;
+}
+
+.btn-submit {
+    background-color: #a31927;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+.btn-submit:hover {
+    background-color: #2e9131;
+}
+
+/* Notificaciones */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    animation: slideIn 0.5s ease-out;
+    z-index: 1000;
+}
+
+.notification.success {
+    background-color: #2ecc71;
+}
+
+.notification.error {
+    background-color: #e74c3c;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }

@@ -4,14 +4,10 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
 
 <h1>¡Bienvenido, <?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?>!</h1>
 
-<h2 class="tittle-list-task">Tareas pendientes</h2>
-
-<?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'administrador'): ?>
-    <div class="add-task-container">
-        <button class="add-task-button" onclick="showTaskModal()">
-            <span class="icon">+</span>
-            <span class="text">Añadir tarea</span>
-        </button>
+    <div class="header-tasks">
+        <h2 class="tittle-list-task">Tareas pendientes</h2>
+        <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'administrador'): ?>
+            <button class="add-task-button" onclick="showTaskModal()" aria-label="Agregar tarea">+</button>
     </div>
 
     <!-- Modal para crear tareas -->
