@@ -61,16 +61,18 @@
     <script>
          // Asegurar que las funciones estén disponibles globalmente
          document.addEventListener('DOMContentLoaded', () => {
-             if (window.taskFunctions) {
-                 window.showTaskModal = window.taskFunctions.showTaskModal;
-                 window.hideTaskModal = window.taskFunctions.hideTaskModal;
-                 window.createTask = window.taskFunctions.createTask;
-                 window.toggleTask = window.taskFunctions.toggleTask;
-                 window.deleteTask = window.taskFunctions.deleteTask;
-                 window.showNotification = window.taskFunctions.showNotification;
-             }
-         });
-     </script>
+            if (document.getElementById('taskModal')) {
+                if (window.taskFunctions) {
+                    window.showTaskModal = window.taskFunctions.showTaskModal;
+                    window.hideTaskModal = window.taskFunctions.hideTaskModal;
+                    window.createTask = window.taskFunctions.createTask;
+                    window.toggleTask = window.taskFunctions.toggleTask;
+                    window.deleteTask = window.taskFunctions.deleteTask;
+                    window.showNotification = window.taskFunctions.showNotification;
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
