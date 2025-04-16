@@ -11,6 +11,7 @@
                     <span>Inicio</span>
                 </a>
             </li>
+
             <li>
                 <a 
                     onclick="loadContent('/goods')"
@@ -19,6 +20,7 @@
                     <span>Bienes</span>
                 </a>
             </li>
+            
             <li>
                 <a 
                     onclick="loadContent('/inventory')"
@@ -27,14 +29,17 @@
                     <span>Inventarios</span>
                 </a>
             </li>
-            <!-- <li>
+            
+            <li>
                 <a 
                     onclick="loadContent('app/views/reports.php')"
                 >
                     <img src="assets/icons/reportes.svg" alt="">
                     <span>Reportes</span>
                 </a>
-            </li> -->
+            </li>
+            
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <li>
                 <a 
                     onclick="loadContent('/users')"
@@ -43,14 +48,20 @@
                     <span>Usuarios</span>
                 </a>
             </li>
-            <!-- <li>
+            <?php endif; ?>
+            
+            <!-- Opción comentada que puedes descomentar si es necesario
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+            <li>
                 <a 
                     onclick="loadContent('app/views/record.php')"
                 >
                     <img src="assets/icons/historial.svg" alt="">
                     <span>Historial</span>
                 </a>
-            </li> -->
+            </li>
+            <?php endif; ?>
+            -->
         </ul>
     </nav>
 </div>

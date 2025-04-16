@@ -1,3 +1,5 @@
+<?php require_once 'app/controllers/sessionCheck.php'; ?>
+
 <!-- En este h2 se insertara el nombre del inventario (inventory.js) -->
 <div class="back-and-title">
     <span id="inventory-name" class="location">Bienes en el Inventario</span>
@@ -17,10 +19,15 @@
         />
         <i class="search-icon fas fa-search"></i>
     </div>
+
+    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <button id="btnCrear" class="create-btn">Crear</button>
+    <?php endif; ?>
+       
 </div>
 
 <!-- Barra de control para bienes -->
+<?php if ($_SESSION['user_rol'] === 'administrador'): ?>
 <div id="control-bar-goods" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
@@ -41,13 +48,22 @@
         </button>
     </div>
 </div>
+<?php endif; ?>
 
 <div class="bienes-grid">
     <?php if (isset($dataGoodsInventory)): ?>
 
         <!-- Por cada bien del inventario -->
         <?php foreach ($dataGoodsInventory as $good): ?>
-            <div class="bien-card card-item" data-id="<?= htmlspecialchars($good['id'] ?? '') ?>" data-name="<?= htmlspecialchars($good['bien']) ?>" onclick="toggleSelectItem(this, 'good')">
+            <div 
+                class="bien-card card-item" 
+                data-id="<?= htmlspecialchars($good['id'] ?? '') ?>" 
+                data-name="<?= htmlspecialchars($good['bien']) ?>" 
+                <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+                onclick="toggleSelectItem(this, 'good')"
+                <?php endif; ?>
+            >
+
                 <img
                     src="<?= htmlspecialchars($good['imagen']) ?>"
                     class="bien-image"

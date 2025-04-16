@@ -36,7 +36,7 @@
 
     <?php include 'app/views/navbar.php'; ?>
 
-    <?php include 'app/views/sidebar.html'; ?>
+    <?php include 'app/views/sidebar.php'; ?>
 
 
     <!-- -------------------------------------------------------------------
@@ -62,7 +62,10 @@
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
+
+    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/selection.js"></script>
+    <?php endif; ?>
 
     <script>
          // Asegurar que las funciones estén disponibles globalmente

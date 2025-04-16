@@ -13,7 +13,11 @@
             />
             <i class="search-icon fas fa-search"></i>
         </div>
+
+        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
         <button id="btnCrear" class="create-btn">Crear</button>
+        <?php endif; ?>
+
     </div>
 
     <div class="bienes-grid">
@@ -30,6 +34,8 @@
                     <?= $bien['total_cantidad'] ?>
                 </p>
             </div>
+
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <div class="actions">
                 <a
                     href="#"
@@ -45,6 +51,8 @@
                     ><i class="fas fa-trash"></i
                 ></a>
             </div>
+            <?php endif; ?>
+
         </div>
         <?php endforeach; ?>
     </div>

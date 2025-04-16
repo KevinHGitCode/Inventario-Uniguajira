@@ -1,3 +1,5 @@
+<?php require_once 'app/controllers/sessionCheck.php'; ?>
+
 <div class="container content">
     <h1>Inventario</h1>
 
@@ -14,10 +16,15 @@
                 />
                 <i class="search-icon fas fa-search"></i>
             </div>
+
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <button id="btnCrear" class="create-btn">Crear</button>
+            <?php endif; ?>
+            
         </div>
 
         <!-- Barra de control para grupos -->
+        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
         <div id="control-bar-groups" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
@@ -35,11 +42,19 @@
                 </button>
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="card-grid">
             <?php if (isset($dataGroups)): ?>
                 <?php foreach ($dataGroups as $group): ?>
-                    <div class="card card-item" data-id="<?= htmlspecialchars($group['id']) ?>" data-name="<?= htmlspecialchars($group['nombre']) ?>" onclick="toggleSelectItem(this, 'group')">
+                    <div 
+                        class="card card-item" 
+                        data-id="<?= htmlspecialchars($group['id']) ?>" 
+                        data-name="<?= htmlspecialchars($group['nombre']) ?>" 
+                        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+                        onclick="toggleSelectItem(this, 'group')"
+                        <?php endif; ?>
+                    >
                         <!-- inicio contenido -->
                         <div class="card-left">
                             <i class="fas fa-layer-group icon-folder"></i>

@@ -1,3 +1,5 @@
+<?php require_once 'app/controllers/sessionCheck.php'; ?>
+
 <!-- En este h2 se insertara el nombre del grupo (inventory.js) -->
 <div class="back-and-title">
     <span id="group-name" class="location">Grupo</span>
@@ -17,10 +19,15 @@
         />
         <i class="search-icon fas fa-search"></i>
     </div>
+    
+    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <button id="btnCrear" class="create-btn">Crear</button>
+    <?php endif; ?>
+            
 </div>
 
 <!-- Barra de control para inventarios -->
+<?php if ($_SESSION['user_rol'] === 'administrador'): ?>
 <div id="control-bar-inventories" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
@@ -38,11 +45,19 @@
         </button>
     </div>
 </div>
+<?php endif; ?>
 
 <div class="card-grid">
     <?php if (isset($dataInventories)): ?>
         <?php foreach ($dataInventories as $inventory): ?>
-            <div class="card card-item" data-id="<?= htmlspecialchars($inventory['id']) ?>" data-name="<?= htmlspecialchars($inventory['nombre']) ?>" onclick="toggleSelectItem(this, 'inventory')">
+            <div 
+                class="card card-item" 
+                data-id="<?= htmlspecialchars($inventory['id']) ?>" 
+                data-name="<?= htmlspecialchars($inventory['nombre']) ?>" 
+                <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+                onclick="toggleSelectItem(this, 'inventory')"
+                <?php endif; ?>
+            >
 
                 <div class="card-left">
                     <i class="fas fa-folder icon-folder"></i>
