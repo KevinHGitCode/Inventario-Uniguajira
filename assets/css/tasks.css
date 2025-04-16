@@ -1,237 +1,170 @@
+/* Estilos para tarjetas de tareas */
 .task-card {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 12px;
     margin-bottom: 10px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
+/* Efecto hover de tarjetas */
 .task-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
-.task-card.completed {
-    opacity: 0.7;
-    background: #f5f5f5;
+/* Contenido de la tarjeta */
+.task-content {
+    flex: 1;
+    min-width: 0;
+    margin: 0 15px;
 }
 
-.task-card.completed .task-title {
-    text-decoration: line-through;
-    color: #777;
-    white-space: nowrap;
+.task-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding-right: 10px;
 }
 
-.check {
-    width: 24px;
-    height: 24px;
-    border: 2px solid #ddd;
-    border-radius: 50%;
-    background: none;
-    cursor: pointer;
-    margin-right: 12px;
-}
-
-.check.completed {
-    background: #4CAF50;
-    color: white;
-    border-color: #4CAF50;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    
-}
-
-.modal h2 {
-    margin-top: 0;
-    color: #2c3e50;
-    font-size: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
+/* Título de la tarea */
+.task-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 140px 4px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: 2.8em;
+    word-break: break-word;
+    padding-right: 60px;
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-family: "Nunito Sans", sans-serif;
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+/* Mostrar texto completo al hacer hover */
+.task-card:hover .task-title {
+    -webkit-line-clamp: unset;
+    max-height: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
 }
 
-.form-group textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.btn-submit {
-    background-color: #a31927;
-    color: white;
-    border: none;
-    padding: 10px 193.5px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-    font-weight: bold;
-}
-
-.btn-submit:hover {
-    background-color: #2e9131;
-}
-
-.close-modal {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* Estilos para el campo de fecha */
-#taskDate {
-    background-color: #f5f5f5;
-    cursor: not-allowed;
+/* Descripción de la tarea */
+.task-description {
+    font-size: 13px;
     color: #666;
+    margin: 3px 90px 0 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: 2.8em;
+    word-break: break-word;
+    padding-right: 60px;
+    display: block;
 }
 
+/* Mostrar descripción completa al hacer hover */
+.task-card:hover .task-description {
+    -webkit-line-clamp: unset;
+    max-height: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+}
+
+/* Fecha de la tarea */
 .task-date {
     font-size: 0.8rem;
     color: #666;
-    margin-left: auto;
-    padding-left: 10px;
     white-space: nowrap;
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.9);
+    padding: 0 5px;
+    border-radius: 3px;
 }
 
-/* Asegurar que las tarjetas de tarea muestren bien la fecha */
-.task-card {
-    width: 100%;
-    max-width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-    overflow: hidden;
+/* Botón de check */
+.button.check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-right: 12px;
 }
 
-.task-content {
-    flex-grow: 1;
-    margin: 0 15px;
-    min-width: 0;
+.button.check:hover {
+    border-color: #666;
 }
 
-/* Estilos para botón de eliminar */
+/* Botón de eliminar */
 .delete-task {
     background: none;
     border: none;
     color: #666;
     cursor: pointer;
     font-size: 1rem;
-    margin-left: 10px;
     padding: 5px;
     transition: color 0.3s;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .delete-task:hover {
     color: #c0392b;
 }
 
-/* Notificaciones */
-.notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 5px;
-    color: white;
-    animation: slideIn 0.5s ease-out;
-    z-index: 1000;
-}
-
-.notification.success {
-    background-color: #2ecc71;
-}
-
-.notification.error {
-    background-color: #e74c3c;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-/* Añadir estas reglas */
-.container-list-task {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.task-card {
-    transition: all 0.3s ease;
-    order: 0; /* Por defecto las no completadas primero */
-}
-
+/* Tareas completadas */
 .task-card.completed {
-    order: 1; /* Las completadas al final */
-    background-color: #f8f9fa;
+    opacity: 0.7;
+    background: #f5f5f5;
+    order: 1;
 }
 
-.check.completed {
-    background-color: #28a745;
-    border-color: #28a745;
+.task-card.completed .task-title {
+    text-decoration: line-through;
+    color: #777;
+}
+
+.button.check.completed {
+    background: #4CAF50;
     color: white;
+    border-color: #4CAF50;
 }
 
-/* Animación para el cambio de estado */
-@keyframes fadeIn {
-    from { opacity: 0.5; }
-    to { opacity: 1; }
-}
-
-.task-card {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-/* Añadir estos estilos */
-.completed-tasks-title {
-    margin-top: 30px;
-    padding-bottom: 8px;
-    font-family: 'Segoe UI', sans-serif;
-}
-
+/* Contenedor de tareas completadas */
 .completed-tasks .task-card {
     opacity: 0.8;
     background-color: #f9f9f9;
@@ -246,45 +179,8 @@
     text-decoration: line-through;
 }
 
-/*-------------------------------------------------------------------*/
-
-/* Estilos para la lista de tareas */
-
-.container-list-task {
-    width: 40%;
-    max-width: 600px;
-    margin-left: 0;
-    margin-bottom: 20px;
-    padding-right: 20px;
-}
-
-.task-card.completed {
-    background-color: #f8f9fa;
-}
-
-/*-------------------------------------------------------------------*/
-
-/* Botón de añadir tareas */
-
-.add-tasks-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 15px 0;
-    text-align: center;
-}
-
-.add-task-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px; 
-    padding: 10px 16px; 
-    font-size: 0.9rem; 
-    border: none;
-    background: #ee6e6e34;
-    border-radius: 10px;
-}
-
-.add-task-button:hover {
-    background: #d67272a2;
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
 }
