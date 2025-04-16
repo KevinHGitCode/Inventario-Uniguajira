@@ -207,6 +207,7 @@ SELECT
     b.id AS bien_id,
     i.nombre AS inventario,
     b.nombre AS bien,
+    b.imagen AS imagen,
     b.tipo AS tipo,
     COALESCE(SUM(bc.cantidad), COUNT(be.id)) AS cantidad
 FROM bienes b

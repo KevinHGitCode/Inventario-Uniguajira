@@ -167,11 +167,8 @@ class User extends Database {
             $stmt->bind_param("si", $hashedPassword, $id);
             $stmt->execute();
 
-            if ($stmt->affected_rows > 0) {
-                return "contraseña actualizada";
-            } else {
-                return "la contraseña no actualizo";
-            }
+            return $stmt->affected_rows > 0;
+            
         } catch (Exception $e) {
             throw new Exception("error para actualizar contraseña:" . $e->getMessage());
         }

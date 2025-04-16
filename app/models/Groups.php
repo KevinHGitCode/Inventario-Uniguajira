@@ -18,16 +18,19 @@ class Groups extends Database {
     }
 
     /**
-     * Obtener todos los grupos.
+     * Obtener todos los grupos con la cantidad de inventarios que tiene cada uno.
      * 
-     * @return array Arreglo asociativo con todos los grupos.
+     * @return array Arreglo asociativo con todos los grupos y su número de inventarios.
      */
     public function getAllGroups() {
         $stmt = $this->connection->prepare("
             SELECT 
-                id, 
-                nombre 
-            FROM grupos
+                g.id as id, 
+                g.nombre as nombre,
+                COUNT(i.id) AS total_inventarios
+            FROM grupos g
+            LEFT JOIN inventarios i ON g.id = i.grupo_id
+            GROUP BY g.id, g.nombre
         ");
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -42,13 +45,20 @@ class Groups extends Database {
     public function getInventoriesByGroup($groupId) {
         $stmt = $this->connection->prepare("
             SELECT 
-                id, 
-                nombre, 
-                responsable_id, 
-                fecha_modificacion, 
-                estado_conservacion 
-            FROM inventarios 
-            WHERE grupo_id = ?
+                i.id as id, 
+                i.nombre as nombre, 
+                i.responsable_id as responsable_id, 
+                i.fecha_modificacion as fecha_modificacion, 
+                i.estado_conservacion as estado_conservacion,
+                COUNT(DISTINCT b.id) AS cantidad_tipos_bienes,
+                COALESCE(SUM(bc.cantidad), 0) + COUNT(be.id) AS cantidad_total_bienes
+            FROM inventarios i
+            LEFT JOIN bienes_inventarios bi ON i.id = bi.inventario_id
+            LEFT JOIN bienes b ON bi.bien_id = b.id
+            LEFT JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
+            LEFT JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
+            WHERE i.grupo_id = ?
+            GROUP BY i.id, i.nombre, i.responsable_id, i.fecha_modificacion, i.estado_conservacion
         ");
         $stmt->bind_param("i", $groupId);
         $stmt->execute();

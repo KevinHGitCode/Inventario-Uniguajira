@@ -4,10 +4,13 @@ require_once '../../app/models/GoodsInventory.php';
 require '.tableHelper.php';
 
 function runTests() {
-    // testGetAllGoodsByInventory();
-    testGetAllQuantityGoodsByInventory(1);
-    // testGetAllSerialGoodsByInventory();
-    // testAddQuantityGoodToInventory();
+    testGetAllGoodsByInventory(5); // passed
+    // testGetAllQuantityGoodsByInventory(5); // passed
+    // testGetAllSerialGoodsByInventory(5); // passed
+
+    // testAddQuantityGoodToInventory(1, 84, 10); // failed
+    // testGetAllGoodsByInventory(1);
+
     // testAddSerialGoodToInventory();
     // testUpdateQuantityGood();
     // testUpdateSerialGood();
@@ -52,31 +55,28 @@ function testGetAllQuantityGoodsByInventory($inventoryId) {
 function testGetAllSerialGoodsByInventory($inventoryId) {
     $goodsInventory = new GoodsInventory();
     echo "Testing getAllSerialGoodsByInventory()... <br>";
+
     $result = $goodsInventory->getAllSerialGoodsByInventory($inventoryId);
-    
+
     if (is_array($result)) {
+        renderTable($result);
         echo "PASSED<br>";
-        foreach ($result as $item) {
-            echo "Inventory ID: {$item['inventario_id']}, Good ID: {$item['bien_id']}, Serial: {$item['serial']}, Model: {$item['modelo']}<br>";
-        }
     } else {
         echo "FAILED<br>";
     }
 }
 
-function testAddQuantityGoodToInventory() {
+function testAddQuantityGoodToInventory($inventoryId, $goodId, $quantity) {
     $goodsInventory = new GoodsInventory();
     echo "Testing addQuantityGoodToInventory()... <br>";
-    $inventoryId = 1; // Replace with valid IDs
-    $goodId = 1;      // Replace with valid IDs
-    $quantity = 5;
-    
+
     if ($goodsInventory->addQuantityGoodToInventory($inventoryId, $goodId, $quantity)) {
         echo "PASSED<br>";
     } else {
         echo "FAILED<br>";
     }
 }
+
 
 function testAddSerialGoodToInventory() {
     $goodsInventory = new GoodsInventory();

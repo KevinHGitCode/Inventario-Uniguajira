@@ -211,4 +211,52 @@ class ctlUser {
             echo json_encode(['status' => 'error', 'message' => 'Error al crear el usuario.']);
         }
     }
+
+    public function updatePassword() {
+        session_start();
+        header('Content-Type: application/json');
+
+        $id = (int) $_SESSION['user_id'] ?? 0;
+        $password = trim($_POST['contraseña'] ?? '');
+        $newPassword = trim($_POST['nueva_contraseña'] ?? '');
+        $newPasswordConfirm = trim($_POST['confirmar_contraseña'] ?? '');
+
+        if (!is_numeric($id) || $password === '' || $newPassword === '') {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Todos los campos son requeridos.']);
+            return;
+        }
+
+        if ($newPassword !== $newPasswordConfirm) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden.']);
+            return;
+        }
+
+        $userModel = new User();
+        $usuarioActual = $userModel->getById($id);
+
+        if (!$usuarioActual) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Usuario no encontrado.']);
+            return;
+        }
+
+        // Verifica la contraseña
+        if (!password_verify($password, $usuarioActual['contraseña'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Contraseña incorrecta.']);
+            return;
+        }
+
+        // Actualizar contraseña
+        $resultado = $userModel->updatepassword($id, $newPassword);
+
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Contraseña actualizada correctamente.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar la contraseña.']);
+        }
+    }
 }

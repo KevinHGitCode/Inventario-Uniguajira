@@ -7,9 +7,9 @@
         <div class="search-container">
             <input
                 type="text"
-                id="searchInput"
+                id="searchGood"
                 placeholder="Buscar o agregar bien"
-                class="search-bar"
+                class="search-bar searchInput"
             />
             <i class="search-icon fas fa-search"></i>
         </div>
@@ -18,13 +18,13 @@
 
     <div class="bienes-grid">
         <?php foreach ($dataGoods as $bien): ?>
-        <div class="bien-card">
+        <div class="bien-card card-item">
             <img
                 src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/goods/default.jpg') ?>"
                 class="bien-image"
             />
             <div class="bien-info">
-                <h3><?= htmlspecialchars($bien['bien']) ?></h3>
+                <h3 class="name-item"><?= htmlspecialchars($bien['bien']) ?></h3>
                 <p>
                     Cantidad:
                     <?= $bien['total_cantidad'] ?>

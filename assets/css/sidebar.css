@@ -23,7 +23,7 @@
     left: 0;
     z-index: 100;
     padding: 1.1rem 0;
-    border-right: 1px dashed #7d7f82;
+    border-right: 1px solid #ccc;
     overflow-y: auto;
     background-color: var(--background-color);
     transition: width 0.5s ease;
@@ -45,10 +45,7 @@
     overflow: hidden;
     color: var(--text-color);
 }
-.sidebar a:hover {
-    /* Estilo de los enlaces al pasar el cursor por encima */
-    background-color: var(--background-hover);
-}
+
 .sidebar a.selected {
     /* Estilo de los enlaces seleccionados */
     color: var(--text-selected-color);
@@ -64,4 +61,12 @@
 .sidebar img {
     /* Estilo de las imágenes dentro del sidebar */
     width: 1.6rem;
+}
+
+.sidebar a:hover {
+    background-color: var(--background-selected);
+    border-radius: 0.5rem;
+    color: var(--text-selected-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
 }
