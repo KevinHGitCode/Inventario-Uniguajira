@@ -6,6 +6,38 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
 
 <h2 class="tittle-list-task">Tareas pendientes</h2>
 
+<?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'administrador'): ?>
+    <div class="add-task-container">
+        <button class="add-task-button" onclick="showTaskModal()">
+            <span class="icon">+</span>
+            <span class="text">Añadir tarea</span>
+        </button>
+    </div>
+
+    <!-- Modal para crear tareas -->
+    <div id="taskModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideTaskModal()">&times;</span>
+            <h2>Crear Nueva Tarea</h2>
+            <form id="taskForm" onsubmit="createTask(event)">
+                <div class="form-group">
+                    <label for="taskName">Nombre:</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDesc">Descripción:</label>
+                    <textarea id="taskDesc"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de creación:</label>
+                    <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
+                </div>
+                <button type="submit" class="btn-submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+
 <div class="container-list-task">
     <?php if (empty($dataTasks['pendientes'])): ?>
         <p>No tienes tareas pendientes.</p>
@@ -52,12 +84,3 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
-
-<?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'administrador'): ?>
-    <button class="add-task-button" onclick="showTaskModal()">
-        <span class="icon">+</span>
-        <span class="text">Añadir tarea</span>
-    </button>
-<?php endif; ?>
-
-<!-- Modal para crear tareas (permanece igual) -->

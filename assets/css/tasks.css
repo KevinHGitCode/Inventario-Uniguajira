@@ -108,7 +108,7 @@
 }
 
 .btn-submit:hover {
-    background-color: #4CAF50;
+    background-color: #2e9131;
 }
 
 .close-modal {
@@ -137,19 +137,18 @@
 
 /* Asegurar que las tarjetas de tarea muestren bien la fecha */
 .task-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px;
-    margin-bottom: 10px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 .task-content {
     flex-grow: 1;
     margin: 0 15px;
+    min-width: 0;
 }
 
 /* Estilos para botón de eliminar */
@@ -229,10 +228,8 @@
 /* Añadir estos estilos */
 .completed-tasks-title {
     margin-top: 30px;
-    color: #666;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #eee;
     padding-bottom: 8px;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .completed-tasks .task-card {
@@ -249,17 +246,45 @@
     text-decoration: line-through;
 }
 
-/* Mantener los estilos existentes y añadir */
-.container-list-task {
-    margin-bottom: 20px;
-}
+/*-------------------------------------------------------------------*/
 
-.task-card {
-    /* Tus estilos existentes */
-    transition: all 0.3s ease;
+/* Estilos para la lista de tareas */
+
+.container-list-task {
+    width: 40%;
+    max-width: 600px;
+    margin-left: 0;
+    margin-bottom: 20px;
+    padding-right: 20px;
 }
 
 .task-card.completed {
-    /* Estilos específicos para tareas completadas */
     background-color: #f8f9fa;
+}
+
+/*-------------------------------------------------------------------*/
+
+/* Botón de añadir tareas */
+
+.add-tasks-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.add-task-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; 
+    padding: 10px 16px; 
+    font-size: 0.9rem; 
+    border: none;
+    background: #ee6e6e34;
+    border-radius: 10px;
+}
+
+.add-task-button:hover {
+    background: #d67272a2;
 }

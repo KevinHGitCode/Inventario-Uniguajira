@@ -46,8 +46,13 @@
 }
 
 .task-title {
-    margin: 0;
+    margin: 0 30px 4px 0;
     font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .task-duration {
@@ -61,22 +66,4 @@
     font-size: 14px;
     color: #666;
     white-space: nowrap;
-}
-
-.add-task-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    background: #f0f0f0;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    justify-content: center;
-    margin-top: 12px;
-}
-
-.add-task-button:hover {
-    background: #e0e0e0;
 }
