@@ -1,19 +1,18 @@
 /* Estilos básicos para la página principal */
-h1, h2 {
+h1,
+h2 {
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* Contenedor de tareas */
 .container-list-task {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas de igual ancho */
     gap: 12px;
     margin-top: 20px;
-    width: 40%;
-    max-width: 600px;
-    margin-left: 0;
+    width: 80%; /* Aumentar el ancho para acomodar dos columnas */
+    max-width: 1200px; /* Ajustar según necesidad */
     margin-bottom: 20px;
-    padding-right: 20px;
 }
 
 /* Header con título y botón */
@@ -31,12 +30,12 @@ h1, h2 {
     margin-top: 20px;
     padding-bottom: 8px;
     margin-bottom: 0;
-    margin-right: auto; /* Empuja el botón hacia la derecha */
 }
 
 .completed-tasks-title {
     margin-top: 30px;
     padding-bottom: 8px;
+    margin-bottom: 0;
 }
 
 /* Botón de añadir tareas */
@@ -115,7 +114,7 @@ h1, h2 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
 .form-group input,
@@ -176,6 +175,12 @@ h1, h2 {
 }
 
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }

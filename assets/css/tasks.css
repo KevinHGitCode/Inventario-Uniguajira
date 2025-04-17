@@ -6,19 +6,28 @@
     margin-bottom: 10px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
     animation: fadeIn 0.3s ease-in-out;
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    width: 100%; /* Ocupa todo el ancho de la columna */
+    box-sizing: border-box; /* Incluye padding en el ancho */
 }
 
+@media (max-width: 768px) {
+    .container-list-task {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+}
 /* Efecto hover de tarjetas */
 .task-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    z-index: 2; /* Asegurar que la tarjeta hover esté sobre las demás */
 }
 
 /* Contenido de la tarjeta */
@@ -49,7 +58,6 @@
     max-height: 2.8em;
     word-break: break-word;
     padding-right: 60px;
-    display: block;
 }
 
 /* Mostrar texto completo al hacer hover */
@@ -59,9 +67,10 @@
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
-    position: relative;
-    z-index: 1;
     background-color: #fff;
+    padding: 8px;
+    z-index: 1;
+    position: relative;
 }
 
 /* Descripción de la tarea */
@@ -88,9 +97,10 @@
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
+    background-color: #fff;
+    padding: 8px;
     position: relative;
     z-index: 1;
-    background-color: #fff;
 }
 
 /* Fecha de la tarea */
@@ -102,9 +112,10 @@
     right: 50px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     padding: 0 5px;
     border-radius: 3px;
+    z-index: 3;
 }
 
 /* Botón de check */
@@ -146,6 +157,34 @@
     color: #c0392b;
 }
 
+/* Estilos para el botón de edición */
+.button.edit-task {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px;
+    transition: color 0.3s;
+    position: absolute;
+    right: 50px; /* Ajustar posición */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.button.edit-task:hover {
+    color: #3498db;
+}
+
+/* Ajustar posición de otros elementos */
+.task-date {
+    margin: 0 30px; /* Ajustar para acomodar nuevo botón */
+}
+
+.delete-task {
+    right: 12px; /* Mantener posición */
+}
+
 /* Tareas completadas */
 .task-card.completed {
     opacity: 0.7;
@@ -159,9 +198,9 @@
 }
 
 .button.check.completed {
-    background: #4CAF50;
+    background: #4caf50;
     color: white;
-    border-color: #4CAF50;
+    border-color: #4caf50;
 }
 
 /* Contenedor de tareas completadas */
@@ -181,6 +220,10 @@
 
 /* Animaciones */
 @keyframes fadeIn {
-    from { opacity: 0.5; }
-    to { opacity: 1; }
+    from {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
 }

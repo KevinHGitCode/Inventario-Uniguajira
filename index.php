@@ -34,6 +34,7 @@ $router->add('/api/users/delete', 'ctlUser', 'delete');
 $router->add('/api/tasks/create', 'ctlTasks', 'create');
 $router->add('/api/tasks/delete/:id', 'ctlTasks', 'delete');
 $router->add('/api/tasks/toggle', 'ctlTasks', 'toggle');
+$router->add('/api/tasks/update', 'ctlTasks', 'update');
 
 // Rutas para la API de bienes
 $router->add('/api/goods/create', 'ctlGoods', 'create');
