@@ -42,14 +42,13 @@
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <div class="actions">
                 <a
-                    href="#"
                     class="btn-editar"
                     data-id="<?= $bien['bien_id'] ?>"
                     data-nombre="<?= htmlspecialchars($bien['bien']) ?>"
+                    onclick="mostrarModal('#modalActualizarBien')"
                     ><i class="fas fa-edit"></i
                 ></a>
                 <a
-                    href="#"
                     class="btn-eliminar"
                     data-id="<?= $bien['bien_id'] ?>"
                     ><i class="fas fa-trash"></i
@@ -99,7 +98,7 @@
     <!-- Modal Actualizar -->
     <div id="modalActualizarBien" class="modal" style="display: none">
         <div class="modal-content">
-            <span id="cerrarModalActualizarBien" class="close">&times;</span>
+            <span id="cerrarModalActualizarBien" class="close" onclick="cerrarModal('#modalActualizarBien')">&times;</span>
             <h2>Actualizar Bien</h2>
             <form id="formActualizarBien" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="actualizarId" />

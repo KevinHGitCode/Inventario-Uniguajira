@@ -18,7 +18,7 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button id="btnCrearGrupo" class="create-btn">Crear</button>
+            <button id="btnCrearGrupo" class="create-btn" onclick="mostrarModal('#modalCrearGrupo')">Crear</button>
             <?php endif; ?>
             
         </div>
@@ -104,7 +104,7 @@
 <!-- Modal Crear Grupo -->
 <div id="modalCrearGrupo" class="modal" style="display: none">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" onclick="ocultarModal('#modalCrearGrupo')">&times;</span>
         <h2>Nuevo Grupo</h2>
         <form
             id="formCrearGrupo"
@@ -157,63 +157,3 @@
     </div>
 </div>
 
-
-<!-- ---------------------------------------------------------------------- -->
-
-
-<!-- Modal Crear Inventario -->
-<div id="modalCrearInventario" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Nuevo Inventario</h2>
-        <form id="formCrearInventario" action="/api/inventario/create" method="POST">
-            <div>
-                <label>Nombre del inventario:</label>
-                <input type="text" name="nombre" required />
-            </div>
-
-            <div>
-                <label>Fecha:</label>
-                <input type="date" name="fecha" required />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button 
-                id="btnCrearInventario"
-                type="submit" 
-                class="create-btn">
-                    Guardar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-<!-- ---------------------------------------------------------------------- -->
-
-
-<!-- Modal Actualizar Inventario -->
-<div id="modalActualizarInventario" class="modal" style="display: none">
-    <div class="modal-content">
-        <span id="cerrarModalActualizarInventario" class="close">&times;</span>
-        <h2>Actualizar Inventario</h2>
-        <form id="formActualizarInventario">
-            <input type="hidden" name="id" id="actualizarInventarioId" />
-
-            <div>
-                <label>Nombre del inventario:</label>
-                <input type="text" name="nombre" id="actualizarInventarioNombre" required />
-            </div>
-
-            <div>
-                <label>Fecha:</label>
-                <input type="date" name="fecha" id="actualizarInventarioFecha" required />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar Cambios</button>
-            </div>
-        </form>
-    </div>
-</div>

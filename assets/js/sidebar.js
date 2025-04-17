@@ -56,10 +56,8 @@ function loadContent(path) {
 
         if (path === '/goods') {
             iniciarBusqueda('searchGood');
-            // if (typeof inicializarModalBien === 'function') inicializarModalBien();
             if (typeof inicializarFormularioBien === 'function') inicializarFormularioBien();
             if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
-            if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
             if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
         }
         if (path === '/users') {
@@ -82,7 +80,6 @@ function loadContent(path) {
         // Activar la selección solo en la página de inventario
         if (path === '/inventory') {
             iniciarBusqueda('searchGroup');
-            inicializarModalCrearGrupo();
             inicializarFormularioCrearGrupo();
             inicializarModalActualizarGrupo();
             inicializarFormularioActualizarGrupo();

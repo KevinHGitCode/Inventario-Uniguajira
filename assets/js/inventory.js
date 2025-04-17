@@ -16,7 +16,6 @@ function abrirGrupo(idGroup) {
         document.getElementById('group-name').innerText = grupoName;
 
         iniciarBusqueda('searchInventory');
-        inicializarModalCrearInventario();
         inicializarFormularioCrearInventario();
         
     })
@@ -217,31 +216,6 @@ function escapeHtml(unsafe) {
 // -------------------------------------
 
 
-// Función para inicializar el modal de Crear Grupo
-function inicializarModalCrearGrupo() {
-    // Obtiene el modal y los elementos relacionados
-    const modal = document.getElementById("modalCrearGrupo");
-    const btnCrear = document.getElementById("btnCrearGrupo");
-    const spanClose = modal?.querySelector(".close");
-
-    // Agrega un evento para abrir el modal al hacer clic en el botón
-    btnCrear.addEventListener("click", () => {
-        modal.style.display = "flex";
-    });
-
-    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
-    spanClose.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    // Agrega un evento para cerrar el modal al hacer clic fuera de él
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-}
-
 // Función para inicializar el formulario de Crear Grupo
 function inicializarFormularioCrearGrupo() {
     const form = document.getElementById("formCrearGrupo");
@@ -350,36 +324,6 @@ function inicializarFormularioActualizarGrupo() {
 // -----------------------------------------------------
 // ------------------- Inventories ---------------------
 // -----------------------------------------------------
-
-
-// Función para inicializar el modal de Crear Inventario
-function inicializarModalCrearInventario() {
-    // Obtiene el modal y los elementos relacionados
-    const modal = document.getElementById("modalCrearInventario");
-    // Asumiendo que habrá un botón para crear inventario
-    const btnCrearInventario = document.getElementById("btnCrearInventorio");
-    const spanClose = modal?.querySelector(".close");
-
-    // Agrega un evento para abrir el modal al hacer clic en el botón
-    if (btnCrearInventario) {
-        btnCrearInventario.addEventListener("click", () => {
-            modal.style.display = "flex";
-        });
-    }
-
-    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
-    spanClose.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    // Agrega un evento para cerrar el modal al hacer clic fuera de él
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-}
-
 
 // Función para inicializar el formulario de Crear Inventario
 function inicializarFormularioCrearInventario() {
