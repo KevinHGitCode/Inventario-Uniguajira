@@ -1,29 +1,55 @@
 /**
  * Configura el modal para la creación de bienes, incluyendo los eventos de apertura y cierre.
  */
-function inicializarModalBien() {
-    // Obtiene el modal y los elementos relacionados (botón de abrir y cerrar)
-    const modal = document.getElementById("modalCrear");
-    const btnCrear = document.getElementById("btnCrear");
-    const spanClose = modal?.querySelector(".close");
+// function inicializarModalBien() {
+//     // Obtiene el modal y los elementos relacionados (botón de abrir y cerrar)
+//     const modal = document.getElementById("modalCrear");
+//     const btnCrear = document.getElementById("btnCrear");
+//     const spanClose = modal?.querySelector(".close");
 
-    // Agrega un evento para abrir el modal al hacer clic en el botón
-    btnCrear.addEventListener("click", () => {
-        modal.style.display = "flex";
-    });
+//     // Agrega un evento para abrir el modal al hacer clic en el botón
+//     btnCrear.addEventListener("click", () => {
+//         modal.style.display = "flex";
+//     });
 
-    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
-    spanClose.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
+//     // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
+//     spanClose.addEventListener("click", () => {
+//         modal.style.display = "none";
+//     });
 
-    // Agrega un evento para cerrar el modal al hacer clic fuera de él
-    window.addEventListener("click", (e) => {
+//     // Agrega un evento para cerrar el modal al hacer clic fuera de él
+//     window.addEventListener("click", (e) => {
+//         if (e.target === modal) {
+//             modal.style.display = "none";
+//         }
+//     });
+// }
+
+// Mostrar el modal
+function mostrarModal(selectorModal) {
+    const modal = document.querySelector(selectorModal);
+    modal.style.display = "flex";
+
+    // Definimos la función y la asignamos solo una vez
+    cerrarModalHandler = function (e) {
         if (e.target === modal) {
-            modal.style.display = "none";
+            ocultarModal(selectorModal);
         }
-    });
+    };
+
+    window.addEventListener("click", cerrarModalHandler);
 }
+
+// Ocultar el modal
+function ocultarModal(selectorModal) {
+    const modal = document.querySelector(selectorModal);
+    modal.style.display = "none";
+
+    // Remueve el event listener
+    window.removeEventListener("click", cerrarModalHandler);
+}
+
+
 
 /**
  * Configura el formulario para la creación de bienes, manejando el envío y la respuesta del servidor.

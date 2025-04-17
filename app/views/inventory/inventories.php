@@ -21,7 +21,7 @@
     </div>
     
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <button id="btnCrear" class="create-btn">Crear</button>
+    <button id="btnCrearInventorio" class="create-btn">Crear</button>
     <?php endif; ?>
             
 </div>

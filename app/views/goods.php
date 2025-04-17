@@ -15,7 +15,7 @@
         </div>
 
         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-        <button id="btnCrear" class="create-btn">Crear</button>
+        <button id="btnCrear" class="create-btn" onclick="mostrarModal('#modalCrear')">Crear</button>
         <?php endif; ?>
 
     </div>
@@ -66,7 +66,7 @@
     <!-- Modal -->
     <div id="modalCrear" class="modal" style="display: none">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="ocultarModal('#modalCrear')">&times;</span>
             <h2>Nuevo Bien</h2>
             <form
                 id="formCrearBien"

@@ -16,6 +16,9 @@ function abrirGrupo(idGroup) {
         document.getElementById('group-name').innerText = grupoName;
 
         iniciarBusqueda('searchInventory');
+        inicializarModalCrearInventario();
+        inicializarFormularioCrearInventario();
+        
     })
     .catch(error => {
         console.error('Error:', error);
@@ -208,4 +211,231 @@ function escapeHtml(unsafe) {
             case "'": return '&#039;';
         }
     }) || '';
+}
+
+
+// -------------------------------------
+
+
+// Función para inicializar el modal de Crear Grupo
+function inicializarModalCrearGrupo() {
+    // Obtiene el modal y los elementos relacionados
+    const modal = document.getElementById("modalCrearGrupo");
+    const btnCrear = document.getElementById("btnCrearGrupo");
+    const spanClose = modal?.querySelector(".close");
+
+    // Agrega un evento para abrir el modal al hacer clic en el botón
+    btnCrear.addEventListener("click", () => {
+        modal.style.display = "flex";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
+    spanClose.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic fuera de él
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
+
+// Función para inicializar el formulario de Crear Grupo
+function inicializarFormularioCrearGrupo() {
+    const form = document.getElementById("formCrearGrupo");
+    const modal = document.getElementById("modalCrearGrupo");
+
+    if (!form) return;
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        fetch("/api/grupos/create", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(response => {
+            showToast(response);
+
+            if (response.success) {
+                modal.style.display = "none";
+                form.reset();
+                setTimeout(() => {
+                    // Recargar la sección de grupos
+                    // Asumiendo que hay una función loadGroups() o se puede usar window.location.reload()
+                    window.location.reload();
+                }, 1500); // Recarga después de 1.5 segundos
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            showToast({
+                success: false,
+                message: 'Error: No se pudo crear el grupo. Intente nuevamente.'
+            });
+        });
+    });
+}
+
+// Función para inicializar el modal de Actualizar Grupo
+function inicializarModalActualizarGrupo() {
+    // Obtiene el modal y el botón de cerrar
+    const modal = document.getElementById("modalActualizarGrupo");
+    const spanClose = document.getElementById("cerrarModalActualizarGrupo");
+    
+    // Podemos suponer que este modal se abrirá desde otra función
+    // cuando se seleccione un grupo para editar
+    
+    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
+    spanClose.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic fuera de él
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
+
+// Función para inicializar el formulario de Actualizar Grupo
+function inicializarFormularioActualizarGrupo() {
+    const form = document.getElementById("formActualizarGrupo");
+    const modal = document.getElementById("modalActualizarGrupo");
+
+    if (!form) return;
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const grupoId = document.getElementById("actualizarGrupoId").value;
+
+        fetch(`/api/grupos/update/${grupoId}`, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(response => {
+            showToast(response);
+
+            if (response.success) {
+                modal.style.display = "none";
+                // Actualizar el nombre del grupo en la interfaz
+                const nombreGrupo = document.getElementById(`group-name${grupoId}`);
+                if (nombreGrupo) {
+                    nombreGrupo.textContent = formData.get("nombre");
+                }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            showToast({
+                success: false,
+                message: 'Error: No se pudo actualizar el grupo. Intente nuevamente.'
+            });
+        });
+    });
+}
+
+
+
+// -----------------------------------------------------
+// ------------------- Inventories ---------------------
+// -----------------------------------------------------
+
+
+// Función para inicializar el modal de Crear Inventario
+function inicializarModalCrearInventario() {
+    // Obtiene el modal y los elementos relacionados
+    const modal = document.getElementById("modalCrearInventario");
+    // Asumiendo que habrá un botón para crear inventario
+    const btnCrearInventario = document.getElementById("btnCrearInventorio");
+    const spanClose = modal?.querySelector(".close");
+
+    // Agrega un evento para abrir el modal al hacer clic en el botón
+    if (btnCrearInventario) {
+        btnCrearInventario.addEventListener("click", () => {
+            modal.style.display = "flex";
+        });
+    }
+
+    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
+    spanClose.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // Agrega un evento para cerrar el modal al hacer clic fuera de él
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+}
+
+
+// Función para inicializar el formulario de Crear Inventario
+function inicializarFormularioCrearInventario() {
+    const form = document.getElementById("formCrearInventario");
+    const modal = document.getElementById("modalCrearInventario");
+
+    if (!form) return;
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        
+        // Asumiendo que tenemos el ID del grupo actual en alguna variable global
+        // o lo podemos obtener de la URL
+        const grupoId = obtenerGrupoIdActual(); // Esta función debería implementarse
+        
+        // Agregar el grupoId al formData
+        formData.append("grupo_id", grupoId);
+
+        fetch("/api/inventario/create", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(response => {
+            showToast(response);
+
+            if (response.success) {
+                modal.style.display = "none";
+                form.reset();
+                setTimeout(() => {
+                    // Recargar los inventarios del grupo actual
+                    abrirGrupo(grupoId); // Asumiendo que esta función ya existe
+                }, 1500);
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            showToast({
+                success: false,
+                message: 'Error: No se pudo crear el inventario. Intente nuevamente.'
+            });
+        });
+    });
+}
+
+// Función auxiliar para obtener el ID del grupo actual
+// Esta es una función de ejemplo, deberás adaptarla según tu implementación
+function obtenerGrupoIdActual() {
+    // Podrías obtener el ID del grupo de una variable global
+    // o de un atributo data en algún elemento HTML
+    // o de la URL actual
+    
+    // Ejemplo de obtención desde la URL: /inventario?grupo=123
+    const urlParams = new URLSearchParams(window.location.search);
+    const grupoId = urlParams.get('grupo');
+    
+    return grupoId || 0; // Devuelve 0 o algún valor predeterminado si no hay ID
 }

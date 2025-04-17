@@ -55,8 +55,9 @@ function updateControlBar(type) {
     
     const controlBar = document.getElementById(controlBarId);
     
+    // TODO: Ver esto luego
     if (!controlBar) {
-        console.warn(`Control bar not found: ${controlBarId}`);
+        // console.warn(`Control bar not found: ${controlBarId}`);
         return;
     }
     
