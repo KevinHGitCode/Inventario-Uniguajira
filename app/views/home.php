@@ -73,12 +73,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                         </div>
                     </div>
                     <p class="task-date"><?= formatDate($task['fecha']) ?></p>
-                    <button class="button edit-task" 
-                            data-id="<?= $task['id'] ?>"
-                            data-name="<?= rawurlencode($task['nombre']) ?>"
-                            data-desc="<?= rawurlencode($task['descripcion'] ?? '') ?>"
-                            data-date="<?= $task['fecha'] ?>"
-                            onclick="event.stopImmediatePropagation()">
+                    <button class="button edit-task" onclick="showEditTaskModal(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
