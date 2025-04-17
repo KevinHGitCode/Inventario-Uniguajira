@@ -57,8 +57,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
-    <script src="assets/js/search.js"></script>
-    <script src="assets/js/toast.js"></script>
+    <script src="assets/js/helpers/search.js"></script>
+    <script src="assets/js/helpers/toast.js"></script>
     <script src="assets/js/tasks.js"></script>
 
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
@@ -69,7 +69,7 @@
     <script src="assets/js/inventory.js"></script>
 
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <script src="assets/js/selection.js"></script>
+    <script src="assets/js/helpers/selection.js"></script>
     <?php endif; ?>
 
     <script>
