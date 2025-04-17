@@ -96,6 +96,61 @@ const deleteTask = (taskId, element) => {
     });
 };
 
+// Funciones para el modal de edición
+const showEditTaskModal = (id, name, description, date) => {
+    document.getElementById('editTaskId').value = id;
+    document.getElementById('editTaskName').value = decodeURIComponent(name);
+    document.getElementById('editTaskDesc').value = decodeURIComponent(description);
+
+    // Formatear la fecha para mostrarla correctamente
+    const formattedDate = new Date(date).toLocaleDateString('es-ES');
+    document.getElementById('editTaskDate').value = formattedDate;
+    
+    document.getElementById('editTaskModal').style.display = 'flex';
+    document.getElementById('editTaskName').focus();
+};
+
+const hideEditTaskModal = () => {
+    document.getElementById('editTaskModal').style.display = 'none';
+};
+
+const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES'); // Formato dd/mm/yyyy
+};
+
+// Función para actualizar tarea
+const updateTask = (event) => {
+    event.preventDefault();
+    
+    const taskData = {
+        id: document.getElementById('editTaskId').value,
+        name: document.getElementById('editTaskName').value,
+        description: document.getElementById('editTaskDesc').value
+    };
+
+    fetch('/api/tasks/update', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(taskData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Error al actualizar tarea'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error en la conexión');
+    });
+};
+
 // Función para mostrar notificaciones
 const showNotification = (message, type) => {
     const notification = document.createElement('div');
@@ -115,5 +170,8 @@ window.taskFunctions = {
     createTask,
     toggleTask,
     deleteTask,
-    showNotification
+    showNotification,
+    showEditTaskModal,
+    hideEditTaskModal,
+    updateTask
 };
