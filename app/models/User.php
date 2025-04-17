@@ -134,11 +134,11 @@ class User extends Database {
      * @return string Mensaje de éxito o de que no hubo cambios.
      * @throws Exception Si ocurre un error al actualizar el usuario.
      */
-    public function updateUser($id, $nombre, $email) {
+    public function updateUser( $id, $nombre, $nombre_usuario, $email) {
         try {
-            $query = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
+            $query = "UPDATE usuarios SET nombre = ?, nombre_usuario = ?, email = ? WHERE id = ?";
             $stmt = $this->connection->prepare($query);
-            $stmt->bind_param("ssi", $nombre, $email, $id);
+            $stmt->bind_param("sssi", $nombre, $nombre_usuario, $email, $id);
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
