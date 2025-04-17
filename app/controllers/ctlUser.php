@@ -188,9 +188,14 @@ class ctlUser {
     }
 
     public function create(){
+        header('Content-Type: application/json');
         // Validar si existen los parámetros necesarios
+        echo "<script>console.log('Parámetros recibidos:', " . json_encode($_POST) . ");</script>";
+
         if (!isset($_POST['nombre']) || !isset($_POST['email']) || !isset($_POST['contraseña']) || !isset($_POST['rol'])) {
-            echo "Error: Parámetros faltantes para crear un usuario.";
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => "Error: Parámetros faltantes para crear un usuario."]);
+
             return;
         }
 
@@ -206,9 +211,9 @@ class ctlUser {
         $result = $this->userModel->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol );
         
         if ($result) {
-            echo json_encode(['status' => 'success', 'message' => 'Usuario creado exitosamente.']);
+            echo json_encode(['success' => true, 'message' => 'Usuario creado exitosamente.']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al crear el usuario.']);
+            echo json_encode(['success' => false, 'message' => 'Error al crear el usuario.']);
         }
     }
 
