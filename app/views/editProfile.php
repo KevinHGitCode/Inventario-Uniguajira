@@ -30,7 +30,7 @@
         <h2>Editar Usuario</h2>
         </h2>
         <form id="formEditarPerfil" 
-                action="/api/users/edit" 
+                action="/api/users/editProfile" 
                 method="POST" 
                 enctype="multipart/form-data">
             <input type="hidden" name="id" id="Id_Usuario" />

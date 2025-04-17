@@ -19,7 +19,7 @@ $router->add('/inventory', 'ctlSidebar', 'inventory');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para el navbar
-$router->add('/api/users/edit', 'ctlUser', 'edit');
+$router->add('/api/users/editProfile', 'ctlUser', 'edit'); //TODO: verificar esta ruta
 $router->add('/api/users/update', 'ctlUser', 'updatePassword');
 $router->add('/api/logout', 'ctlUser', 'logout');
 
