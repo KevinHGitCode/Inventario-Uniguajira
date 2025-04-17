@@ -1,0 +1,116 @@
+<section id="controladores">
+    <h2>Controladores</h2>
+
+    <!-- Router -->
+    <details>
+        <summary>Router</summary>
+        <p>Clase para manejar las rutas de la aplicación.</p>
+        <details>
+            <summary>add($route, $controller, $method)</summary>
+            <p>Agrega una nueva ruta al enrutador.</p>
+            <p><strong>Argumentos:</strong></p>
+            <ul>
+                <li><code>$route</code> (string) - URI de la ruta.</li>
+                <li><code>$controller</code> (string) - Nombre del controlador.</li>
+                <li><code>$method</code> (string) - Método del controlador.</li>
+            </ul>
+            <p><strong>Retorna:</strong> void.</p>
+        </details>
+        <details>
+            <summary>dispatch($requestUri)</summary>
+            <p>Despacha la solicitud a la ruta correspondiente.</p>
+            <p><strong>Argumentos:</strong> <code>$requestUri</code> (string) - URI de la solicitud.</p>
+            <p><strong>Retorna:</strong> Ejecuta el método correspondiente o muestra la vista 404.</p>
+        </details>
+    </details>
+
+    <!-- ctlView -->
+    <details>
+        <summary>ctlView</summary>
+        <p>Controlador para manejar las vistas de la aplicación.</p>
+        <details>
+            <summary>index()</summary>
+            <p>Muestra la vista principal (index).</p>
+            <p><strong>Retorna:</strong> HTML de la vista principal.</p>
+        </details>
+        <details>
+            <summary>login()</summary>
+            <p>Muestra la vista de inicio de sesión (login).</p>
+            <p><strong>Retorna:</strong> HTML de la vista de inicio de sesión.</p>
+        </details>
+        <details>
+            <summary>doc()</summary>
+            <p>Muestra la vista de documentación (doc).</p>
+            <p><strong>Retorna:</strong> HTML de la vista de documentación.</p>
+        </details>
+        <details>
+            <summary>notFound()</summary>
+            <p>Muestra la vista de error 404 (not found).</p>
+            <p><strong>Retorna:</strong> HTML de la vista de error 404.</p>
+        </details>
+        <details>
+            <summary>sendJsonResponse($response)</summary>
+            <p>Envía una respuesta en formato JSON.</p>
+            <p><strong>Argumentos:</strong> <code>$response</code> (array) - Datos a enviar en la respuesta JSON.</p>
+            <p><strong>Retorna:</strong> JSON.</p>
+        </details>
+    </details>
+
+    <!-- ctlSidebar -->
+    <details>
+        <summary>ctlSidebar</summary>
+        <p>Controlador para manejar las vistas de la barra lateral.</p>
+        <details>
+            <summary>home()</summary>
+            <p>Muestra la vista principal (home).</p>
+            <p><strong>Retorna:</strong> HTML de la vista principal.</p>
+        </details>
+        <details>
+            <summary>goods()</summary>
+            <p>Muestra la vista de bienes.</p>
+            <p><strong>Retorna:</strong> HTML de la vista de bienes.</p>
+        </details>
+        <details>
+            <summary>inventary()</summary>
+            <p>Muestra la vista de inventario.</p>
+            <p><strong>Retorna:</strong> HTML de la vista de inventario.</p>
+        </details>
+        <details>
+            <summary>users()</summary>
+            <p>Muestra la vista de usuarios.</p>
+            <p><strong>Retorna:</strong> HTML de la vista de usuarios.</p>
+        </details>
+    </details>
+
+    <!-- ctlUser -->
+    <details>
+        <summary>ctlUser</summary>
+        <p>Controlador para manejar las operaciones relacionadas con los usuarios.</p>
+        <details>
+            <summary>login()</summary>
+            <p>Inicia sesión validando las credenciales del usuario.</p>
+            <p><strong>Retorna:</strong> Redirección a la página principal o mensaje de error.</p>
+        </details>
+        <details>
+            <summary>register()</summary>
+            <p>Registra un nuevo usuario en el sistema.</p>
+            <p><strong>Retorna:</strong> Mensaje de éxito o error.</p>
+        </details>
+        <details>
+            <summary>profile()</summary>
+            <p>Obtiene el perfil de un usuario específico.</p>
+            <p><strong>Retorna:</strong> Datos del perfil del usuario.</p>
+        </details>
+        <details>
+            <summary>edit()</summary>
+            <p>Edita la información de un usuario existente.</p>
+            <p><strong>Retorna:</strong> Mensaje de éxito o error.</p>
+        </details>
+        <details>
+            <summary>logout()</summary>
+            <p>Cierra la sesión del usuario y redirige a la página de inicio de sesión.</p>
+            <p><strong>Retorna:</strong> Redirección a la página de inicio de sesión.</p>
+        </details>
+    </details>
+    
+</section>
