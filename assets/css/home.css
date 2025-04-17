@@ -35,6 +35,7 @@ h1, h2 {
 .completed-tasks-title {
     margin-top: 30px;
     padding-bottom: 8px;
+    font-size: 23px;
 }
 
 /* Botón de añadir tareas */
