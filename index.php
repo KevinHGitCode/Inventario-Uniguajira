@@ -44,6 +44,7 @@ $router->add('/api/goods/update', 'ctlGoods', 'update');
 // Rutas para la API de inventarios
 $router->add('/api/get/inventories/:id_group', 'ctlInventory', 'getInventoriesOfGroup');
 $router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');
+$router->add('/api/grupos/create', 'ctlInventory', 'createGroup');
 
 // Mas rutas...
 
