@@ -196,9 +196,7 @@ class ctlUser {
 
     public function create(){
         header('Content-Type: application/json');
-        // Validar si existen los parámetros necesarios
-        echo "<script>console.log('Parámetros recibidos:', " . json_encode($_POST) . ");</script>";
-
+        
         if (!isset($_POST['nombre']) || !isset($_POST['email']) || !isset($_POST['contraseña']) || !isset($_POST['rol'])) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => "Error: Parámetros faltantes para crear un usuario."]);

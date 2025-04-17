@@ -71,31 +71,25 @@ function inicializarCrearUsuario() {
         .then(response => {
             showToast(response);
             if (response.success) {
-                // modalCrear.style.display = 'none';
-                // setTimeout(() => loadContent('/users'), 1500); // Recarga después de 1.5 segundos
+                 modalCrear.style.display = 'none';
+                 setTimeout(() => loadContent('/users'), 1500); // Recarga después de 1.5 segundos
                     // Agrega el nuevo usuario a la tabla
-                    const newRow = document.createElement('tr');
-                    newRow.innerHTML = `
-                        <td>${newUser.id}</td>
-                        <td>${newUser.nombre}</td>
-                        <td>${newUser.nombre_usuario}</td>
-                        <td>${newUser.email}</td>
-                        <td>${newUser.rol}</td>
-                    `;
-                    tablaUsuarios.appendChild(newRow);
+                    // const newRow = document.createElement('tr');
+                    // newRow.innerHTML = `
+                    //     <td>${newUser.id}</td>
+                    //     <td>${newUser.nombre}</td>
+                    //     <td>${newUser.nombre_usuario}</td>
+                    //     <td>${newUser.email}</td>
+                    //     <td>${newUser.rol}</td>
+                    // `;
+                    // tablaUsuarios.appendChild(newRow);
     
-                    // Cierra el modal y resetea el formulario
-                    modalCrear.style.display = 'none';
-                    formCrearUsuario.reset();
+                    // // Cierra el modal y resetea el formulario
+                    // modalCrear.style.display = 'none';
+                    // formCrearUsuario.reset();
             }
         })
-        .catch(err => {
-           
-            showToast({
-                success: false,
-                message: 'Error: El registro ya existe. No se pueden crear duplicados.'
-            });
-        });
+        .catch(err => { showToast(err) });
 
 
 
