@@ -33,19 +33,23 @@ class ctlUser {
      * @TODO: Implementar validaciones adicionales y manejo de errores más robusto.
      */
     public function login() {
-        // Validar si existen los parámetros necesarios
-        if (!isset($_POST['username']) || !isset($_POST['password'])) {
-            echo "Error: Parámetros faltantes para iniciar sesión.";
-            return;
-        }
-
-        // Obtener parámetros desde $_POST
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        // Autenticar usuario
-        $dataUser = $this->userModel->authentication($username, $password);
-        if ($dataUser) {
+        try {
+            // Validar si existen los parámetros necesarios
+            if (!isset($_POST['username']) || !isset($_POST['password'])) {
+                throw new InvalidArgumentException('Parámetros faltantes para iniciar sesión');
+            }
+    
+            // Obtener parámetros desde $_POST
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+    
+            // Autenticar usuario
+            $dataUser = $this->userModel->authentication($username, $password);
+            if (!$dataUser) {
+                throw new RuntimeException('Credenciales incorrectas');
+            }
+    
+            // Iniciar sesión y establecer datos de usuario
             session_start();
             $_SESSION['user_id'] = $dataUser['id'];
             $_SESSION['user_name'] = $dataUser['nombre'];
@@ -53,10 +57,13 @@ class ctlUser {
             $_SESSION['user_rol'] = $dataUser['rol'];
             $_SESSION['user_img'] = $dataUser['foto_perfil'];
             $this->userModel->updateUltimoAcceso($dataUser['id']);
-
-            header("Location: /");
-        } else {
-            echo "Error: Credenciales incorrectas.";
+    
+            // Retornar éxito sin redireccionar
+            // return ['success' => true, 'user' => $dataUser];
+    
+        } catch (Exception $e) {
+            // Lanzar la excepción para que sea manejada por el manejador de errores
+            throw $e;
         }
     }
 
@@ -188,9 +195,12 @@ class ctlUser {
     }
 
     public function create(){
-        // Validar si existen los parámetros necesarios
+        header('Content-Type: application/json');
+        
         if (!isset($_POST['nombre']) || !isset($_POST['email']) || !isset($_POST['contraseña']) || !isset($_POST['rol'])) {
-            echo "Error: Parámetros faltantes para crear un usuario.";
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => "Error: Parámetros faltantes para crear un usuario."]);
+
             return;
         }
 
@@ -206,9 +216,9 @@ class ctlUser {
         $result = $this->userModel->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol );
         
         if ($result) {
-            echo json_encode(['status' => 'success', 'message' => 'Usuario creado exitosamente.']);
+            echo json_encode(['success' => true, 'message' => 'Usuario creado exitosamente.']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al crear el usuario.']);
+            echo json_encode(['success' => false, 'message' => 'Error al crear el usuario.']);
         }
     }
 

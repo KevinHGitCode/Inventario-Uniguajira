@@ -96,6 +96,7 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         // Realizar la petición AJAX
         fetch(action, fetchConfig)
             .then(response => {
+                // TODO: Se puede simplificar
                 // Intentar parsear la respuesta como JSON
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {

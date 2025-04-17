@@ -189,11 +189,15 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/toast.css">
 </head>
 <body>
     <!-- Imagen de fondo -->
     <img class="background-image" src="assets/images/fondounigua.jpeg" alt="Fondo Uniguajira">
     
+    <!-- Contenedor de Toasts -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <!-- Figuras decorativas con posición absoluta -->
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
@@ -246,9 +250,23 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="assets/js/submitForm.js"></script>
+    <script src="assets/js/helpers/toast.js"></script>
+    <script src="assets/js/helpers/submitForm.js"></script>
     <script>
-        // inicializarFormularioAjax()
+        // Inicializar el formulario de login
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarFormularioAjax('form[action="/api/login"', {
+                redirectOnSuccess: '/', // Redirige al dashboard después de iniciar sesión
+                resetOnSuccess: false, // No resetear el formulario en caso de éxito
+                onError: function(response) {
+                    // Personaliza el mensaje de error
+                    showToast({
+                        success: false, 
+                        message: 'Usuario o contraseña incorrectos'
+                    });
+                }
+            });
+        });
     </script>
     
 </body>

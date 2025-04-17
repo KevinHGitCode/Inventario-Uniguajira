@@ -37,6 +37,15 @@
     border-radius: 8px;
 }
 
+.bien-icon{
+    width: 16px;
+    height: 16px;
+    /* border-radius: 12px; */
+    object-fit: cover;
+    /* margin-right: 16px;
+    border-radius: 8px; */
+}
+
 /* Información del bien */
 .bien-info {
     flex-grow: 1;
