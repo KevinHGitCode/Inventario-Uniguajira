@@ -5,6 +5,8 @@ require_once __DIR__ . '/../models/Tasks.php';
 class ctlTasks {
     private $tasksModel;
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function __construct() {
         $this->tasksModel = new Tasks();
         
@@ -13,6 +15,8 @@ class ctlTasks {
             exit();
         }
     }
+
+//-------------------------------------------------------------------------------------------------------//
 
     public function create() {
         header('Content-Type: application/json');
@@ -65,6 +69,8 @@ class ctlTasks {
         }
     }
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function delete($id) {
         header('Content-Type: application/json');
         
@@ -101,6 +107,8 @@ class ctlTasks {
             exit();
         }
     }
+
+//-------------------------------------------------------------------------------------------------------//
 
     /**
      * Endpoint: PATCH /api/tasks/toggle
@@ -146,6 +154,8 @@ class ctlTasks {
         }
     }
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function home() {
         $tasksModel = new Tasks();
         $dataTasks = $tasksModel->getByUser($_SESSION['user_id']);
@@ -162,6 +172,8 @@ class ctlTasks {
         
         include __DIR__ . '/../views/home.php';
     }
+
+//-------------------------------------------------------------------------------------------------------//
 
     /**
      * Endpoint: PUT /api/tasks/update
@@ -218,3 +230,5 @@ class ctlTasks {
     }
     
 }
+
+//-------------------------------------------------------------------------------------------------------//

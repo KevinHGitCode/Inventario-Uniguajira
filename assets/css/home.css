@@ -1,6 +1,5 @@
 /* Estilos básicos para la página principal */
-h1,
-h2 {
+h1, h2 {
     font-family: 'Segoe UI', sans-serif;
 }
 
@@ -30,12 +29,12 @@ h2 {
     margin-top: 20px;
     padding-bottom: 8px;
     margin-bottom: 0;
+    margin-right: 0;
 }
 
 .completed-tasks-title {
     margin-top: 30px;
     padding-bottom: 8px;
-    margin-bottom: 0;
 }
 
 /* Botón de añadir tareas */
@@ -47,18 +46,18 @@ h2 {
     width: 50px;
     height: 40px;
     border-radius: 30%; /* Cambio a círculo perfecto */
-    background: #ee6e6e34;
+    background: #026bf534;
     border: none;
     font-size: 24px; /* Aumentar tamaño de fuente */
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     cursor: pointer;
     margin-left: 10px; /* Espacio desde el título */
 }
 
 .add-task-button:hover {
-    background: #d67272a2;
+    background: #4784d398;
 }
 
 .add-task-button .icon {
@@ -114,7 +113,7 @@ h2 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
 }
 
 .form-group input,
@@ -175,12 +174,6 @@ h2 {
 }
 
 @keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
