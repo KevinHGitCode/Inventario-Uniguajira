@@ -27,7 +27,8 @@ class Goods extends Database {
         $stmt = $this->connection->prepare("
             SELECT 
                 bien_id, 
-                bien, 
+                bien,
+                tipo_bien, 
                 total_cantidad, 
                 imagen 
             FROM vista_total_bienes_sistema
