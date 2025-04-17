@@ -127,7 +127,7 @@
         </div>
     </div>
 
- <div>
+ <div >
  <table class="table table-bordered">
         <thead>
             <tr>
@@ -136,6 +136,8 @@
                 <th>Nombre Usuario</th>
                 <th>Email</th>
                 <th>Rol</th>
+                <th>Fecha Creación</th>
+                <th>Último Acceso</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -151,6 +153,8 @@
                 </td>
                 <td><?php echo htmlspecialchars($user['email']); ?></td>
                 <td><?php echo htmlspecialchars($user['rol']); ?></td>
+                <td><?php echo htmlspecialchars($user['fecha_creacion']); ?></td>
+                <td><?php echo htmlspecialchars($user['fecha_ultimo_acceso']); ?></td>
                 <td class="actions-cell">
                     <div class="dropdown">
                         <button class="dropdown-btn"><i class="fas fa-ellipsis-v"></i></button>
