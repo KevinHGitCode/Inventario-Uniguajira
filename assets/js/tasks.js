@@ -14,9 +14,17 @@ const hideTaskModal = () => {
 const createTask = (event) => {
     event.preventDefault();
     
+    const taskName = document.getElementById('taskName').value.trim();
+    const taskDesc = document.getElementById('taskDesc').value.trim();
+    
+    if (!taskName) {
+        showNotification('El nombre de la tarea es requerido', 'error');
+        return;
+    }
+
     const taskData = {
-        name: document.getElementById('taskName').value,
-        description: document.getElementById('taskDesc').value
+        name: taskName,
+        description: taskDesc
     };
 
     fetch('/api/tasks/create', {
@@ -30,18 +38,30 @@ const createTask = (event) => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.reload();
+            // Cerrar el modal
+            hideTaskModal();
+            
+            // Limpiar el formulario
+            document.getElementById('taskForm').reset();
+            
+            // Añadir la nueva tarea al DOM
+            //addTaskToDOM(data.task);
+            loadContent('/home');
+            showNotification('Tarea creada exitosamente', 'success');
         } else {
-            alert('Error: ' + (data.error || 'Error al crear tarea'));
+            showNotification(data.error || 'Error al crear tarea', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error en la conexión');
+        showNotification('Error en la conexión', 'error');
     });
 };
 
-const toggleTask = (taskId, element) => {
+//-------------------------------------------------------------------------------------------------------//
+
+// Función para alternar el estado de una tarea (completada/pendiente)
+const toggleTask = (taskId, button) => {
     fetch('/api/tasks/toggle', {
         method: 'PATCH',
         headers: {
@@ -50,31 +70,27 @@ const toggleTask = (taskId, element) => {
         },
         body: JSON.stringify({ id: taskId })
     })
-    .then(async response => {
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Error al actualizar la tarea');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const taskCard = element.closest('.task-card');
+            // Obtener la tarjeta de tarea
+            const taskCard = button.closest('.task-card');
             
-            // Alternar clases
+            // Alternar la clase 'completed' en la tarjeta
             taskCard.classList.toggle('completed');
-            element.classList.toggle('completed');
             
-            // Alternar estilo del título
-            const title = taskCard.querySelector('.task-title');
-            title.classList.toggle('completed-title');
+            // Alternar la clase 'completed' en el botón
+            button.classList.toggle('completed');
             
             // Mover la tarjeta a la sección correcta
-            setTimeout(() => {
-                moveTaskToProperSection(taskCard);
-            }, 10); // Pequeño delay para la animación
+            moveTaskToProperSection(taskCard);
+            
+            // Reorganizar el grid después de mover la tarea
+            reorganizeTasksGrid();
             
             showNotification('Estado de tarea actualizado', 'success');
+        } else {
+            throw new Error(data.error || 'Error al actualizar el estado de la tarea');
         }
     })
     .catch(error => {
@@ -87,6 +103,7 @@ const toggleTask = (taskId, element) => {
 
 // Función para mover la tarjeta de tarea a la sección correcta
 // Esta función se llama después de completar o eliminar una tarea
+
 function moveTaskToProperSection(taskCard) {
     const isCompleted = taskCard.classList.contains('completed');
     
@@ -127,6 +144,7 @@ function moveTaskToProperSection(taskCard) {
 //-------------------------------------------------------------------------------------------------------//
 
 // Nueva función para ordenar tareas por fecha (más reciente primero)
+
 function sortTasksByDate(container) {
     const taskCards = Array.from(container.querySelectorAll('.task-card'));
     
@@ -178,6 +196,7 @@ function sortTasksByDate(container) {
 //-------------------------------------------------------------------------------------------------------//
 
 // Ordenar las tareas al cargar la página
+
 document.addEventListener('DOMContentLoaded', function() {
     // Ordenar tareas pendientes
     const pendingContainer = document.querySelector('.container-list-task:not(.completed-tasks)');
@@ -304,7 +323,7 @@ const updateTask = (event) => {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.reload();
+            loadContent('/home'); // Recargar el contenido de la página
         } else {
             alert('Error: ' + (data.error || 'Error al actualizar tarea'));
         }
@@ -331,15 +350,97 @@ const showNotification = (message, type) => {
 
 //-------------------------------------------------------------------------------------------------------//
 
+// Función para marcar tarea como completada o no
+function addTaskToDOM(taskData) {
+    // Crear elemento de tarjeta
+    const taskCard = document.createElement('div');
+    taskCard.className = 'task-card';
+    
+    // Formatear fecha para mostrar
+    const taskDate = new Date(taskData.date);
+    const formattedDate = formatDateForDisplay(taskDate);
+    
+    // Construir el HTML de la tarjeta
+    taskCard.innerHTML = `
+        <button class="button check" onclick="toggleTask(${taskData.id}, this)">✓</button>
+        <div class="task-content">
+            <div class="task-text">
+                <h3 class="task-title">${escapeHtml(taskData.name)}</h3>
+                ${taskData.description ? `<p class="task-description">${escapeHtml(taskData.description)}</p>` : ''}
+            </div>
+        </div>
+        <p class="task-date">${formattedDate}</p>
+        <button class="button edit-task" onclick="showEditTaskModal(${taskData.id}, '${escapeHtml(taskData.name)}', '${escapeHtml(taskData.description || '')}', '${taskData.date}')">
+            <i class="fas fa-edit"></i>
+        </button>
+        <button class="button delete-task" onclick="deleteTask(${taskData.id}, this)">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+    
+    // Añadir al contenedor de tareas pendientes
+    const pendingContainer = document.querySelector('.container-list-task:not(.completed-tasks)');
+    if (pendingContainer) {
+        pendingContainer.prepend(taskCard); // Añadir al inicio para mantener orden
+        
+        // Ordenar tareas por fecha
+        sortTasksByDate(pendingContainer);
+        
+        // Forzar actualización del grid si es necesario
+        reorganizeTasksGrid();
+    }
+}
+
+//-------------------------------------------------------------------------------------------------------//
+
+// Función auxiliar para escapar HTML
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+//-------------------------------------------------------------------------------------------------------//
+
+// Función para formatear fecha para mostrar
+function formatDateForDisplay(date) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const taskDate = new Date(date);
+    taskDate.setHours(0, 0, 0, 0);
+    
+    if (taskDate.getTime() === today.getTime()) {
+        return 'Hoy';
+    }
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (taskDate.getTime() === yesterday.getTime()) {
+        return 'Ayer';
+    }
+    
+    return taskDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+}
+
+//-------------------------------------------------------------------------------------------------------//
+
 // Exportar funciones al ámbito global
 window.taskFunctions = {
     showTaskModal,
     hideTaskModal,
     createTask,
-    toggleTask,
+    addTaskToDOM,
     deleteTask,
     showNotification,
     showEditTaskModal,
     hideEditTaskModal,
-    updateTask
+    updateTask,
+    toggleTask
 };
+
+//-------------------------------------------------------------------------------------------------------//
