@@ -123,9 +123,8 @@ cerrarInventario = function() {
     clearSelection('good');
     originalCerrarInventario();
 };
-
-// Agregar evento para detectar clics fuera de los elementos seleccionables
-document.addEventListener('click', function(event) {
+// Extraer el manejador de eventos en una función nombrada para poder eliminarla
+function handleOutsideClick(event) {
     // Si se hace clic en un botón dentro de un card o en la barra de control, no desseleccionar
     if (event.target.closest('.btn-open') || 
         event.target.closest('.control-btn') || 
@@ -138,11 +137,40 @@ document.addEventListener('click', function(event) {
         // Si se hizo clic fuera de un item y fuera de la barra de control, limpiar todas las selecciones
         clearSelection();
     }
-});
+}
 
-// Inicializar
-document.addEventListener('DOMContentLoaded', function() {
+
+
+// Función para inicializar la selección
+function initializeSelection() {
+    // Desactivar primero para evitar múltiples eventos
+    deactivateSelection();
+    
+    // Agregar evento para detectar clics fuera de los elementos seleccionables
+    document.addEventListener('click', handleOutsideClick);
+    
     // Asegurar que las barras de control están ocultas inicialmente
     const controlBars = document.querySelectorAll('.control-bar');
     controlBars.forEach(bar => bar.classList.remove('visible'));
-});
+    
+    console.log('Selection functionality initialized');
+}
+
+// Función para desactivar la selección
+function deactivateSelection() {
+    // Limpiar todas las selecciones primero
+    clearSelection();
+    
+    // Eliminar el evento de clic
+    document.removeEventListener('click', handleOutsideClick);
+    
+    console.log('Selection functionality deactivated');
+}
+
+// Exportar las funciones para que estén disponibles globalmente
+window.selectionFunctions = {
+    initializeSelection,
+    deactivateSelection,
+    toggleSelectItem,
+    clearSelection
+};

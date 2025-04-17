@@ -62,9 +62,6 @@ function loadContent(path) {
             if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
             if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
         }
-        if (path === '/inventory') {
-            iniciarBusqueda('searchGroup');
-        }
         if (path === '/users') {
             activarBusquedaEnTabla();
             inicializarModalUser();
@@ -75,6 +72,19 @@ function loadContent(path) {
         if (path === '/profile') {
             inicializarFormularioEditarPerfil();
             inicializarModalEditUser();
+        }
+
+        // Desactivar la selección por defecto en todas las páginas
+        if (window.selectionFunctions) {
+            window.selectionFunctions.deactivateSelection();
+        }
+
+        // Activar la selección solo en la página de inventario
+        if (path === '/inventory') {
+            iniciarBusqueda('searchGroup');
+            if (window.selectionFunctions) {
+                window.selectionFunctions.initializeSelection();
+            }
         }
 
         // Hacer scroll hacia arriba

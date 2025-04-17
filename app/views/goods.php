@@ -28,7 +28,11 @@
                 class="bien-image"
             />
             <div class="bien-info">
-                <h3 class="name-item"><?= htmlspecialchars($bien['bien']) ?></h3>
+                <h3 class="name-item"><?= htmlspecialchars($bien['bien']) ?> <img
+                    src="assets/icons/<?= $bien['tipo_bien'] === "Cantidad" ? 'bienCantidad.svg' : 'bienSerial.svg' ?>"
+                    alt="Icono de tipo de bien"
+                    class="bien-icon"
+                /></h3>
                 <p>
                     Cantidad:
                     <?= $bien['total_cantidad'] ?>
