@@ -18,7 +18,7 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button id="btnCrear" class="create-btn">Crear</button>
+            <button id="btnCrearGrupo" class="create-btn">Crear</button>
             <?php endif; ?>
             
         </div>
@@ -98,6 +98,9 @@
 </div>
 
 
+<!-- ---------------------------------------------------------------------- -->
+
+
 <!-- Modal Crear Grupo -->
 <div id="modalCrearGrupo" class="modal" style="display: none">
     <div class="modal-content">
@@ -113,7 +116,12 @@
                 <input type="text" name="nombre" required />
             </div>
             <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar</button>
+                <button 
+                    type="submit" 
+                    id="create-btn-grupo" 
+                    class="create-btn">
+                    Guardar
+                </button>
             </div>
         </form>
     </div>
@@ -170,7 +178,12 @@
             </div>
 
             <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar</button>
+                <button 
+                id="btnCrearInventario"
+                type="submit" 
+                class="create-btn">
+                    Guardar
+                </button>
             </div>
         </form>
     </div>
