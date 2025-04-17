@@ -119,128 +119,415 @@
     border-radius: 4px;
     cursor: pointer;
 }
+/* 
 
-/* Estilos básicos para la tabla */
-.table {
+------------------------ */
+/* estilos para que la tabla haga scroll */
+
+/* Estilos para el contenedor principal */
+.container {
+  max-width: 100%;
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Estilos para el contenedor de tabla con scroll */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegurar que la tabla está dentro de un contenedor con scroll */
+div > table {
+  overflow-x: auto;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch; /* Para scroll suave en iOS */
+}
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  padding: 12px 15px;
+  text-align: left;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  border-bottom: 2px solid #dee2e6;
+  z-index: 1;
+}
+
+.table tbody td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Estilos para las celdas de acciones */
+.actions-cell {
+  width: 80px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Estilos para el dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background-color: #f8f9fa;
+  border: 1px solid #e2e6ea;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.dropdown-btn:hover {
+  background-color: #e9ecef;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  z-index: 10; /* Asegura que esté por encima de otros elementos */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: #333;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown-content a i {
+  margin-right: 8px;
+  width: 16px;
+}
+
+/* Estilos para los iconos */
+.fa-edit {
+  color: #007bff;
+}
+
+.fa-trash-alt {
+  color: #dc3545;
+}
+
+/* Responsive design - tabla con scroll horizontal independiente */
+@media screen and (max-width: 992px) {
+  div > table {
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Ajustes para mantener el diseño responsivo pero con scroll solo en la tabla */
+  .container {
     width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden; /* Evita el scroll horizontal en el contenedor principal */
   }
   
-  .table-bordered {
-    border: 1px solid #dee2e6;
+  div > table::-webkit-scrollbar {
+    height: 8px;
   }
   
-  .table thead th {
-    background-color: #f8f9fa;
-    color: #333;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-    padding: 12px 15px;
-    text-align: left;
-  }
-  
-  .table tbody td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #dee2e6;
-    vertical-align: middle;
-  }
-  
-  .table tbody tr:hover {
-    background-color: #f5f5f5;
-  }
-  
-  /* Estilos para las celdas de acciones */
-  .actions-cell {
-    width: 80px;
-    text-align: center;
-  }
-  
-  /* Estilos para el dropdown */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .dropdown-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 3px;
-  }
-  
-  .dropdown-btn:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #fff;
-    min-width: 160px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+  div > table::-webkit-scrollbar-thumb {
+    background-color: #ccc;
     border-radius: 4px;
   }
   
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  .dropdown-content a {
-    color: #333;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-    transition: background-color 0.2s;
-  }
-  
-  .dropdown-content a:hover {
+  div > table::-webkit-scrollbar-track {
     background-color: #f1f1f1;
   }
-  
-  .dropdown-content a i {
-    margin-right: 8px;
-    width: 16px;
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media screen and (max-width: 576px) {
+  .table thead th,
+  .table tbody td {
+    padding: 8px 10px;
+    font-size: 14px;
   }
   
-  /* Estilos para los iconos */
-  .fa-edit {
-    color: #007bff;
+  .container {
+    padding: 10px;
   }
   
-  .fa-trash-alt {
-    color: #dc3545;
+  .top-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* Estilos para la barra superior */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  position: relative;
+  flex-grow: 1;
+  margin-right: 15px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.create-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.create-btn:hover {
+  background-color: #218838;
+}
+
+/* Estilos para modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: #333;
+}
+
+/* Estilos para formularios */
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.edit-btn:hover {
+  background-color: #0069d9;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* ---------------- */
+
+/* Estilos para la barra superior con búsqueda y botón */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+/* Estilos para el contenedor de búsqueda */
+.search-container {
+  position: relative;
+  flex-grow: 1;
+  margin-right: 20px;
+}
+
+/* Barra de búsqueda con borde circular */
+.search-bar {
+  width: 100%;
+  padding: 12px 45px 12px 20px;
+  border-radius: 50px; /* Borde circular */
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #ff5a5f; /* Color flamenco para el borde al enfocar */
+  box-shadow: 0 2px 8px rgba(255, 90, 95, 0.2);
+}
+
+/* Icono de búsqueda */
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 16px;
+}
+
+/* Botón de crear con color flamenco */
+.create-btn {
+  background-color: #ff5a5f; /* Color flamenco */
+  color: white;
+  border: none;
+  border-radius: 50px; /* Borde circular */
+  padding: 12px 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(255, 90, 95, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.create-btn:hover {
+  background-color: #ff4448; /* Flamenco un poco más oscuro al hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 90, 95, 0.4);
+}
+
+.create-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 90, 95, 0.4);
+}
+
+/* Responsive para barra de búsqueda y botón */
+@media screen and (max-width: 768px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
   }
   
-  /* Responsive design para la tabla */
-  @media screen and (max-width: 992px) {
-    .container {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Mantiene la tabla con su estructura original pero con scroll horizontal */
-    .table {
-      width: 100%;
-      min-width: 800px; /* Ancho mínimo para asegurar que se muestre toda la información */
-    }
+  .search-container {
+    margin-right: 0;
+    margin-bottom: 15px;
   }
   
-  /* Para pantallas muy pequeñas, ajustamos algunos espaciados */
-  @media screen and (max-width: 576px) {
-    .table thead th,
-    .table tbody td {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
-    
-    .container {
-      padding: 10px;
-    }
+  .create-btn {
+    width: 100%;
+    padding: 10px 15px;
   }
+}
