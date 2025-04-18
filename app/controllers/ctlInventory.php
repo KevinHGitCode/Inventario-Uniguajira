@@ -15,25 +15,14 @@ class ctlInventory  {
         $this->goodsInventory = new GoodsInventory();
     }
 
-    public function index() {
-        $dataGroups = $this->group->getAllGroups();
-        require 'app/views/inventory.php';
-    }
-
     public function getInventoriesOfGroup($id_group) {
         $dataInventories = $this->group->getInventoriesByGroup($id_group);
         require 'app/views/inventory/inventories.php';
-        // header('Content-Type: application/json');
-        // echo json_encode($dataInventories);
-        // exit;
     }
 
     public function getGoodsOfInventory($id_inventory) {
         $dataGoodsInventory = $this->goodsInventory->getAllGoodsByInventory($id_inventory);
         require 'app/views/inventory/goods-inventory.php';
-        // header('Content-Type: application/json');
-        // echo json_encode($dataGoodsInventory);
-        // exit;
     }
 
     // createGroup
@@ -47,7 +36,6 @@ class ctlInventory  {
 
         $nombre = $_POST['nombre'] ?? null;
 
-        // 
         $result = $this->group->createGroup($nombre);
 
         if ($result) {
