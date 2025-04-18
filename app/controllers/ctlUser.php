@@ -33,20 +33,27 @@ class ctlUser {
      * @TODO: Implementar validaciones adicionales y manejo de errores más robusto.
      */
     public function login() {
+        header('Content-Type: application/json');
+        
+        // Validar si existen los parámetros necesarios
+        if (!isset($_POST['username']) || !isset($_POST['password'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Parámetros faltantes para iniciar sesión']);
+            return;
+        }
+    
+        // Obtener parámetros desde $_POST
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+    
+        // Autenticar usuario
         try {
-            // Validar si existen los parámetros necesarios
-            if (!isset($_POST['username']) || !isset($_POST['password'])) {
-                throw new InvalidArgumentException('Parámetros faltantes para iniciar sesión');
-            }
-    
-            // Obtener parámetros desde $_POST
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-    
-            // Autenticar usuario
             $dataUser = $this->userModel->authentication($username, $password);
+            
             if (!$dataUser) {
-                throw new RuntimeException('Credenciales incorrectas');
+                http_response_code(401);
+                echo json_encode(['success' => false, 'message' => 'Credenciales incorrectas']);
+                return;
             }
     
             // Iniciar sesión y establecer datos de usuario
@@ -56,14 +63,24 @@ class ctlUser {
             $_SESSION['user_email'] = $dataUser['email'];
             $_SESSION['user_rol'] = $dataUser['rol'];
             $_SESSION['user_img'] = $dataUser['foto_perfil'];
+            
+            // Actualizar último acceso
             $this->userModel->updateUltimoAcceso($dataUser['id']);
     
-            // Retornar éxito sin redireccionar
-            // return ['success' => true, 'user' => $dataUser];
-    
+            // Retornar éxito
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Inicio de sesión exitoso',
+                'user' => [
+                    'id' => $dataUser['id'],
+                    'nombre' => $dataUser['nombre'],
+                    'rol' => $dataUser['rol']
+                ]
+            ]);
+            
         } catch (Exception $e) {
-            // Lanzar la excepción para que sea manejada por el manejador de errores
-            throw $e;
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error al procesar la solicitud: ' . $e->getMessage()]);
         }
     }
 
