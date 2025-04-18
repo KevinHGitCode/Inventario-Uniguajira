@@ -68,6 +68,7 @@
     <?php endif; ?>
 
     <script src="assets/js/user.js"></script>
+    <script src="assets/js/profile.js"></script>
     <script src="assets/js/inventory.js"></script>
 
     <script>
