@@ -3,6 +3,10 @@ require_once __DIR__ . '/../config/db.php';
 
 class GoodsInventory extends Database {
 
+    /**
+     * Constructor de la clase GoodsInventory.
+     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     */
     public function __construct() {
         parent::__construct();
     }
@@ -95,7 +99,6 @@ class GoodsInventory extends Database {
      * @param int $quantity Cantidad a añadir.
      * @return bool Resultado de la operación.
      */
-    // TODO: Primero a de confirmar si extente la relacion bien inventario
     public function addQuantityGoodToInventory($inventoryId, $goodId, $quantity) {
         $stmt = $this->connection->prepare("
             INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)

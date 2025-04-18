@@ -1,114 +1,41 @@
-/**
- * Configura el formulario para la creación de bienes, manejando el envío y la respuesta del servidor.
- */
-function inicializarFormularioBien() {
-    const form = document.getElementById("formCrearBien");
-    const modal = document.getElementById("modalCrear");
-
-    if (!form) return;
-
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const formData = new FormData(form);
-
-        fetch("/api/goods/create", {
-            method: "POST",
-            body: formData
-        })
-        .then(res =>  res.json())
-        .then(response => {
+function initFormCrearBien() {
+    inicializarFormularioAjax('#formCrearBien', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
             showToast(response);
+            loadContent('/goods');
+        }
+    });
+}
 
+function eliminarBien(id) {
+    eliminarRegistro({
+        url: `/api/goods/delete/${id}`,
+        onSuccess: (response) => {
             if (response.success) {
-                modal.style.display = "none";
-                setTimeout(() => loadContent('/goods'), 1500); // Recarga después de 1.5 segundos
+                loadContent('/goods');
             }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            showToast({
-                success: false,
-                message: 'Error: El registro ya existe. No se pueden crear duplicados.'
-            });
-        });
+            showToast(response);
+        }
     });
 }
 
-/**
- * Configura los botones de eliminación para manejar la eliminación de bienes con confirmación.
- */
-function inicializarBotonesEliminar() {
-    // Selecciona todos los botones de eliminación
-    document.querySelectorAll('.btn-eliminar').forEach(btn => {
-        // Agrega un evento a cada botón para manejar la eliminación
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const id = this.dataset.id; // Obtiene el ID del bien a eliminar
+function ActualizarBien(id, nombre) {
+    // Configurar los valores iniciales del formulario
+    document.getElementById("actualizarId").value = id;
+    document.getElementById("actualizarNombre").value = nombre;
+    document.getElementById("actualizarImagen").value = ""; // Limpiar imagen seleccionada
 
-            // Muestra una alerta de confirmación
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡Esta acción no se puede deshacer!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => { 
-                if (!result.isConfirmed) return; // Si el usuario cancela, no hace nada  
-
-                // Envía una solicitud para eliminar el bien y muestra el resultado
-                fetch(`/api/goods/delete/${id}`, {
-                    method: 'DELETE'
-                })
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success) {
-                        loadContent('/goods')
-                    }
-                    showToast(response)
-                }).catch(err => { showToast(err) });
-            });
-        });
+    // Mostrar el modal
+    mostrarModal('#modalActualizarBien')
+    
+    // Configurar el manejo del formulario con tu nueva función
+    inicializarFormularioAjax('#formActualizarBien', {
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            loadContent('/goods');
+        }
     });
 }
-
-
-function inicializarFormularioActualizarBien() {
-    const form = document.getElementById("formActualizarBien");
-    const modal = document.getElementById("modalActualizarBien");
-    const cerrar = document.getElementById("cerrarModalActualizarBien");
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-
-        fetch("/api/goods/update", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(response => {
-            if (response.success) {
-                modal.style.display = "none";
-                loadContent('/goods')
-            }
-            showToast(response)
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            showToast({
-                success: false,
-                message: 'Error al enviar el formulario'
-            });
-        });
-
-    });
-
-    cerrar.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-}
-

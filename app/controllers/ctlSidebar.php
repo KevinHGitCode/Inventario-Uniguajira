@@ -68,7 +68,21 @@ class ctlSidebar {
         $dataGroups = $groups->getAllGroups(); // Get all groups from the model
 
         // Pass $dataGroups to the view
-        require __DIR__ . '/../views/inventory/inventory.php';
+        require __DIR__ . '/../views/inventory/groups.php';
+    }
+
+    /**
+     * Muestra la vista de reportes (reports).
+     *
+     * @return void
+     */
+    public function reports() {
+        // require_once __DIR__ . '/../models/Groups.php';
+        // $groups = new Groups();
+        // $dataGroups = $groups->getAllGroups(); // Get all groups from the model
+
+        // Logic for reports view
+        require __DIR__ . '/../views/reports.php';
     }
 
     /**

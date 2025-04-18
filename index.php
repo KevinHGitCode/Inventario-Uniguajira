@@ -9,17 +9,18 @@ $router->add('/login', 'ctlView', 'login');
 $router->add('/profile', 'ctlView', 'Profile');
 $router->add('/doc', 'ctlView', 'doc');
 $router->add('/404', 'ctlView', 'notFound');
-$router->add('/inv', 'ctlView', 'test');
+$router->add('/test', 'ctlView', 'test');
 
 
 // Rutas para el sidebar
 $router->add('/home', 'ctlSidebar', 'home');
 $router->add('/goods', 'ctlSidebar', 'goods');
 $router->add('/inventory', 'ctlSidebar', 'inventory');
+$router->add('/reports', 'ctlSidebar', 'reports');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para el navbar
-$router->add('/api/users/editProfile', 'ctlUser', 'edit'); //TODO: verificar esta ruta
+$router->add('/api/users/editProfile', 'ctlUser', 'editProfile');
 $router->add('/api/users/update', 'ctlUser', 'updatePassword');
 $router->add('/api/logout', 'ctlUser', 'logout');
 

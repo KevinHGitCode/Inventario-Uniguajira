@@ -28,7 +28,7 @@
 
 <!-- Barra de control para bienes -->
 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-<div id="control-bar-goods" class="control-bar">
+<div id="control-bar-good" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
         <button class="control-btn" title="Renombrar">
@@ -55,12 +55,12 @@
 
         <!-- Por cada bien del inventario -->
         <?php foreach ($dataGoodsInventory as $good): ?>
-            <div 
-                class="bien-card card-item" 
-                data-id="<?= htmlspecialchars($good['id'] ?? '') ?>" 
-                data-name="<?= htmlspecialchars($good['bien']) ?>" 
+            <div class="bien-card card-item"
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                onclick="toggleSelectItem(this, 'good')"
+                    data-id="<?= htmlspecialchars($good['id'] ?? '') ?>" 
+                    data-name="<?= htmlspecialchars($good['bien']) ?>" 
+                    data-type="good"
+                    onclick="toggleSelectItem(this)"
                 <?php endif; ?>
             >
 

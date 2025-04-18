@@ -28,21 +28,21 @@
 
 <!-- Barra de control para inventarios -->
 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-<div id="control-bar-inventories" class="control-bar">
+<div id="control-bar-inventory" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
-        <button class="control-btn" title="Renombrar">
+        <button class="control-btn" title="Renombrar" onclick="renombrarInventario()">
             <i class="fas fa-pen"></i>
         </button>
-        <button class="control-btn" title="Editar">
+        <button class="control-btn" title="Editar" onclick="editarInventario()">
             <i class="fas fa-edit"></i>
         </button>
-        <button class="control-btn" title="Eliminar">
+        <button class="control-btn" title="Eliminar" onclick="eliminarInventario()">
             <i class="fas fa-trash"></i>
         </button>
-        <button class="control-btn" title="Más acciones">
+        <!-- <button class="control-btn" title="Más acciones">
             <i class="fas fa-ellipsis-v"></i>
-        </button>
+        </button> -->
     </div>
 </div>
 <?php endif; ?>
@@ -50,12 +50,12 @@
 <div class="card-grid">
     <?php if (isset($dataInventories)): ?>
         <?php foreach ($dataInventories as $inventory): ?>
-            <div 
-                class="card card-item" 
-                data-id="<?= htmlspecialchars($inventory['id']) ?>" 
-                data-name="<?= htmlspecialchars($inventory['nombre']) ?>" 
+            <div class="card card-item" 
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                onclick="toggleSelectItem(this, 'inventory')"
+                    data-id="<?= htmlspecialchars($inventory['id']) ?>" 
+                    data-name="<?= htmlspecialchars($inventory['nombre']) ?>"
+                    data-type="inventory"
+                    onclick="toggleSelectItem(this)"
                 <?php endif; ?>
             >
 

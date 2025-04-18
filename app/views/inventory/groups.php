@@ -25,21 +25,18 @@
 
         <!-- Barra de control para grupos -->
         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-        <div id="control-bar-groups" class="control-bar">
+        <div id="control-bar-group" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
-                <button class="control-btn" title="Renombrar">
+                <button class="control-btn" title="Renombrar" onclick="renombrarGrupo()">
                     <i class="fas fa-pen"></i>
                 </button>
-                <button class="control-btn" title="Editar">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="control-btn" title="Eliminar">
+                <button class="control-btn" title="Eliminar" onclick="eliminarGrupo()">
                     <i class="fas fa-trash"></i>
                 </button>
-                <button class="control-btn" title="Más acciones">
+                <!-- <button class="control-btn" title="Más acciones">
                     <i class="fas fa-ellipsis-v"></i>
-                </button>
+                </button> -->
             </div>
         </div>
         <?php endif; ?>
@@ -47,12 +44,12 @@
         <div class="card-grid">
             <?php if (isset($dataGroups)): ?>
                 <?php foreach ($dataGroups as $group): ?>
-                    <div 
-                        class="card card-item" 
-                        data-id="<?= htmlspecialchars($group['id']) ?>" 
-                        data-name="<?= htmlspecialchars($group['nombre']) ?>" 
+                    <div class="card card-item" 
                         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                        onclick="toggleSelectItem(this, 'group')"
+                            data-id="<?= htmlspecialchars($group['id']) ?>" 
+                            data-name="<?= htmlspecialchars($group['nombre']) ?>" 
+                            data-type="group"
+                            onclick="toggleSelectItem(this)"
                         <?php endif; ?>
                     >
                         <!-- inicio contenido -->

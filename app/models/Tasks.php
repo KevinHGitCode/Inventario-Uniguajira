@@ -25,11 +25,8 @@ class Tasks extends Database {
      * @param int $usuario_id ID del usuario asociado a la tarea.
      * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
      * @return bool Devuelve true si la tarea se creó correctamente, false en caso contrario.
+     * @throws Exception Si el usuario no tiene permisos para crear tareas.
      */
-
-    // TODO: El estado al crear una tarea debería ser 'por hacer' por defecto.
-    // TODO: Solo crear la tarea si el usuario es administrador.
-    //
     public function create($name, $description, $usuario_id, $estado = 'por hacer') {
         if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
             throw new Exception('No tienes permisos para crear tareas');
@@ -45,10 +42,10 @@ class Tasks extends Database {
     }
 
     /**
-     * Obtener todas las tareas de un usuario separadas por estado
+     * Obtener todas las tareas de un usuario separadas por estado.
      * 
-     * @param int $usuario_id ID del usuario cuyas tareas se quieren obtener
-     * @return array Array asociativo con dos keys: 'por_hacer' y 'completadas'
+     * @param int $usuario_id ID del usuario cuyas tareas se quieren obtener.
+     * @return array Array asociativo con las tareas del usuario.
      */
     public function getByUser($usuario_id) {
         $stmt = $this->connection->prepare("
@@ -99,6 +96,7 @@ class Tasks extends Database {
      * @param int $id ID de la tarea a modificar.
      * @param string $name Nuevo nombre de la tarea.
      * @param string $description Nueva descripción de la tarea.
+     * @param int $usuario_id ID del usuario propietario de la tarea.
      * @return bool Devuelve true si la tarea se actualizó correctamente, false en caso contrario.
      */
     public function updateName($id, $name, $description, $usuario_id) {
@@ -111,6 +109,7 @@ class Tasks extends Database {
      * Eliminar una tarea con verificación de propiedad.
      * 
      * @param int $id ID de la tarea a eliminar.
+     * @param int $usuario_id ID del usuario propietario de la tarea.
      * @return bool Devuelve true si la tarea se eliminó correctamente, false en caso contrario.
      */
     public function delete($id, $usuario_id) {
@@ -130,10 +129,8 @@ class Tasks extends Database {
      * Cambia el estado de la tarea entre 'por hacer' y 'completado'.
      * 
      * @param int $id ID de la tarea cuyo estado se desea cambiar.
+     * @param int $usuario_id ID del usuario propietario de la tarea.
      * @return bool Devuelve true si el estado se cambió correctamente, false en caso contrario.
-     */
-    /**
-     * Cambiar el estado de una tarea (versión mejorada)
      */
     public function changeState($id, $usuario_id) {
         // Verificar primero si la tarea existe y pertenece al usuario

@@ -57,6 +57,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/helpers/submitForm.js"></script>
+    <script src="assets/js/helpers/delete.js"></script>
     <script src="assets/js/helpers/search.js"></script>
     <script src="assets/js/helpers/toast.js"></script>
     <script src="assets/js/tasks.js"></script>
@@ -64,14 +66,15 @@
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/helpers/modal.js"></script>
+    <script src="assets/js/helpers/selection.js"></script>
     <?php endif; ?>
 
     <script src="assets/js/user.js"></script>
+    <script src="assets/js/profile.js"></script>
     <script src="assets/js/inventory.js"></script>
+    <script src="assets/js/groups.js"></script>
+    <script src="assets/js/goodsInventory.js"></script>
 
-    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <script src="assets/js/helpers/selection.js"></script>
-    <?php endif; ?>
 
     <script>
          // Asegurar que las funciones estén disponibles globalmente

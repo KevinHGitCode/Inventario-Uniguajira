@@ -85,7 +85,8 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
     </div>
 
     <?php if (!empty($dataTasks['completadas'])): ?>
-        <h2 class="tittle-list-task completed-tasks-title">Tareas completadas</h2>
+        <details>   
+            <summary class="tittle-list-task completed-tasks-title">Tareas completadas</summary>  
         <div class="container-list-task completed-tasks">
             <?php foreach ($dataTasks['completadas'] as $task): ?>
                 <div class="task-card completed">
@@ -108,6 +109,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                 </div>
             <?php endforeach; ?>
         </div>
+        </details>
     <?php endif; ?>
 
 <?php endif; ?>

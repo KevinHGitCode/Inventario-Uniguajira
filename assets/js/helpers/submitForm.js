@@ -1,30 +1,23 @@
 /**
- * Manejador de formularios para envío mediante AJAX
+ * Manejador de formularios para envío mediante AJAX simplificado
  * Esta función permite enviar cualquier formulario mediante AJAX y realizar acciones personalizadas
  * con la respuesta obtenida del servidor.
  * 
  * @param {string} formSelector - Selector CSS para identificar el/los formulario(s) (ej: ".FormularioAjax")
  * @param {Object} options - Opciones de configuración
- * @param {Function} options.beforeSubmit - Función llamada antes de enviar el formulario (retorna false para cancelar)
  * @param {Function} options.onSuccess - Función llamada cuando el servidor responde exitosamente
  * @param {Function} options.onError - Función llamada cuando ocurre un error
- * @param {Function} options.onComplete - Función llamada al finalizar (exitoso o con error)
  * @param {boolean} options.showConfirm - Mostrar diálogo de confirmación antes de enviar (default: false)
  * @param {string} options.confirmMessage - Mensaje de confirmación personalizado
  * @param {boolean} options.resetOnSuccess - Resetear el formulario después de éxito (default: false)
- * @param {boolean} options.closeModalOnSuccess - Cerrar modal asociado (requiere data-modal) (default: false)
- * @param {string|Function} options.redirectOnSuccess - URL o función que devuelve URL para redireccionar después de éxito
+ * @param {boolean} options.closeModalOnSuccess - Cerrar modal asociado (el modal contenedor a de tener la clase modal) (default: false)
+ * @param {string} options.redirectOnSuccess - URL para redireccionar después de éxito
  */
 function inicializarFormularioAjax(formSelector, options = {}) {
     // Opciones por defecto
     const defaultOptions = {
-        beforeSubmit: null,
         onSuccess: response => showToast(response),
-        onError: error => showToast({
-            success: false,
-            message: 'Error al procesar la solicitud: ' + (error.message || 'Error desconocido')
-        }),
-        onComplete: null,
+        onError: error => showToast(error),
         showConfirm: false,
         confirmMessage: '¿Estás seguro de enviar este formulario?',
         resetOnSuccess: false,
@@ -37,11 +30,6 @@ function inicializarFormularioAjax(formSelector, options = {}) {
     
     // Obtener todos los formularios que coinciden con el selector
     const formularios = document.querySelectorAll(formSelector);
-    
-    if (formularios.length === 0) {
-        console.warn(`No se encontraron formularios con el selector: ${formSelector}`);
-        return;
-    }
     
     // Asignar el evento submit a cada formulario
     formularios.forEach(formulario => {
@@ -59,16 +47,9 @@ function inicializarFormularioAjax(formSelector, options = {}) {
     function formSubmitHandler(e) {
         e.preventDefault();
         
-        // Ejecutar función beforeSubmit si existe
-        if (settings.beforeSubmit && settings.beforeSubmit(this) === false) {
-            return; // Cancela el envío si beforeSubmit retorna false
-        }
-        
         // Mostrar confirmación si está habilitado
-        if (settings.showConfirm) {
-            if (!confirm(settings.confirmMessage)) {
-                return; // El usuario canceló el envío
-            }
+        if (settings.showConfirm && !confirm(settings.confirmMessage)) {
+            return; // El usuario canceló el envío
         }
         
         // Crear objeto FormData con los datos del formulario
@@ -76,7 +57,7 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         
         // Obtener método y acción del formulario
         const method = this.getAttribute('method') || 'POST';
-        const action = this.getAttribute('action') || '';
+        const action = this.getAttribute('action');
         
         // Referencia al formulario para usar en promesas
         const form = this;
@@ -85,41 +66,28 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         const fetchConfig = {
             method: method.toUpperCase(),
             body: formData,
-            headers: new Headers(),
             mode: 'cors',
             cache: 'no-cache'
         };
         
-        // Mostrar indicador de carga si existe
+        // Mostrar indicador de carga
         toggleLoadingState(form, true);
         
         // Realizar la petición AJAX
         fetch(action, fetchConfig)
             .then(response => {
-                // TODO: Se puede simplificar
-                // Intentar parsear la respuesta como JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
+                try {
                     return response.json();
+                } catch (e) {
+                    console.error('Error al parsear la respuesta JSON:', e);
+                    return { success: false, message: 'Error al procesar la respuesta' };
                 }
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        // Si no es JSON, devolver como texto
-                        return { success: response.ok, message: text };
-                    }
-                });
             })
             .then(responseData => {
-                // Determinar si la respuesta fue exitosa
-                const isSuccess = responseData.success !== false;
-                
-                if (isSuccess) {
+
+                if (responseData.success === true) {
                     // Acciones en caso de éxito
-                    if (settings.onSuccess) {
-                        settings.onSuccess(responseData, form);
-                    }
+                    settings.onSuccess(responseData, form);
                     
                     // Resetear formulario si está configurado
                     if (settings.resetOnSuccess) {
@@ -127,9 +95,8 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     }
                     
                     // Cerrar modal asociado si está configurado
-                    if (settings.closeModalOnSuccess && form.dataset.modal) {
-                        const modalId = form.dataset.modal;
-                        const modal = document.getElementById(modalId);
+                    if (settings.closeModalOnSuccess) {
+                        const modal = form.closest('.modal');
                         if (modal) {
                             modal.style.display = 'none';
                         }
@@ -137,38 +104,18 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     
                     // Redireccionar si está configurado
                     if (settings.redirectOnSuccess) {
-                        let redirectUrl = settings.redirectOnSuccess;
-                        if (typeof redirectUrl === 'function') {
-                            redirectUrl = redirectUrl(responseData);
-                        }
-                        if (redirectUrl) {
-                            setTimeout(() => {
-                                window.location.href = redirectUrl;
-                            }, 500); // Pequeño retraso para que el usuario vea el mensaje
-                        }
+                        setTimeout(() => {
+                            window.location.href = settings.redirectOnSuccess;
+                        }, 500);
                     }
                 } else {
                     // Acciones en caso de error
-                    if (settings.onError) {
-                        settings.onError(responseData, form);
-                    }
-                }
-                
-                // Acciones al completar (éxito o error)
-                if (settings.onComplete) {
-                    settings.onComplete(responseData, isSuccess, form);
+                    settings.onError(responseData, form);
                 }
             })
             .catch(error => {
                 console.error('Error en la solicitud:', error);
-                
-                if (settings.onError) {
-                    settings.onError(error, form);
-                }
-                
-                if (settings.onComplete) {
-                    settings.onComplete(error, false, form);
-                }
+                settings.onError(error, form);
             })
             .finally(() => {
                 // Ocultar indicador de carga
@@ -210,39 +157,3 @@ function inicializarFormularioAjax(formSelector, options = {}) {
     // Retornar la configuración actual para posibles usos externos
     return settings;
 }
-
-
-/**
- * Ejemplos de uso:
- * 
- * 1. Inicializar todos los formularios con la clase FormularioAjax de forma básica:
- * inicializarFormularioAjax('.FormularioAjax');
- * 
- * 2. Formulario de Login con redirección:
- * inicializarFormularioAjax('form[action="/api/login"]', {
- *     redirectOnSuccess: '/dashboard',
- *     onError: (response) => {
- *         showToast({success: false, message: 'Usuario o contraseña incorrectos'});
- *     }
- * });
- * 
- * 3. Formulario de creación con reset y cierre de modal:
- * inicializarFormularioAjax('#formCrearBien', {
- *     resetOnSuccess: true,
- *     closeModalOnSuccess: true,
- *     onSuccess: (response) => {
- *         showToast(response);
- *         setTimeout(() => loadContent('/goods'), 1500);
- *     }
- * });
- * 
- * 4. Formulario de eliminación con confirmación:
- * inicializarFormularioAjax('#formEliminar', {
- *     showConfirm: true,
- *     confirmMessage: '¿Estás seguro de eliminar este elemento? Esta acción no se puede deshacer.',
- *     onSuccess: (response) => {
- *         showToast(response);
- *         loadContent('/goods');
- *     }
- * });
- */

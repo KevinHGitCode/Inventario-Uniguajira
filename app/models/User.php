@@ -249,7 +249,7 @@ class User extends Database {
     public function authentication($identificador, $contraseña) {
         try {
             // Consulta para buscar al usuario por nombre (sensible a mayúsculas y minúsculas)
-            $query = "SELECT id, nombre, email, 
+            $query = "SELECT id, nombre, nombre_usuario, email, 
                 rol, fecha_creacion, fecha_ultimo_acceso, foto_perfil,
                  contraseña FROM usuarios WHERE BINARY nombre_usuario = ? OR BINARY email = ?";
             $stmt = $this->connection->prepare($query);
