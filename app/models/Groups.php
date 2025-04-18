@@ -69,7 +69,7 @@ class Groups extends Database {
      * Crear un nuevo grupo.
      * 
      * @param string $name Nombre del grupo.
-     * @return bool True si el grupo fue creado exitosamente, False si el nombre ya existe.
+     * @return int|false ID del grupo creado si fue exitoso, False si el nombre ya existe o hubo un error.
      */
     public function createGroup($name) {
         // Verificar si el nombre ya existe
@@ -77,17 +77,19 @@ class Groups extends Database {
         $checkStmt->bind_param("s", $name);
         $checkStmt->execute();
         $result = $checkStmt->get_result();
-    
+
         if ($result->num_rows > 0) {
             return false; // El nombre ya existe
         }
-    
-        // Si no existe, insertamos el nuevo grupo
+
+        // Insertar el nuevo grupo
         $stmt = $this->connection->prepare("INSERT INTO grupos (nombre) VALUES (?)");
         $stmt->bind_param("s", $name);
-        $stmt->execute();
-    
-        return $stmt->affected_rows > 0;
+        if ($stmt->execute()) {
+            return $stmt->insert_id; // Retornar el ID del grupo recién creado
+        }
+
+        return false;
     }
     
 
@@ -98,7 +100,7 @@ class Groups extends Database {
      * @param string $newName Nuevo nombre del grupo.
      * @return bool True si el grupo fue actualizado exitosamente, False en caso contrario.
      */
-    public function updateGroup($id, $newName) {
+    public function renameGroup($id, $newName) {
         // Primero, verificamos si el grupo existe
         $checkStmt = $this->connection->prepare("SELECT nombre FROM grupos WHERE id = ?");
         $checkStmt->bind_param("i", $id);

@@ -6,6 +6,15 @@ class TestRunner {
         'failed' => 0
     ];
     private $resultsBuffer = '';
+    private $idTest = 0;
+
+    public function setIdTest($id) {
+        $this->idTest = $id;
+    }
+
+    public function getIdTest() {
+        return $this->idTest;
+    }
     
     public function registerTest($name, $callback, $params = []) {
         $this->availableTests[$name] = [

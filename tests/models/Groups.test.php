@@ -4,7 +4,7 @@ require_once '../../app/models/Groups.php';
 // Crear una instancia del runner pero NO manejar la solicitud web automáticamente
 $runner = new TestRunner();
 
-// Registrar todas las pruebas disponibles
+// Obtener todos los grupos
 $runner->registerTest('getAllGroups', function() {
     $group = new Groups();
     echo "<p>Testing getAllGroups()...</p>";
@@ -19,6 +19,7 @@ $runner->registerTest('getAllGroups', function() {
     }
 });
 
+// Obtener inventarios de un grupo específico
 $runner->registerTest('getInventoriesByGroup', 
     function($groupId) {
         $group = new Groups();
@@ -41,8 +42,8 @@ $runner->registerTest('getInventoriesByGroup',
     ]
 );
 
-
-$runner->registerTest('createGroup', 
+// Crear un nuevo grupo
+$runner->registerTest('create new', 
     function($newGroupName) {
         $group = new Groups();
         echo "<p>Testing createGroup('$newGroupName')...</p>";
@@ -55,20 +56,57 @@ $runner->registerTest('createGroup',
             return false;
         }
     }, [
-        "Grupo de prueba2" // Nombre del nuevo grupo
+        "Bloque Z" // Nombre del nuevo grupo
     ]
 );
 
-$runner->registerTest('updateGroup', 
-    function($groupIdToUpdate, $newGroupName) {
+// Crear un nuevo grupo
+$runner->registerTest('create repeated', 
+    function($newGroupName) {
         $group = new Groups();
-        echo "<p>Testing updateGroup($groupIdToUpdate, '$newGroupName')...</p>";
+        echo "<p>Testing createGroup('$newGroupName')...</p>";
 
-        if ($group->updateGroup($groupIdToUpdate, $newGroupName)) {
-            echo "<p>Grupo actualizado correctamente.</p>";
+        if ($group->createGroup($newGroupName)) {
+            echo "<p>Grupo '$newGroupName' creado exitosamente.</p>";
             return true;
         } else {
-            echo "<p>Error al actualizar el grupo.</p>";
+            echo "<p>Error al crear el grupo.</p>";
+            return false;
+        }
+    }, [
+        "Bloque Z" // Nombre del nuevo grupo
+    ]
+);
+
+// Crear un nuevo grupo
+$runner->registerTest('create with different text case', 
+    function($newGroupName) {
+        $group = new Groups();
+        echo "<p>Testing createGroup('$newGroupName')...</p>";
+
+        if ($group->createGroup($newGroupName)) {
+            echo "<p>Grupo '$newGroupName' creado exitosamente.</p>";
+            return true;
+        } else {
+            echo "<p>Error al crear el grupo.</p>";
+            return false;
+        }
+    }, [
+        "Bloque Z" // Nombre del nuevo grupo
+    ]
+);
+
+// Renombrar grupo existente
+$runner->registerTest('renameGroup', 
+    function($groupIdToUpdate, $newGroupName) {
+        $group = new Groups();
+        echo "<p>Testing renameGroup($groupIdToUpdate, '$newGroupName')...</p>";
+
+        if ($group->renameGroup($groupIdToUpdate, $newGroupName)) {
+            echo "<p>Grupo renombrado correctamente.</p>";
+            return true;
+        } else {
+            echo "<p>Error al renombrar el grupo.</p>";
             return false;
         }
     }, [
@@ -77,6 +115,7 @@ $runner->registerTest('updateGroup',
     ]
 );
 
+// Eliminar grupo
 $runner->registerTest('deleteGroup', 
     function($groupIdToDelete) {
         $group = new Groups();
