@@ -32,7 +32,7 @@
             
             <li>
                 <a 
-                    onclick="loadContent('app/views/reports.php')"
+                    onclick="loadContent('/reports')"
                 >
                     <img src="assets/icons/reportes.svg" alt="">
                     <span>Reportes</span>
