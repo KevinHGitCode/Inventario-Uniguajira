@@ -16,6 +16,7 @@ $router->add('/inv', 'ctlView', 'test');
 $router->add('/home', 'ctlSidebar', 'home');
 $router->add('/goods', 'ctlSidebar', 'goods');
 $router->add('/inventory', 'ctlSidebar', 'inventory');
+$router->add('/reports', 'ctlSidebar', 'reports');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para el navbar
