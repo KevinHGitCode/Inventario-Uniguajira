@@ -194,24 +194,44 @@ class User extends Database {
      * @return string Mensaje de éxito o de que no se encontró el usuario.
      * @throws Exception Si ocurre un error al eliminar el usuario o si se intenta eliminar el usuario con ID 1.
      */
-    public function deleteUser($id) {
-        try {
-            if ($id == 1) {
-                throw new Exception("El usuario con ID 1 no puede ser eliminado.");
-            }
+    // public function deleteUser($id) {
+    //     try {
+    //         if ($id == 1) {
+    //             throw new Exception("El usuario con ID 1 no puede ser eliminado.");
+    //         }
 
+    //         $query = "DELETE FROM usuarios WHERE id = ?";
+    //         $stmt = $this->connection->prepare($query);
+    //         $stmt->bind_param("i", $id);
+    //         $stmt->execute();
+
+    //         if ($stmt->affected_rows > 0) {
+    //             return "Usuario eliminado exitosamente.";
+    //         } else {
+    //             return "No se encontró un usuario con el ID proporcionado.";
+    //         }
+    //     } catch (Exception $e) {
+    //         throw new Exception("Error al eliminar el usuario: " . $e->getMessage());
+    //     }
+    // }
+
+    public function deleteUser($id) {
+        // Protección para el usuario con ID 1
+        if ($id == 1) {
+            return false;
+        }
+        
+        try {
             $query = "DELETE FROM usuarios WHERE id = ?";
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param("i", $id);
             $stmt->execute();
-
-            if ($stmt->affected_rows > 0) {
-                return "Usuario eliminado exitosamente.";
-            } else {
-                return "No se encontró un usuario con el ID proporcionado.";
-            }
+            
+            // Retorna true si se eliminó al menos un registro
+            return ($stmt->affected_rows > 0);
         } catch (Exception $e) {
-            throw new Exception("Error al eliminar el usuario: " . $e->getMessage());
+            // Si ocurre un error, simplemente retorna false
+            return false;
         }
     }
 

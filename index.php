@@ -27,7 +27,7 @@ $router->add('/api/logout', 'ctlUser', 'logout');
 $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/users/create', 'ctlUser', 'create');
 $router->add('/api/users/edit', 'ctlUser', 'edit');
-$router->add('/api/users/delete', 'ctlUser', 'delete');
+$router->add('/api/users/delete/:id', 'ctlUser', 'deleteUser');
 
 
 // Rutas para la API de tareas
