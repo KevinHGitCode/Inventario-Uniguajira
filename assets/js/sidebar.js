@@ -56,10 +56,7 @@ function loadContent(path) {
 
         if (path === '/goods') {
             iniciarBusqueda('searchGood');
-            if (typeof inicializarFormularioBien === 'function') inicializarFormularioBien();
-            // if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
-            // if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
-            // if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
+            if (typeof initFormCrearBien === 'function') initFormCrearBien();
         }
         if (path === '/users') {
             activarBusquedaEnTabla();

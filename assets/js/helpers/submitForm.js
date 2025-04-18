@@ -10,7 +10,7 @@
  * @param {boolean} options.showConfirm - Mostrar diálogo de confirmación antes de enviar (default: false)
  * @param {string} options.confirmMessage - Mensaje de confirmación personalizado
  * @param {boolean} options.resetOnSuccess - Resetear el formulario después de éxito (default: false)
- * @param {boolean} options.closeModalOnSuccess - Cerrar modal asociado (requiere data-modal) (default: false)
+ * @param {boolean} options.closeModalOnSuccess - Cerrar modal asociado (el modal contenedor a de tener la clase modal) (default: false)
  * @param {string} options.redirectOnSuccess - URL para redireccionar después de éxito
  */
 function inicializarFormularioAjax(formSelector, options = {}) {
@@ -57,7 +57,7 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         
         // Obtener método y acción del formulario
         const method = this.getAttribute('method') || 'POST';
-        const action = this.getAttribute('action') || '';
+        const action = this.getAttribute('action');
         
         // Referencia al formulario para usar en promesas
         const form = this;
@@ -76,26 +76,16 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         // Realizar la petición AJAX
         fetch(action, fetchConfig)
             .then(response => {
-                // Intentar parsear la respuesta como JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
+                try {
                     return response.json();
+                } catch (e) {
+                    console.error('Error al parsear la respuesta JSON:', e);
+                    return { success: false, message: 'Error al procesar la respuesta' };
                 }
-                
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        // Si no es JSON, devolver como texto
-                        return { success: response.ok, message: text };
-                    }
-                });
             })
             .then(responseData => {
-                // Determinar si la respuesta fue exitosa
-                const isSuccess = responseData.success !== false;
-                
-                if (isSuccess) {
+
+                if (responseData.success === true) {
                     // Acciones en caso de éxito
                     settings.onSuccess(responseData, form);
                     
@@ -105,8 +95,8 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     }
                     
                     // Cerrar modal asociado si está configurado
-                    if (settings.closeModalOnSuccess && form.dataset.modal) {
-                        const modal = document.getElementById(form.dataset.modal);
+                    if (settings.closeModalOnSuccess) {
+                        const modal = form.closest('.modal');
                         if (modal) {
                             modal.style.display = 'none';
                         }

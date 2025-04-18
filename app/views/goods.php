@@ -98,7 +98,7 @@
         <div class="modal-content">
             <span id="cerrarModalActualizarBien" class="close" onclick="ocultarModal('#modalActualizarBien')">&times;</span>
             <h2>Actualizar Bien</h2>
-            <form id="formActualizarBien" enctype="multipart/form-data">
+            <form id="formActualizarBien" action="/api/goods/update" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="actualizarId" />
 
                 <div>
