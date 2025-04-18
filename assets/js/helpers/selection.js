@@ -28,7 +28,7 @@ function toggleSelectItem(element) {
 
 // Función para actualizar la barra de control
 function updateControlBar(type) {
-    const controlBar = document.getElementById(`control-bar-${type}s`);
+    const controlBar = document.getElementById(`control-bar-${type}`);
     
     if (selectedItem && selectedItem.type === type) {
         controlBar.classList.add('visible');

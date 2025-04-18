@@ -69,6 +69,9 @@
 
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
+    <script src="assets/js/groups.js"></script>
+    <script src="assets/js/goodsInventory.js"></script>
+
 
     <script>
          // Asegurar que las funciones estén disponibles globalmente

@@ -31,18 +31,18 @@
 <div id="control-bar-inventory" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
-        <button class="control-btn" title="Renombrar">
+        <button class="control-btn" title="Renombrar" onclick="renombrarInventario()">
             <i class="fas fa-pen"></i>
         </button>
-        <button class="control-btn" title="Editar">
+        <button class="control-btn" title="Editar" onclick="editarInventario()">
             <i class="fas fa-edit"></i>
         </button>
-        <button class="control-btn" title="Eliminar">
+        <button class="control-btn" title="Eliminar" onclick="eliminarInventario()">
             <i class="fas fa-trash"></i>
         </button>
-        <button class="control-btn" title="Más acciones">
+        <!-- <button class="control-btn" title="Más acciones">
             <i class="fas fa-ellipsis-v"></i>
-        </button>
+        </button> -->
     </div>
 </div>
 <?php endif; ?>
