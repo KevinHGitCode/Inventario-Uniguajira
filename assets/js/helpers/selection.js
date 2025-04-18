@@ -1,177 +1,73 @@
-// Variables para controlar la selección
-let selectedItems = {
-    group: [],
-    inventory: [],
-    good: []
-};
+// Variable para almacenar el elemento seleccionado
+let selectedItem = null;
 
-// Función para alternar la selección de un elemento
-function toggleSelectItem(element, type) {
-    // Evitar que se active la funcionalidad de "Abrir" al hacer clic en botones dentro del card
-    if (event && event.target.closest('.btn-open')) {
-        return; // No hacer nada si se hizo clic en el botón Abrir
-    }
-
-    // Prevenir la navegación si estamos seleccionando
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
+// Función para seleccionar un elemento
+function toggleSelectItem(element) {
     const itemId = element.dataset.id;
     const itemName = element.dataset.name;
+    const type = element.dataset.type;
     
     // Si el elemento ya está seleccionado, lo deseleccionamos
     if (element.classList.contains('selected')) {
         element.classList.remove('selected');
-        selectedItems[type] = [];
+        selectedItem = null;
     } else {
-        // Deseleccionar todos los demás elementos del mismo tipo
-        const allSelectedItems = document.querySelectorAll(`.card-item.selected[data-id]`);
-        allSelectedItems.forEach(item => {
-            item.classList.remove('selected');
-        });
-        
-        // Limpiar la matriz de elementos seleccionados
-        selectedItems[type] = [];
+        // Deseleccionar el elemento anteriormente seleccionado (si existe)
+        if (selectedItem) {
+            selectedItem.element.classList.remove('selected');
+        }
         
         // Seleccionar este elemento
         element.classList.add('selected');
-        selectedItems[type].push({ id: itemId, name: itemName, element: element });
+        selectedItem = { id: itemId, name: itemName, type: type, element: element };
     }
     
     updateControlBar(type);
+    console.log(selectedItem); // Depuración: mostrar el elemento seleccionado
 }
 
 // Función para actualizar la barra de control
 function updateControlBar(type) {
-    // Para "inventory", necesitamos usar "inventories" en el ID
-    let controlBarId;
-    if (type === 'inventory') {
-        controlBarId = 'control-bar-inventories';
-    } else {
-        controlBarId = `control-bar-${type}s`;
-    }
+    const controlBar = document.getElementById(`control-bar-${type}s`);
     
-    const controlBar = document.getElementById(controlBarId);
-    
-    // TODO: Ver esto luego
-    if (!controlBar) {
-        // console.warn(`Control bar not found: ${controlBarId}`);
-        return;
-    }
-    
-    const count = selectedItems[type].length;
-    
-    if (count > 0) {
+    if (selectedItem && selectedItem.type === type) {
         controlBar.classList.add('visible');
         const nameElement = controlBar.querySelector('.selected-name');
-        nameElement.textContent = selectedItems[type][0].name;
+        nameElement.textContent = selectedItem.name;
     } else {
         controlBar.classList.remove('visible');
     }
 }
 
-// Función para limpiar la selección cuando se cambia de vista
-function clearSelection(type) {
-    if (!type) {
-        // Limpiar todas las selecciones
-        Object.keys(selectedItems).forEach(key => {
-            clearSelectionByType(key);
-        });
-    } else {
-        // Limpiar solo el tipo especificado
-        clearSelectionByType(type);
+// Función para limpiar la selección
+function clearSelection() {
+    if (selectedItem) {
+        selectedItem.element.classList.remove('selected');
+        const type = selectedItem.type;
+        selectedItem = null;
+        updateControlBar(type);
     }
 }
 
-// Helper function para limpiar por tipo
-function clearSelectionByType(type) {
-    // Deseleccionar todos los elementos del DOM con esta clase
-    const allSelectedItems = document.querySelectorAll(`.card-item.selected[data-id]`);
-    allSelectedItems.forEach(item => {
-        item.classList.remove('selected');
-    });
-    
-    // Limpiar el array
-    selectedItems[type] = [];
-    
-    // Actualizar la barra de control
-    updateControlBar(type);
-}
-
-// Modificar las funciones de navegación existentes para limpiar la selección
-const originalAbrirGrupo = abrirGrupo;
-abrirGrupo = function(idGroup) {
-    clearSelection('group');
-    originalAbrirGrupo(idGroup);
-};
-
-const originalCerrarGrupo = cerrarGrupo;
-cerrarGrupo = function() {
-    clearSelection('inventory');
-    originalCerrarGrupo();
-};
-
-const originalAbrirInventario = abrirInventario;
-abrirInventario = function(idInventory) {
-    clearSelection('inventory');
-    originalAbrirInventario(idInventory);
-};
-
-const originalCerrarInventario = cerrarInventario;
-cerrarInventario = function() {
-    clearSelection('good');
-    originalCerrarInventario();
-};
-// Extraer el manejador de eventos en una función nombrada para poder eliminarla
+// Manejador de eventos para clicks fuera de los elementos
 function handleOutsideClick(event) {
-    // Si se hace clic en un botón dentro de un card o en la barra de control, no desseleccionar
-    if (event.target.closest('.btn-open') || 
-        event.target.closest('.control-btn') || 
-        event.target.closest('.control-bar')) {
-        return;
-    }
+    // Si se hace clic en la barra de control, no deseleccionar
+    if (event.target.closest('.control-bar')) return;
     
     const cardItem = event.target.closest('.card-item');
-    if (!cardItem) {
-        // Si se hizo clic fuera de un item y fuera de la barra de control, limpiar todas las selecciones
-        clearSelection();
-    }
+    // Si se hizo clic fuera de un item, limpiar la selección
+    if (!cardItem) clearSelection();
 }
-
-
 
 // Función para inicializar la selección
 function initializeSelection() {
-    // Desactivar primero para evitar múltiples eventos
-    deactivateSelection();
-    
-    // Agregar evento para detectar clics fuera de los elementos seleccionables
     document.addEventListener('click', handleOutsideClick);
-    
-    // Asegurar que las barras de control están ocultas inicialmente
-    const controlBars = document.querySelectorAll('.control-bar');
-    controlBars.forEach(bar => bar.classList.remove('visible'));
-    
     console.log('Selection functionality initialized');
 }
 
 // Función para desactivar la selección
 function deactivateSelection() {
-    // Limpiar todas las selecciones primero
     clearSelection();
-    
-    // Eliminar el evento de clic
     document.removeEventListener('click', handleOutsideClick);
-    
     console.log('Selection functionality deactivated');
 }
-
-// Exportar las funciones para que estén disponibles globalmente
-window.selectionFunctions = {
-    initializeSelection,
-    deactivateSelection,
-    toggleSelectItem,
-    clearSelection
-};

@@ -20,10 +20,7 @@ function inicializarFormularioAjax(formSelector, options = {}) {
     const defaultOptions = {
         beforeSubmit: null,
         onSuccess: response => showToast(response),
-        onError: error => showToast({
-            success: false,
-            message: 'Error al procesar la solicitud: ' + (error.message || 'Error desconocido')
-        }),
+        onError: error => showToast(error),
         onComplete: null,
         showConfirm: false,
         confirmMessage: '¿Estás seguro de enviar este formulario?',

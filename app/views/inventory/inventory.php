@@ -28,7 +28,7 @@
         <div id="control-bar-groups" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
-                <button class="control-btn" title="Renombrar">
+                <button class="control-btn" title="Renombrar" onclick="renombrarGrupo()">
                     <i class="fas fa-pen"></i>
                 </button>
                 <button class="control-btn" title="Editar">
@@ -47,12 +47,12 @@
         <div class="card-grid">
             <?php if (isset($dataGroups)): ?>
                 <?php foreach ($dataGroups as $group): ?>
-                    <div 
-                        class="card card-item" 
-                        data-id="<?= htmlspecialchars($group['id']) ?>" 
-                        data-name="<?= htmlspecialchars($group['nombre']) ?>" 
+                    <div class="card card-item" 
                         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                        onclick="toggleSelectItem(this, 'group')"
+                            data-id="<?= htmlspecialchars($group['id']) ?>" 
+                            data-name="<?= htmlspecialchars($group['nombre']) ?>" 
+                            data-type="group"
+                            onclick="toggleSelectItem(this)"
                         <?php endif; ?>
                     >
                         <!-- inicio contenido -->

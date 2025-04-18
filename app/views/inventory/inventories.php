@@ -28,7 +28,7 @@
 
 <!-- Barra de control para inventarios -->
 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-<div id="control-bar-inventories" class="control-bar">
+<div id="control-bar-inventory" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
         <button class="control-btn" title="Renombrar">
@@ -50,12 +50,12 @@
 <div class="card-grid">
     <?php if (isset($dataInventories)): ?>
         <?php foreach ($dataInventories as $inventory): ?>
-            <div 
-                class="card card-item" 
-                data-id="<?= htmlspecialchars($inventory['id']) ?>" 
-                data-name="<?= htmlspecialchars($inventory['nombre']) ?>" 
+            <div class="card card-item" 
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                onclick="toggleSelectItem(this, 'inventory')"
+                    data-id="<?= htmlspecialchars($inventory['id']) ?>" 
+                    data-name="<?= htmlspecialchars($inventory['nombre']) ?>"
+                    data-type="inventory"
+                    onclick="toggleSelectItem(this)"
                 <?php endif; ?>
             >
 

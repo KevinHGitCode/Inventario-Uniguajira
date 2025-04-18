@@ -51,6 +51,7 @@
                 <a
                     class="btn-eliminar"
                     data-id="<?= $bien['bien_id'] ?>"
+                    onclick="eliminarBien(<?= $bien['bien_id'] ?>)"
                     ><i class="fas fa-trash"></i
                 ></a>
             </div>

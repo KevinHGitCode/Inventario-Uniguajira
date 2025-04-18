@@ -73,9 +73,9 @@ function loadContent(path) {
         }
 
         // Desactivar la selección por defecto en todas las páginas
-        if (window.selectionFunctions) {
-            window.selectionFunctions.deactivateSelection();
-        }
+        if (typeof deactivateSelection === 'function') 
+            deactivateSelection();
+       
 
         // Activar la selección solo en la página de inventario
         if (path === '/inventory') {
@@ -84,10 +84,9 @@ function loadContent(path) {
             inicializarModalActualizarGrupo();
             inicializarFormularioActualizarGrupo();
             
-
-            if (window.selectionFunctions) {
-                window.selectionFunctions.initializeSelection();
-            }
+            if (typeof initializeSelection === 'function') 
+                initializeSelection();
+            
         }
 
         // Hacer scroll hacia arriba

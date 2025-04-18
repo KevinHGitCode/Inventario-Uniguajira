@@ -255,14 +255,8 @@
     <script>
         // Inicializar el formulario de login
         inicializarFormularioAjax('form[action="/api/login"', {
-            redirectOnSuccess: '/', // Redirige al dashboard después de iniciar sesión
-            onError: function(response) {
-                // Personaliza el mensaje de error
-                showToast({
-                    success: false, 
-                    message: 'Usuario o contraseña incorrectos'
-                });
-            }
+            onSuccess: null,
+            redirectOnSuccess: '/'
         });
     </script>
     
