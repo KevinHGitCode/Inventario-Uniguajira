@@ -62,44 +62,25 @@ function inicializarCrearUsuario() {
         // Obtén los datos del formulario
         const formData = new FormData(formCrearUsuario);
         const data = Object.fromEntries(formData.entries());
-
-        try {
-            // Realiza la solicitud POST al servidor
-            const response = await fetch('/api/users/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const newUser = await response.json();
-
-                // Agrega el nuevo usuario a la tabla
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${newUser.id}</td>
-                    <td>${newUser.nombre}</td>
-                    <td>${newUser.nombre_usuario}</td>
-                    <td>${newUser.email}</td>
-                    <td>${newUser.rol}</td>
-                `;
-                tablaUsuarios.appendChild(newRow);
-
-                // Cierra el modal y resetea el formulario
-                modalCrear.style.display = 'none';
-                formCrearUsuario.reset();
-
-                alert('Usuario creado exitosamente.');
-            } else {
-                const error = await response.json();
-                alert(`Error al crear usuario: ${error.message}`);
+        fetch('/api/users/create', {
+            method: 'POST',
+            
+            body:formData
+        })
+        .then(res => res.json())
+        .then(response => {
+            showToast(response);
+            if (response.success) {
+                 modalCrear.style.display = 'none';
+                 setTimeout(() => loadContent('/users'), 1500); // Recarga después de 1.5 segundos
+                    
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Ocurrió un error al intentar crear el usuario.');
-        }
+        })
+        .catch(err => { showToast(err) });
+
+
+
+        
     });
 }
 
@@ -142,12 +123,9 @@ function inicializarBotonesEliminarUser() {
         const userId = document.getElementById('delete-user-id').value;
         
         // Realizar petición AJAX para eliminar usuario
-        fetch(`/api/users/delete/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+        fetch(`/api/users/delete/`, {
+            method: 'delete',
+           
         })
         .then(response => response.json())
         .then(data => {
@@ -158,13 +136,14 @@ function inicializarBotonesEliminarUser() {
                 alert('Error al eliminar el usuario: ' + data.message);
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al eliminar el usuario');
-        })
-        .finally(() => {
-            modalConfirmar.style.display = 'none';
+        .catch(err => {
+            console.error('Error:', err);
+            showToast({
+                success: false,
+                message: 'Error al eliminar el usuario elegido'
+            });
         });
+       
     });
     
     // Cerrar modal al hacer clic fuera
@@ -176,10 +155,55 @@ function inicializarBotonesEliminarUser() {
 }
 
 
+// function inicializarBotonesEdicion1() {
+//     const botonesEditar = document.querySelectorAll('.edit-user');
+//     const modalEditar = document.getElementById('modalEditar');
+//     const closeBtn = modalEditar.querySelector('.close');
+
+
+//     fetch('/api/users/updateUser')
+//     botonesEditar.forEach(boton => {
+//         boton.addEventListener('click', function (event) {
+//             event.preventDefault();
+
+//             // Obtén los datos del usuario desde los atributos del botón
+//             const id = this.getAttribute('data-id');
+//             const nombre = this.getAttribute('data-nombre');
+//             const nombreUsuario = this.getAttribute('data-nombre-usuario');
+//             const email = this.getAttribute('data-email');
+//             const rol = this.getAttribute('data-rol');
+//             console.log (id);
+//             // Llena los campos del formulario con los datos del usuario
+//             document.getElementById('edit-id').value = id;
+//             document.getElementById('edit-nombre').value = nombre;
+//             document.getElementById('edit-nombre_usuario').value = nombreUsuario;
+//             document.getElementById('edit-email').value = email;
+//             // document.getElementById('edit-rol').value = rol;
+
+//             // Muestra el modal
+//             modalEditar.style.display = 'block';
+            
+//         });
+//     });
+
+//     // Cierra el modal al hacer clic en el botón de cerrar
+//     closeBtn.addEventListener('click', function () {
+//         modalEditar.style.display = 'none';
+//     });
+
+//     // Cierra el modal al hacer clic fuera del contenido del modal
+//     window.addEventListener('click', function (event) {
+//         if (event.target === modalEditar) {
+//             modalEditar.style.display = 'none';
+//         }
+//     });
+// }
+
 function inicializarBotonesEdicion() {
     const botonesEditar = document.querySelectorAll('.edit-user');
     const modalEditar = document.getElementById('modalEditar');
     const closeBtn = modalEditar.querySelector('.close');
+    const formEditar = document.getElementById('formEditarUser');
 
     botonesEditar.forEach(boton => {
         boton.addEventListener('click', function (event) {
@@ -191,17 +215,21 @@ function inicializarBotonesEdicion() {
             const nombreUsuario = this.getAttribute('data-nombre-usuario');
             const email = this.getAttribute('data-email');
             const rol = this.getAttribute('data-rol');
-            console.log (id);
+
             // Llena los campos del formulario con los datos del usuario
             document.getElementById('edit-id').value = id;
             document.getElementById('edit-nombre').value = nombre;
             document.getElementById('edit-nombre_usuario').value = nombreUsuario;
             document.getElementById('edit-email').value = email;
-            // document.getElementById('edit-rol').value = rol;
+            
+            // Si hay un campo de rol, asígnalo también
+            const rolInput = document.getElementById('edit-rol');
+            if (rolInput) {
+                rolInput.value = rol;
+            }
 
             // Muestra el modal
             modalEditar.style.display = 'block';
-            
         });
     });
 
@@ -216,6 +244,35 @@ function inicializarBotonesEdicion() {
             modalEditar.style.display = 'none';
         }
     });
+
+    // Maneja el envío del formulario de edición
+    if (formEditar) {
+        formEditar.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(formEditar);
+            
+             fetch('/api/users/edit', {
+                method: 'POST',
+                body: formData
+            })
+            
+            .then(res => res.json())
+            .then(response => {
+                showToast(response);
+                if (response.success) {
+                     modalCrear.style.display = 'none';
+                     setTimeout(() => loadContent('/users'), 1500); // Recarga después de 1.5 segundos
+                        
+                }
+            })
+            .catch(err => { 
+                console.log(err)
+                showToast(err) });
+
+    
+        });
+    }
 }
 
 

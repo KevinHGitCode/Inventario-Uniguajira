@@ -35,4 +35,28 @@ class ctlInventory  {
         // echo json_encode($dataGoodsInventory);
         // exit;
     }
+
+    // createGroup
+    public function createGroup() {
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405); // Method Not Allowed
+            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+            return;
+        }
+
+        $nombre = $_POST['nombre'] ?? null;
+
+        // 
+        $result = $this->group->createGroup($nombre);
+
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Grupo creado correctamente.']);
+        } else {
+            // el nombre del grupo ya existe
+            http_response_code(400); // Bad Request
+            echo json_encode(['success' => false, 'message' => 'El grupo ya existe.']);
+        }
+            
+    } 
 }

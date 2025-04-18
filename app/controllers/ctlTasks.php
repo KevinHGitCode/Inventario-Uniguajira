@@ -5,6 +5,8 @@ require_once __DIR__ . '/../models/Tasks.php';
 class ctlTasks {
     private $tasksModel;
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function __construct() {
         $this->tasksModel = new Tasks();
         
@@ -13,6 +15,8 @@ class ctlTasks {
             exit();
         }
     }
+
+//-------------------------------------------------------------------------------------------------------//
 
     public function create() {
         header('Content-Type: application/json');
@@ -65,6 +69,8 @@ class ctlTasks {
         }
     }
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function delete($id) {
         header('Content-Type: application/json');
         
@@ -101,6 +107,8 @@ class ctlTasks {
             exit();
         }
     }
+
+//-------------------------------------------------------------------------------------------------------//
 
     /**
      * Endpoint: PATCH /api/tasks/toggle
@@ -146,6 +154,8 @@ class ctlTasks {
         }
     }
 
+//-------------------------------------------------------------------------------------------------------//
+
     public function home() {
         $tasksModel = new Tasks();
         $dataTasks = $tasksModel->getByUser($_SESSION['user_id']);
@@ -162,5 +172,63 @@ class ctlTasks {
         
         include __DIR__ . '/../views/home.php';
     }
+
+//-------------------------------------------------------------------------------------------------------//
+
+    /**
+     * Endpoint: PUT /api/tasks/update
+     */
+    public function update() {
+        header('Content-Type: application/json');
+        
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
+                throw new Exception('Método no permitido', 405);
+            }
+
+            if (!isset($_SESSION['user_id'])) {
+                throw new Exception('No autorizado', 401);
+            }
+
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            if (empty($data['id'])) {
+                throw new Exception("ID de tarea es requerido", 400);
+            }
+            
+            if (empty($data['name'])) {
+                throw new Exception("El nombre de la tarea es requerido", 400);
+            }
+
+            $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
+            $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
+            $description = filter_var($data['description'] ?? '', FILTER_SANITIZE_STRING);
+
+            $result = $this->tasksModel->updateName(
+                $taskId,
+                $name,
+                $description,
+                $_SESSION['user_id']
+            );
+
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Tarea actualizada exitosamente'
+                ]);
+            } else {
+                throw new Exception('No se pudo actualizar la tarea o no tienes permisos', 403);
+            }
+        } catch (Exception $e) {
+            http_response_code($e->getCode() ?: 500);
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+            exit();
+        }
+    }
     
 }
+
+//-------------------------------------------------------------------------------------------------------//

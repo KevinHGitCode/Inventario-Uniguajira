@@ -5,15 +5,13 @@ h1, h2 {
 
 /* Contenedor de tareas */
 .container-list-task {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas de igual ancho */
     gap: 12px;
     margin-top: 20px;
-    width: 40%;
-    max-width: 600px;
-    margin-left: 0;
+    width: 80%; /* Aumentar el ancho para acomodar dos columnas */
+    max-width: 1200px; /* Ajustar según necesidad */
     margin-bottom: 20px;
-    padding-right: 20px;
 }
 
 /* Header con título y botón */
@@ -31,12 +29,13 @@ h1, h2 {
     margin-top: 20px;
     padding-bottom: 8px;
     margin-bottom: 0;
-    margin-right: auto; /* Empuja el botón hacia la derecha */
+    margin-right: 0;
 }
 
 .completed-tasks-title {
     margin-top: 30px;
     padding-bottom: 8px;
+    font-size: 23px;
 }
 
 /* Botón de añadir tareas */
@@ -48,18 +47,18 @@ h1, h2 {
     width: 50px;
     height: 40px;
     border-radius: 30%; /* Cambio a círculo perfecto */
-    background: #ee6e6e34;
+    background: #026bf534;
     border: none;
     font-size: 24px; /* Aumentar tamaño de fuente */
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     cursor: pointer;
     margin-left: 10px; /* Espacio desde el título */
 }
 
 .add-task-button:hover {
-    background: #d67272a2;
+    background: #4784d398;
 }
 
 .add-task-button .icon {

@@ -20,7 +20,7 @@ $router->add('/reports', 'ctlSidebar', 'reports');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para el navbar
-$router->add('/api/users/edit', 'ctlUser', 'edit');
+$router->add('/api/users/editProfile', 'ctlUser', 'edit'); //TODO: verificar esta ruta
 $router->add('/api/users/update', 'ctlUser', 'updatePassword');
 $router->add('/api/logout', 'ctlUser', 'logout');
 
@@ -35,6 +35,7 @@ $router->add('/api/users/delete', 'ctlUser', 'delete');
 $router->add('/api/tasks/create', 'ctlTasks', 'create');
 $router->add('/api/tasks/delete/:id', 'ctlTasks', 'delete');
 $router->add('/api/tasks/toggle', 'ctlTasks', 'toggle');
+$router->add('/api/tasks/update', 'ctlTasks', 'update');
 
 // Rutas para la API de bienes
 $router->add('/api/goods/create', 'ctlGoods', 'create');
@@ -45,6 +46,7 @@ $router->add('/api/goods/update', 'ctlGoods', 'update');
 // Rutas para la API de inventarios
 $router->add('/api/get/inventories/:id_group', 'ctlInventory', 'getInventoriesOfGroup');
 $router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');
+$router->add('/api/grupos/create', 'ctlInventory', 'createGroup');
 
 // Mas rutas...
 

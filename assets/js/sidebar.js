@@ -56,10 +56,8 @@ function loadContent(path) {
 
         if (path === '/goods') {
             iniciarBusqueda('searchGood');
-            if (typeof inicializarModalBien === 'function') inicializarModalBien();
             if (typeof inicializarFormularioBien === 'function') inicializarFormularioBien();
             if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
-            if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
             if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
         }
         if (path === '/users') {
@@ -75,16 +73,20 @@ function loadContent(path) {
         }
 
         // Desactivar la selección por defecto en todas las páginas
-        if (window.selectionFunctions) {
-            window.selectionFunctions.deactivateSelection();
-        }
+        if (typeof deactivateSelection === 'function') 
+            deactivateSelection();
+       
 
         // Activar la selección solo en la página de inventario
         if (path === '/inventory') {
             iniciarBusqueda('searchGroup');
-            if (window.selectionFunctions) {
-                window.selectionFunctions.initializeSelection();
-            }
+            inicializarFormularioCrearGrupo();
+            inicializarModalActualizarGrupo();
+            inicializarFormularioActualizarGrupo();
+            
+            if (typeof initializeSelection === 'function') 
+                initializeSelection();
+            
         }
 
         // Hacer scroll hacia arriba

@@ -15,7 +15,7 @@
         </div>
 
         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-        <button id="btnCrear" class="create-btn">Crear</button>
+        <button id="btnCrear" class="create-btn" onclick="mostrarModal('#modalCrear')">Crear</button>
         <?php endif; ?>
 
     </div>
@@ -42,16 +42,16 @@
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <div class="actions">
                 <a
-                    href="#"
                     class="btn-editar"
                     data-id="<?= $bien['bien_id'] ?>"
                     data-nombre="<?= htmlspecialchars($bien['bien']) ?>"
+                    onclick="mostrarModal('#modalActualizarBien')"
                     ><i class="fas fa-edit"></i
                 ></a>
                 <a
-                    href="#"
                     class="btn-eliminar"
                     data-id="<?= $bien['bien_id'] ?>"
+                    onclick="eliminarBien(<?= $bien['bien_id'] ?>)"
                     ><i class="fas fa-trash"></i
                 ></a>
             </div>
@@ -66,7 +66,7 @@
     <!-- Modal -->
     <div id="modalCrear" class="modal" style="display: none">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="ocultarModal('#modalCrear')">&times;</span>
             <h2>Nuevo Bien</h2>
             <form
                 id="formCrearBien"
@@ -99,7 +99,7 @@
     <!-- Modal Actualizar -->
     <div id="modalActualizarBien" class="modal" style="display: none">
         <div class="modal-content">
-            <span id="cerrarModalActualizarBien" class="close">&times;</span>
+            <span id="cerrarModalActualizarBien" class="close" onclick="cerrarModal('#modalActualizarBien')">&times;</span>
             <h2>Actualizar Bien</h2>
             <form id="formActualizarBien" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="actualizarId" />

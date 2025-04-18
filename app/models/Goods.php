@@ -18,11 +18,10 @@ class Goods extends Database {
     }
 
     /**
-     * Obtener la lista de todos los bienes.
+     * Obtener la lista de todos los bienes desde la vista del sistema.
      * 
-     * @return array Lista de bienes con sus campos 'id', 'nombre' y 'tipo'.
+     * @return array Lista de bienes con los campos 'bien_id', 'bien', 'tipo_bien', 'total_cantidad' e 'imagen'.
      */
-    // TODO: Se debe agregar el campo tipo
     public function getAll() {
         $stmt = $this->connection->prepare("
             SELECT 
@@ -38,6 +37,11 @@ class Goods extends Database {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    /**
+     * Obtener la lista de todos los bienes desde la tabla 'bienes'.
+     * 
+     * @return array Lista de bienes con los campos 'id', 'nombre', 'tipo' e 'imagen'.
+     */
     public function getAllGoods() {
         $stmt = $this->connection->prepare("
             SELECT 
@@ -58,6 +62,7 @@ class Goods extends Database {
      * 
      * @param string $nombre Nombre del bien.
      * @param int $tipo Tipo del bien (representado como un entero).
+     * @param string $imagenRuta Ruta de la imagen asociada al bien.
      * @return bool True si la operación fue exitosa, False en caso contrario.
      */
     public function create($nombre, $tipo, $imagenRuta) {
@@ -68,10 +73,11 @@ class Goods extends Database {
     
     
     /**
-     * Modificar el nombre de un bien.
+     * Modificar el nombre y/o la imagen de un bien.
      * 
      * @param int $id ID del bien a modificar.
      * @param string $nombre Nuevo nombre del bien.
+     * @param string|null $nuevaRuta Nueva ruta de la imagen (opcional).
      * @return bool True si la operación fue exitosa, False en caso contrario.
      */
     public function update($id, $nombre, $nuevaRuta = null) {
@@ -100,10 +106,10 @@ class Goods extends Database {
     }
 
     /**
-     * Obtener la cantidad de un bien por su ID.
+     * Obtener la cantidad total de un bien por su ID.
      * 
      * @param int $id ID del bien.
-     * @return int Cantidad del bien.
+     * @return int Cantidad total del bien. Retorna 0 si no se encuentra.
      */
     public function getQuantityById($id) {
         $stmt = $this->connection->prepare("SELECT total_cantidad FROM vista_total_bienes_sistema WHERE bien_id = ?");
@@ -120,6 +126,12 @@ class Goods extends Database {
         }
     }
 
+    /**
+     * Obtener la ruta de la imagen de un bien por su ID.
+     * 
+     * @param int $id ID del bien.
+     * @return string|null Ruta de la imagen o null si no existe.
+     */
     public function getImageById($id) {
         $stmt = $this->connection->prepare("SELECT imagen FROM bienes WHERE id = ?");
         $stmt->bind_param("i", $id);
@@ -129,6 +141,12 @@ class Goods extends Database {
         return $row['imagen'] ?? null;
     }
 
+    /**
+     * Verificar si existe un bien con un nombre específico.
+     * 
+     * @param string $nombre Nombre del bien.
+     * @return bool True si el bien existe, False en caso contrario.
+     */
     public function existsByName($nombre) {
         $stmt = $this->connection->prepare("SELECT id FROM bienes WHERE nombre = ?");
         $stmt->bind_param("s", $nombre);

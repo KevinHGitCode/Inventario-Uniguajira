@@ -1,31 +1,4 @@
 /**
- * Configura el modal para la creación de bienes, incluyendo los eventos de apertura y cierre.
- */
-function inicializarModalBien() {
-    // Obtiene el modal y los elementos relacionados (botón de abrir y cerrar)
-    const modal = document.getElementById("modalCrear");
-    const btnCrear = document.getElementById("btnCrear");
-    const spanClose = modal?.querySelector(".close");
-
-    // Agrega un evento para abrir el modal al hacer clic en el botón
-    btnCrear.addEventListener("click", () => {
-        modal.style.display = "flex";
-    });
-
-    // Agrega un evento para cerrar el modal al hacer clic en el botón de cerrar
-    spanClose.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    // Agrega un evento para cerrar el modal al hacer clic fuera de él
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-}
-
-/**
  * Configura el formulario para la creación de bienes, manejando el envío y la respuesta del servidor.
  */
 function inicializarFormularioBien() {
@@ -101,24 +74,6 @@ function inicializarBotonesEliminar() {
     });
 }
 
-function activarModalActualizarBien() {
-    document.querySelectorAll('.btn-editar').forEach(btn => {
-        btn.addEventListener('click', e => {
-            e.preventDefault();
-
-            const id = btn.dataset.id;
-            const nombre = btn.dataset.nombre;
-
-            document.getElementById("actualizarId").value = id;
-            document.getElementById("actualizarNombre").value = nombre;
-            document.getElementById("actualizarImagen").value = ""; // Limpiar imagen seleccionada
-
-            document.getElementById("modalActualizarBien").style.display = "flex";
-        });
-    });
-}
-
-
 
 function inicializarFormularioActualizarBien() {
     const form = document.getElementById("formActualizarBien");
@@ -156,5 +111,4 @@ function inicializarFormularioActualizarBien() {
         modal.style.display = "none";
     });
 }
-
 

@@ -63,14 +63,12 @@
 
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/goods.js"></script>
+    <script src="assets/js/helpers/modal.js"></script>
+    <script src="assets/js/helpers/selection.js"></script>
     <?php endif; ?>
 
     <script src="assets/js/user.js"></script>
     <script src="assets/js/inventory.js"></script>
-
-    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <script src="assets/js/helpers/selection.js"></script>
-    <?php endif; ?>
 
     <script>
          // Asegurar que las funciones estén disponibles globalmente
