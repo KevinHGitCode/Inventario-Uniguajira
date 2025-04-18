@@ -43,18 +43,8 @@ class ctlView {
     }
 
     public function test() {
-        include 'tests/views/diseño-inventario.html';
-    }
-
-    /**
-     * Envía una respuesta en formato JSON.
-     *
-     * @param array $response Datos a enviar en la respuesta JSON.
-     * @return void
-     */
-    private function sendJsonResponse($response) {
-        header('Content-Type: application/json');
-        echo json_encode($response);
+        header('Location: tests/models/.init-tests.php');
+        exit;        
     }
 
     /**

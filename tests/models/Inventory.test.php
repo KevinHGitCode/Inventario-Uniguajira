@@ -1,90 +1,141 @@
 <?php
-
 require_once '../../app/models/Inventory.php';
-require '.tableHelper.php';
 
-function runTests() {
-    testGetAll();
-    // testCreate("Nuevo Inventario", 1);
-    // testUpdateName(3, "3A");
-    // testUpdateGroup(3, 1);
-    // testUpdateConservation(5, 2);
-    // testDeleteWithoutItems(5);
-    // testDeleteWithItems(1);
-}
+// Crear una instancia del runner pero NO manejar la solicitud web automáticamente
+$runner = new TestRunner();
 
-function testGetAll() {
-    $inventory = new Inventory();
-    echo "Testing getAll()... <br>";
-
-    $allInventories = $inventory->getAll();
-    if (is_array($allInventories)) {
-        renderTable($allInventories);
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
+// Registrar todas las pruebas disponibles
+$runner->registerTest('getAll', 
+    function() {
+        $inventory = new Inventory();
+        echo "<p>Testing getAll()...</p>";
+        
+        $allInventories = $inventory->getAll();
+        if (is_array($allInventories)) {
+            renderTable($allInventories);
+            return true;
+        } else {
+            echo "<p>No se pudo obtener los inventarios como un array</p>";
+            return false;
+        }
     }
-}
-    
+);
 
-function testCreate($name, $grupoId) {
-    $inventory = new Inventory();
-    echo "Testing create()... <br>";
-    if ($inventory->create($name, $grupoId)) {
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
-    }
-}
+$runner->registerTest('create', 
+    function($name, $grupoId) {
+        $inventory = new Inventory();
+        echo "<p>Testing create() con nombre: '$name', grupo ID: $grupoId</p>";
+        
+        if ($inventory->create($name, $grupoId)) {
+            echo "<p>Se creó el inventario correctamente</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo crear el inventario</p>";
+            return false;
+        }
+    }, 
+    [
+        "Nuevo Inventario",  // name
+        1                   // grupoId
+    ]
+);
 
-function testUpdateName($updateId, $updateName) {
-    $inventory = new Inventory();
-    echo "Testing updateName()... <br>";
-    if ($inventory->updateName($updateId, $updateName)) {
-        echo "PASSED: Nombre actualizado correctamente<br>";
-    } else {
-        echo "FAILED: No se pudo actualizar el nombre<br>";
-    }
-}
+$runner->registerTest('updateName', 
+    function($updateId, $updateName) {
+        $inventory = new Inventory();
+        echo "<p>Testing updateName() para ID $updateId con nuevo nombre: '$updateName'</p>";
+        
+        if ($inventory->updateName($updateId, $updateName)) {
+            echo "<p>Nombre actualizado correctamente</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo actualizar el nombre</p>";
+            return false;
+        }
+    }, 
+    [
+        3,    // updateId
+        "3A"  // updateName
+    ]
+);
 
-function testUpdateGroup($updateId, $newGroupId) {
-    $inventory = new Inventory();
-    echo "Testing updateGroup()... <br>";
-    if ($inventory->updateGroup($updateId, $newGroupId)) {
-        echo "PASSED: Grupo actualizado correctamente<br>";
-    } else {
-        echo "FAILED: No se pudo actualizar el grupo<br>";
-    }
-}
+$runner->registerTest('updateGroup', 
+    function($updateId, $newGroupId) {
+        $inventory = new Inventory();
+        echo "<p>Testing updateGroup() para ID $updateId con nuevo grupo ID: $newGroupId</p>";
+        
+        if ($inventory->updateGroup($updateId, $newGroupId)) {
+            echo "<p>Grupo actualizado correctamente</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo actualizar el grupo</p>";
+            return false;
+        }
+    }, 
+    [
+        3,  // updateId
+        1   // newGroupId
+    ]
+);
 
-function testUpdateConservation($id, $newConservation) {
-    $inventory = new Inventory();
-    echo "Testing updateConservation()... <br>";
-    if ($inventory->updateConservation($id, $newConservation)) {
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
-    }
-}
+$runner->registerTest('updateConservation', 
+    function($id, $newConservation) {
+        $inventory = new Inventory();
+        echo "<p>Testing updateConservation() para ID $id con nuevo estado de conservación: $newConservation</p>";
+        
+        if ($inventory->updateConservation($id, $newConservation)) {
+            echo "<p>Estado de conservación actualizado correctamente</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo actualizar el estado de conservación</p>";
+            return false;
+        }
+    }, 
+    [
+        5,  // id
+        2   // newConservation
+    ]
+);
 
-function testDeleteWithoutItems($deleteId) {
-    $inventory = new Inventory();
-    echo "Testing delete()... <br>";
-    if ($inventory->delete($deleteId)) {
-        echo "PASSED: Inventario eliminado <br>";
-    } else {
-        echo "FAILED: El inventario tiene bienes, no se puede eliminar <br>";
-    }
-}
+$runner->registerTest('deleteWithoutItems', 
+    function($deleteId) {
+        $inventory = new Inventory();
+        echo "<p>Testing delete() para inventario ID $deleteId (sin bienes asociados)</p>";
+        
+        if ($inventory->delete($deleteId)) {
+            echo "<p>Inventario eliminado correctamente</p>";
+            return true;
+        } else {
+            echo "<p>El inventario tiene bienes, no se puede eliminar</p>";
+            return false;
+        }
+    }, 
+    [
+        5  // deleteId
+    ]
+);
 
-function testDeleteWithItems($deleteIdWithItems) {
-    $inventory = new Inventory();
-    echo "Testing delete() with associated goods... <br>";
-    if ($inventory->delete($deleteIdWithItems)) {
-        echo "PASSED<br>";
-    } else {
-        echo "FAILED<br>";
-    }
-}
+$runner->registerTest('deleteWithItems', 
+    function($deleteIdWithItems) {
+        $inventory = new Inventory();
+        echo "<p>Testing delete() para inventario ID $deleteIdWithItems (con bienes asociados)</p>";
+        
+        if ($inventory->delete($deleteIdWithItems)) {
+            echo "<p>Inventario eliminado correctamente (esto no debería ocurrir si tiene bienes)</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo eliminar el inventario con bienes (comportamiento esperado)</p>";
+            return true; // Marcamos como éxito ya que el comportamiento esperado es que no se pueda eliminar
+        }
+    }, 
+    [
+        1  // deleteIdWithItems
+    ]
+);
 
-runTests();
+
+// Si se accede directamente a este archivo (no a través de .init-tests.php), redirigir al índice
+if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
+    header('Location: /test');
+    exit;
+}

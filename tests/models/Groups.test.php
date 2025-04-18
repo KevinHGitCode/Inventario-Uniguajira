@@ -1,79 +1,102 @@
 <?php
-
 require_once '../../app/models/Groups.php';
-require '.tableHelper.php';
 
-function runTests() {
-    testGetAllGroups();
-    // testGetInventoriesByGroup(1);
-    // testCreateGroup("Grupo de prueba2");
-    // testUpdateGroup(6, "Nombre Actualizado 3");
-    // testDeleteGroup(6);
-}
+// Crear una instancia del runner pero NO manejar la solicitud web automáticamente
+$runner = new TestRunner();
 
-function testGetAllGroups() {
+// Registrar todas las pruebas disponibles
+$runner->registerTest('getAllGroups', function() {
     $group = new Groups();
-    echo "Testing getAllGroups()...<br>";
-
+    echo "<p>Testing getAllGroups()...</p>";
+    
     $groups = $group->getAllGroups();
     if (!empty($groups)) {
         renderTable($groups);
-        echo "PASSED<br>";
+        return true;
     } else {
-        echo "No hay grupos registrados.<br>";
+        echo "<p>No hay grupos registrados.</p>";
+        return false;
     }
-}
+});
 
+$runner->registerTest('getInventoriesByGroup', 
+    function($groupId) {
+        $group = new Groups();
+        echo "<p>Testing getInventoriesByGroup($groupId)...</p>";
 
-function testGetInventoriesByGroup($groupId) {
-    $group = new Groups();
-    echo "Testing getInventoriesByGroup($groupId)...<br>";
-    $groups = $group->getInventoriesByGroup($groupId);
-    if (!empty($groups)) {
-        echo "PASSED<br>";
-        foreach ($groups as $groupsItem) {
-            echo "ID: {$groupsItem['id']}, Nombre: {$groupsItem['nombre']}<br>";
+        $groups = $group->getInventoriesByGroup($groupId);
+        if (!empty($groups)) {
+            echo "<div class='test-output-detail'>";
+            foreach ($groups as $groupsItem) {
+                echo "ID: {$groupsItem['id']}, Nombre: {$groupsItem['nombre']}<br>";
+            }
+            echo "</div>";
+            return true;
+        } else {
+            echo "<p>No hay inventarios en este grupo.</p>";
+            return false;
         }
-    } else {
-        echo "FAILED<br>";
-        echo "No hay inventarios en este grupo.<br>";
-    }
-}
+    }, [
+        1 // ID del grupo
+    ]
+);
 
-function testCreateGroup($newGroupName) {
-    $group = new Groups();
-    echo "Testing createGroup('$newGroupName')...<br>";
-    if ($group->createGroup($newGroupName)) {
-        echo "PASSED<br>";
-        echo "Grupo '$newGroupName' creado exitosamente.<br>";
-    } else {
-        echo "FAILED<br>";
-        echo "Error al crear el grupo.<br>";
-    }
-}
 
-function testUpdateGroup($groupIdToUpdate, $newGroupName) {
-    $group = new Groups();
-    echo "Testing updateGroup($groupIdToUpdate, '$newGroupName')...<br>";
-    if ($group->updateGroup($groupIdToUpdate, $newGroupName)) {
-        echo "PASSED<br>";
-        echo "Grupo actualizado correctamente.<br>";
-    } else {
-        echo "FAILED<br>";
-        echo "Error al actualizar el grupo.<br>";
-    }
-}
+$runner->registerTest('createGroup', 
+    function($newGroupName) {
+        $group = new Groups();
+        echo "<p>Testing createGroup('$newGroupName')...</p>";
 
-function testDeleteGroup($groupIdToDelete) {
-    $group = new Groups();
-    echo "Testing deleteGroup($groupIdToDelete)...<br>";
-    if ($group->deleteGroup($groupIdToDelete)) {
-        echo "PASSED<br>";
-        echo "Grupo eliminado correctamente.<br>";
-    } else {
-        echo "FAILED<br>";
-        echo "No se pudo eliminar el grupo (puede tener inventarios asociados o no existe).<br>";
-    }
-}
+        if ($group->createGroup($newGroupName)) {
+            echo "<p>Grupo '$newGroupName' creado exitosamente.</p>";
+            return true;
+        } else {
+            echo "<p>Error al crear el grupo.</p>";
+            return false;
+        }
+    }, [
+        "Grupo de prueba2" // Nombre del nuevo grupo
+    ]
+);
 
-runTests();
+$runner->registerTest('updateGroup', 
+    function($groupIdToUpdate, $newGroupName) {
+        $group = new Groups();
+        echo "<p>Testing updateGroup($groupIdToUpdate, '$newGroupName')...</p>";
+
+        if ($group->updateGroup($groupIdToUpdate, $newGroupName)) {
+            echo "<p>Grupo actualizado correctamente.</p>";
+            return true;
+        } else {
+            echo "<p>Error al actualizar el grupo.</p>";
+            return false;
+        }
+    }, [
+        6, // ID del grupo a actualizar
+        "Nombre Actualizado 3" // Nuevo nombre del grupo
+    ]
+);
+
+$runner->registerTest('deleteGroup', 
+    function($groupIdToDelete) {
+        $group = new Groups();
+        echo "<p>Testing deleteGroup($groupIdToDelete)...</p>";
+
+        if ($group->deleteGroup($groupIdToDelete)) {
+            echo "<p>Grupo eliminado correctamente.</p>";
+            return true;
+        } else {
+            echo "<p>No se pudo eliminar el grupo (puede tener inventarios asociados o no existe).</p>";
+            return false;
+        }
+    }, [
+        6 // ID del grupo a eliminar
+    ]
+);
+
+
+// Si se accede directamente a este archivo (no a través de init-tests.php), redirigir al índice
+if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
+    header('Location: /test');
+    exit;
+}

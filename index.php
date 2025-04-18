@@ -9,7 +9,7 @@ $router->add('/login', 'ctlView', 'login');
 $router->add('/profile', 'ctlView', 'Profile');
 $router->add('/doc', 'ctlView', 'doc');
 $router->add('/404', 'ctlView', 'notFound');
-$router->add('/inv', 'ctlView', 'test');
+$router->add('/test', 'ctlView', 'test');
 
 
 // Rutas para el sidebar
