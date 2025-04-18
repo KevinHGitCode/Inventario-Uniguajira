@@ -43,14 +43,11 @@
             <div class="actions">
                 <a
                     class="btn-editar"
-                    data-id="<?= $bien['bien_id'] ?>"
-                    data-nombre="<?= htmlspecialchars($bien['bien']) ?>"
-                    onclick="mostrarModal('#modalActualizarBien')"
+                    onclick="ActualizarBien(<?= $bien['bien_id'] ?>, '<?= htmlspecialchars($bien['bien']) ?>')"
                     ><i class="fas fa-edit"></i
                 ></a>
                 <a
                     class="btn-eliminar"
-                    data-id="<?= $bien['bien_id'] ?>"
                     onclick="eliminarBien(<?= $bien['bien_id'] ?>)"
                     ><i class="fas fa-trash"></i
                 ></a>
@@ -99,7 +96,7 @@
     <!-- Modal Actualizar -->
     <div id="modalActualizarBien" class="modal" style="display: none">
         <div class="modal-content">
-            <span id="cerrarModalActualizarBien" class="close" onclick="cerrarModal('#modalActualizarBien')">&times;</span>
+            <span id="cerrarModalActualizarBien" class="close" onclick="ocultarModal('#modalActualizarBien')">&times;</span>
             <h2>Actualizar Bien</h2>
             <form id="formActualizarBien" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="actualizarId" />

@@ -20,7 +20,7 @@ $router->add('/reports', 'ctlSidebar', 'reports');
 $router->add('/users', 'ctlSidebar', 'users');
 
 // Rutas para el navbar
-$router->add('/api/users/editProfile', 'ctlUser', 'edit'); //TODO: verificar esta ruta
+$router->add('/api/users/editProfile', 'ctlUser', 'editProfile'); //TODO: verificar esta ruta
 $router->add('/api/users/update', 'ctlUser', 'updatePassword');
 $router->add('/api/logout', 'ctlUser', 'logout');
 

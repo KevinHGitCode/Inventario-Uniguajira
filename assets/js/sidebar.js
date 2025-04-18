@@ -57,8 +57,9 @@ function loadContent(path) {
         if (path === '/goods') {
             iniciarBusqueda('searchGood');
             if (typeof inicializarFormularioBien === 'function') inicializarFormularioBien();
-            if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
-            if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
+            // if (typeof inicializarBotonesEliminar === 'function') inicializarBotonesEliminar();
+            // if (typeof activarModalActualizarBien === 'function') activarModalActualizarBien();
+            // if (typeof inicializarFormularioActualizarBien === 'function') inicializarFormularioActualizarBien();
         }
         if (path === '/users') {
             activarBusquedaEnTabla();
@@ -66,10 +67,6 @@ function loadContent(path) {
             inicializarCrearUsuario();
             inicializarBotonesEliminarUser();  
             inicializarBotonesEdicion(); 
-        }
-        if (path === '/profile') {
-            inicializarFormularioEditarPerfil();
-            inicializarModalEditUser();
         }
 
         // Desactivar la selección por defecto en todas las páginas
