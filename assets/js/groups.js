@@ -63,14 +63,21 @@ function abrirGrupo(idGroup) {
         document.getElementById('group-name').innerText = grupoName;
 
         iniciarBusqueda('searchInventory');
-        inicializarFormularioCrearInventario();
-        
+        inicializarFormularioCrearInventario(); // TODO:
+
+        // si hay un inventario almacenado, abrir
+        if (localStorage.getItem('openInventory')) {
+            const idInventory = localStorage.getItem('openInventory');
+            abrirInventario(idInventory);
+        } else {
+            localStorage.setItem('openGroup', idGroup);
+            window.scrollTo(0, 0);
+        }
     })
     .catch(error => {
         console.error('Error:', error);
         divInventories.innerHTML = '<p>Error al cargar los inventarios</p>';
     });
-
 }
 
 // Función para cerrar grupo (mejorada)
@@ -82,4 +89,6 @@ function cerrarGrupo() {
     input.value = ''; // Borra el valor
     input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
     input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
+
+    localStorage.removeItem('openGroup');
 }

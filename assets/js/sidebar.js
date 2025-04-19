@@ -1,3 +1,5 @@
+// TODO: Punto de inicio
+
 // Este script maneja la visibilidad del sidebar al hacer clic en el menú.
 // Añade o quita la clase CSS 'menu-toggle' para mostrar u ocultar el sidebar.
 const menu = document.getElementById('menu');
@@ -54,6 +56,12 @@ function loadContent(path, scrollUpRequired = true) {
         // Desactivar la selección por defecto en todas las páginas
         if (typeof deactivateSelection === 'function') 
             deactivateSelection();
+        
+        // si path es diferente de inventory, localStorage.removeItem 
+        if (path !== '/inventory') {
+            localStorage.removeItem('openGroup');
+            localStorage.removeItem('openInventory');
+        }
 
         switch (path) {
             case '/profile': editarPerfil(); break;
@@ -71,8 +79,20 @@ function loadContent(path, scrollUpRequired = true) {
                 
             case '/inventory':
                 iniciarBusqueda('searchGroup');
-                if (typeof initGroupFunctions === 'function') initGroupFunctions();
-                if (typeof initializeSelection === 'function') initializeSelection();
+
+                // comprobamos que existe al menos una funcion de gruops.js
+                // significa que se cargaron los archivos del rol administrador
+                if (typeof initGroupFunctions === 'function') {
+                    initGroupFunctions();
+                    initializeSelection();
+
+                    // si hay un grupo almacenado, abrir
+                    if (localStorage.getItem('openGroup')) {
+                        const idGroup = localStorage.getItem('openGroup');
+                        abrirGrupo(idGroup);  // si hay un inventario almacenado se abrira en esta funcion
+                    }
+                }
+
                 break;
         }
         
@@ -91,11 +111,18 @@ links.forEach(link => {
         links.forEach(l => l.classList.remove('selected'));
         link.classList.add('selected');
 
-        // guardar la ruta del elemento seleccionado en localStorage
-        const path = link.getAttribute('onclick');
+        // guardar el id del elemento seleccionado en localStorage
+        const path = link.getAttribute('id');
         console.log(path)
         if (path) {
             localStorage.setItem('lastSelected', path);
+        }
+        // si se hace click sobre inventory
+        if (path === 'inventory') {
+            // eliminar los datos almacenados, esto garantiza que esta accion
+            // suceda al hacer click en el sidebar y no al cargar la pagina
+            localStorage.removeItem('openGroup');
+            localStorage.removeItem('openInventory');
         }
     });
 });
@@ -104,17 +131,14 @@ links.forEach(link => {
 // o hacer click en el elemento con id home si no hay nada guardado
 window.onload = () => {
     const lastSelected = localStorage.getItem('lastSelected');
-    if (lastSelected) {
-        const matchingLink = Array.from(links).find(link => link.getAttribute('onclick') === lastSelected);
-        if (matchingLink) {
-            console.log(`Cargando el elemento guardado: ${lastSelected}`);
-            matchingLink.click();
-        }
+    const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'reports']; // Lista de rutas válidas
+
+    if (lastSelected && validPaths.includes(lastSelected)) {
+        console.log(`Cargando el elemento guardado: ${lastSelected}`);
+        document.getElementById(lastSelected).classList.add('selected');
+        loadContent(`/${lastSelected}`);
     } else {
-        const homeElement = document.getElementById('home');
-        if (homeElement) {
-            console.log('No hay elemento guardado, cargando el elemento con id "home".');
-            homeElement.click();
-        }
+        console.log('No hay elemento guardado o no es válido, cargando la opcion "home".');
+        loadContent('/home');
     }
 };

@@ -4,7 +4,6 @@
             <li>
                 <a
                     id="home"
-                    class="selected"
                     onclick="loadContent('/home')"
                 >
                     <img src="assets/icons/home.svg" alt="" />
@@ -14,6 +13,7 @@
 
             <li>
                 <a 
+                    id="goods"
                     onclick="loadContent('/goods')"
                 >
                     <img src="assets/icons/bienes.svg" alt="" />
@@ -23,6 +23,7 @@
             
             <li>
                 <a 
+                    id="inventory"
                     onclick="loadContent('/inventory')"
                 >
                     <img src="assets/icons/inventario.svg" alt="" />
@@ -32,6 +33,7 @@
             
             <li>
                 <a 
+                    id="reports"
                     onclick="loadContent('/reports')"
                 >
                     <img src="assets/icons/reportes.svg" alt="">
@@ -42,6 +44,7 @@
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <li>
                 <a 
+                    id="users"
                     onclick="loadContent('/users')"
                 >
                     <img src="assets/icons/usuarios.svg" alt="" />

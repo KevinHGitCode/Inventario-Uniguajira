@@ -29,11 +29,14 @@ function abrirInventario(idInventory) {
         document.getElementById('inventory-name').innerText = inventoryName;
 
         iniciarBusqueda('searchGoodInventory');
+        localStorage.setItem('openInventory', idInventory);
+        window.scrollTo(0, 0);
     })
     .catch(error => {
         console.error('Error:', error);
         divGoodsInventory.innerHTML = '<p>Error al cargar los bienes</p>';
     });
+
 }
 
 // cerrar inventario
@@ -46,6 +49,8 @@ function cerrarInventario() {
     input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', code: 'Backspace' }));
     input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
+
+    localStorage.removeItem('openInventory');
 }
 
 

@@ -4,7 +4,7 @@ function initFormCrearBien() {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
             showToast(response);
-            loadContent('/goods');
+            loadContent('/goods', false);
         }
     });
 }
@@ -14,7 +14,7 @@ function eliminarBien(id) {
         url: `/api/goods/delete/${id}`,
         onSuccess: (response) => {
             if (response.success) {
-                loadContent('/goods');
+                loadContent('/goods', false);
             }
             showToast(response);
         }
@@ -35,7 +35,7 @@ function ActualizarBien(id, nombre) {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
             showToast(response);
-            loadContent('/goods');
+            loadContent('/goods', false);
         }
     });
 }

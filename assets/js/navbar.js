@@ -7,6 +7,8 @@ function toggleUserMenu() {
 function logout() {
     // Eliminar la última opción seleccionada antes de cerrar sesión
     localStorage.removeItem('lastSelected');
+    localStorage.removeItem('openGroup');
+    localStorage.removeItem('openInventory');
     window.location.href = '/api/logout'; // Redirigir al endpoint correcto del backend
 }
 
