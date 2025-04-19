@@ -17,7 +17,7 @@
                 <h5 id="userRol"><?=htmlspecialchars($_SESSION['user_rol'] ?? 'Rol no definido')?></h5>
                 <button
                     id="btnEditar"
-                    onclick="editarPerfil()"
+                    onclick="mostrarModal('#modalEditarPerfil')"
                     class="create-btn">
                     Editar
                 </button>
@@ -56,7 +56,7 @@
                     type="text"
                     name="nombre_usuario"
                     value="<?= htmlspecialchars($_SESSION['user_username']) ?>"
-                    id="actualizarNombre"
+                    id="actualizarNombreUsuario"
                     required
                 />
             </div>

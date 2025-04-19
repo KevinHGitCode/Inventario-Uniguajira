@@ -44,47 +44,44 @@ sidebar.addEventListener('click', (e) => {
     e.stopPropagation();
 });
 
-function loadContent(path) {
+function loadContent(path, scrollUpRequired = true) {
     fetch(path)
     .then(res => res.text())
     .then(html => {
+        // Cargar el contenido en el main-content
         document.getElementById('main-content').innerHTML = html;
-
-        // TODO: convertir a onclick
-        activarModalActualizarContraseña();
-        inicializarFormularioActualizarContraseña();
-
-        if (path === '/goods') {
-            iniciarBusqueda('searchGood');
-            if (typeof initFormCrearBien === 'function') initFormCrearBien();
-        }
-        if (path === '/users') {
-            activarBusquedaEnTabla();
-            inicializarModalUser();
-            inicializarCrearUsuario();
-            inicializarBotonesEliminarUser();  
-            inicializarBotonesEdicion(); 
-        }
 
         // Desactivar la selección por defecto en todas las páginas
         if (typeof deactivateSelection === 'function') 
             deactivateSelection();
-       
 
-        // Activar la selección solo en la página de inventario
-        if (path === '/inventory') {
-            iniciarBusqueda('searchGroup');
-            inicializarFormularioCrearGrupo();
-            inicializarModalActualizarGrupo();
-            inicializarFormularioActualizarGrupo();
-            
-            if (typeof initializeSelection === 'function') 
-                initializeSelection();
-            
+        switch (path) {
+            case '/profile': editarPerfil(); break;
+                
+            case '/goods':
+                iniciarBusqueda('searchGood');
+                // TODO: hacer un init goods
+                if (typeof initFormCrearBien === 'function') initFormCrearBien();
+                break;
+                
+            case '/users':
+                activarBusquedaEnTabla();
+                if (typeof initUserFunctions === 'function') initUserFunctions();
+                break;
+                
+            case '/inventory':
+                iniciarBusqueda('searchGroup');
+                inicializarFormularioCrearGrupo();
+                inicializarModalActualizarGrupo();
+                inicializarFormularioActualizarGrupo();
+                
+                if (typeof initializeSelection === 'function') 
+                    initializeSelection();
+                break;
         }
-
+        
         // Hacer scroll hacia arriba
-        window.scrollTo(0, 0);
+        if (scrollUpRequired) window.scrollTo(0, 0);
     });
 }
 

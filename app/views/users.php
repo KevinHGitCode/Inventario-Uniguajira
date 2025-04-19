@@ -19,16 +19,15 @@
             />
             <i class="search-icon fas fa-search"></i>
         </div>
-        <button id="btnCrear" class="create-btn">Crear</button>
+        <button id="btnCrear" class="create-btn" onclick="mostrarModal('#modalCrear')">Crear</button>
     </div>
 
     <!-- Modal crear usuario-->
     <div id="modalCrear" class="modal" style="display: none">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <span class="close" onclick="ocultarModal('#modalCrear')">&times;</span>
             <h2>Nuevo Usuario</h2>
             <form
-            
                 method="POST"
                 id="formCrearUser"
                 enctype="multipart/form-data"
@@ -78,7 +77,7 @@
                 method="POST"
                 id="formEditarUser"
                 enctype="multipart/form-data"
-                action="/api/users/update"
+                action="/api/users/edit"
             >
                 <input type="hidden" name="id" id="edit-id" />
                 <div>
@@ -121,8 +120,17 @@
             <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
             <input type="hidden" id="delete-user-id">
             <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-                <button id="btnCancelarEliminar" class="cancel-btn">Cancelar</button>
-                <button id="btnConfirmarEliminar" class="delete-btn">Eliminar</button>
+                <button 
+                id="btnCancelarEliminar" 
+                class="cancel-btn"
+                onclick="ocultarModal('#modalConfirmarEliminar')"
+                >Cancelar</button>
+                <button 
+                id="btnConfirmarEliminar" 
+                class="delete-btn"
+                data-id=""
+                onclick="eliminarUser(this)"
+                >Eliminar</button>
             </div>
         </div>
     </div>
@@ -159,14 +167,17 @@
                     <div class="dropdown">
                         <button class="dropdown-btn"><i class="fas fa-ellipsis-v"></i></button>
                         <div class="dropdown-content">
-                            <a href="#" class="edit-user" data-id="<?php echo $user['id']; ?>" 
-                               data-nombre="<?php echo htmlspecialchars($user['nombre']); ?>"
-                               data-nombre-usuario="<?php echo htmlspecialchars($user['nombre_usuario']); ?>"
-                               data-email="<?php echo htmlspecialchars($user['email']); ?>"
-                               data-rol="<?php echo htmlspecialchars($user['rol']); ?>">
+                            <a class="edit-user" 
+                                data-id="<?= $user['id']; ?>" 
+                                data-nombre="<?= htmlspecialchars($user['nombre']); ?>"
+                                data-nombre-usuario="<?= htmlspecialchars($user['nombre_usuario']); ?>"
+                                data-email="<?= htmlspecialchars($user['email']); ?>"
+                                data-rol="<?= htmlspecialchars($user['rol']); ?>"
+                                onclick="btnEditarUser(this)"
+                            >
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <a href="#" class="delete-user" data-id="<?php echo $user['id']; ?>">
+                            <a class="delete-user" onclick="mostrarConfirmacion(<?= $user['id']; ?>)">
                                 <i class="fas fa-trash-alt"></i> Eliminar
                             </a>
                         </div>

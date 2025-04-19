@@ -40,7 +40,7 @@
 <!-- TODO: Implementar las funciones editProfile y logout -->
 <div class="user-menu">
     <div id="userMenu" class="user-menu-content hidden">
-        <button class="user-menu-item" onclick="editProfile()">
+        <button class="user-menu-item" onclick="toggleUserMenu(); loadContent('/profile');">
             <img
                 class="user-menu-icon"
                 src="assets/icons/editarPerfil.svg"
@@ -49,7 +49,7 @@
             <span>Editar Perfil</span>
         </button>
 
-        <button class="user-menu-item" id="btnCambiarContraseña">
+        <button class="user-menu-item" onclick="mostrarModal('#modalCambiarContraseña')">
             <img
                 class="user-menu-icon"
                 src="assets/icons/cambiarContraseña.svg"
@@ -71,9 +71,14 @@
     <!-- Modal para cambiar la contraseña -->
     <div id="modalCambiarContraseña" class="modal" style="display: none">
         <div class="modal-content">
-            <span id="cerrarModalCambiarContraseña" class="close">&times;</span>
+            <span id="cerrarModalCambiarContraseña" class="close" onclick="ocultarModal('#modalCambiarContraseña')">&times;</span>
             <h2>Cambiar Contraseña</h2>
-            <form id="formCambiarContraseña" enctype="multipart/form-data">
+            <form 
+                id="formCambiarContraseña" 
+                action="/api/users/update"
+                method="POST" 
+                enctype="multipart/form-data"
+            >
                 <div>
                     <label>Nueva Contraseña:</label>
                     <input

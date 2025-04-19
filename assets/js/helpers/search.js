@@ -25,3 +25,27 @@ function iniciarBusqueda(searchInputID) {
         });
     });
 }
+
+
+function activarBusquedaEnTabla() {
+    // Obtiene el campo de entrada para la búsqueda
+    const searchInput = document.getElementById('searchUserInput');
+    if (!searchInput) {
+        console.warn("No se encontró el campo de búsqueda.");
+        return;
+    }
+
+    // Agrega un evento para detectar cuando el usuario escribe en el campo de búsqueda
+    searchInput.addEventListener('keyup', function () {
+        const filter = searchInput.value.toLowerCase();
+        // Obtiene todas las filas de la tabla
+        const rows = document.querySelectorAll("table tbody tr");
+
+        // Itera sobre cada fila y verifica si coincide con el texto de búsqueda
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            // Muestra u oculta la fila según si coincide con el filtro
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+}

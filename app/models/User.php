@@ -166,11 +166,10 @@ class User extends Database {
             $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT);
             $stmt->bind_param("si", $hashedPassword, $id);
             $stmt->execute();
-
             return $stmt->affected_rows > 0;
             
         } catch (Exception $e) {
-            throw new Exception("error para actualizar contraseña:" . $e->getMessage());
+            return false;
         }
     }
 
