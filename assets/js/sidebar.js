@@ -71,12 +71,8 @@ function loadContent(path, scrollUpRequired = true) {
                 
             case '/inventory':
                 iniciarBusqueda('searchGroup');
-                inicializarFormularioCrearGrupo();
-                inicializarModalActualizarGrupo();
-                inicializarFormularioActualizarGrupo();
-                
-                if (typeof initializeSelection === 'function') 
-                    initializeSelection();
+                if (typeof initGroupFunctions === 'function') initGroupFunctions();
+                if (typeof initializeSelection === 'function') initializeSelection();
                 break;
         }
         

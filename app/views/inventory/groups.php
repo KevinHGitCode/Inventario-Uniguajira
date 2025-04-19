@@ -28,10 +28,10 @@
         <div id="control-bar-group" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
-                <button class="control-btn" title="Renombrar" onclick="renombrarGrupo()">
+                <button class="control-btn" title="Renombrar" onclick="btnRenombrarGrupo()">
                     <i class="fas fa-pen"></i>
                 </button>
-                <button class="control-btn" title="Eliminar" onclick="eliminarGrupo()">
+                <button class="control-btn" title="Eliminar" onclick="btnEliminarGrupo()">
                     <i class="fas fa-trash"></i>
                 </button>
                 <!-- <button class="control-btn" title="Más acciones">
@@ -105,7 +105,7 @@
         <h2>Nuevo Grupo</h2>
         <form
             id="formCrearGrupo"
-            action="/api/grupos/create"
+            action="/api/groups/create"
             method="POST"
         >
             <div>
@@ -126,21 +126,23 @@
 
 
 <!-- ---------------------------------------------------------------------- -->
-
-<!-- Modal Actualizar Grupo -->
-<div id="modalActualizarGrupo" class="modal" style="display: none">
+<!-- Modal Renombrar Grupo -->
+<div id="modalRenombrarGrupo" class="modal" style="display: none">
     <div class="modal-content">
-        <span id="cerrarModalActualizarGrupo" class="close">&times;</span>
-        <h2>Actualizar Grupo</h2>
-        <form id="formActualizarGrupo">
-            <input type="hidden" name="id" id="actualizarGrupoId" />
+        <span id="cerrarModalRenombrarGrupo" class="close" onclick="ocultarModal('#modalRenombrarGrupo')">&times;</span>
+        <h2>Renombrar Grupo</h2>
+        <form 
+            id="formRenombrarGrupo" 
+            action="/api/groups/rename"
+        >
+            <input type="hidden" name="id" id="grupoRenombrarId" />
 
             <div>
-                <label>Nombre del grupo:</label>
+                <label>Nuevo Nombre:</label>
                 <input
                     type="text"
                     name="nombre"
-                    id="actualizarGrupoNombre"
+                    id="grupoRenombrarNombre"
                     required
                 />
             </div>

@@ -43,10 +43,19 @@ $router->add('/api/goods/delete/:id', 'ctlGoods', 'delete');
 $router->add('/api/goods/update', 'ctlGoods', 'update');
 
 
+// Rutas para la API de grupos
+$router->add('/api/groups', 'ctlGroup', 'getAll');
+$router->add('/api/groups/get/:id', 'ctlGroup', 'getById');
+$router->add('/api/groups/create', 'ctlGroup', 'create');
+$router->add('/api/groups/rename', 'ctlGroup', 'rename');
+$router->add('/api/groups/delete/:id', 'ctlGroup', 'delete');
+
+
 // Rutas para la API de inventarios
 $router->add('/api/get/inventories/:id_group', 'ctlInventory', 'getInventoriesOfGroup');
 $router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');
-$router->add('/api/grupos/create', 'ctlInventory', 'createGroup');
+// $router->add('/api/grupos/create', 'ctlInventory', 'createGroup');
+
 
 // Mas rutas...
 
