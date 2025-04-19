@@ -10,53 +10,6 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         <button class="add-task-button" onclick="showTaskModal()" aria-label="Agregar tarea">+</button>
     </div>
 
-    <!-- Modal para crear tareas -->
-    <div id="taskModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-modal" onclick="hideTaskModal()">&times;</span>
-            <h2>Crear Nueva Tarea</h2>
-            <form id="taskForm" onsubmit="createTask(event)">
-                <div class="form-group">
-                    <label for="taskName">Nombre:</label>
-                    <input type="text" id="taskName" required>
-                </div>
-                <div class="form-group">
-                    <label for="taskDesc">Descripción:</label>
-                    <textarea id="taskDesc"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Fecha de creación:</label>
-                    <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
-                </div>
-                <button type="submit" class="btn-submit">Guardar</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal para editar tareas -->
-    <div id="editTaskModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-modal" onclick="hideEditTaskModal()">&times;</span>
-            <h2>Editar Tarea</h2>
-            <form id="editTaskForm" onsubmit="updateTask(event)">
-                <input type="hidden" id="editTaskId">
-                <div class="form-group">
-                    <label for="editTaskName">Nombre:</label>
-                    <input type="text" id="editTaskName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskDesc">Descripción:</label>
-                    <textarea id="editTaskDesc"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Fecha de creación:</label>
-                    <input type="text" id="editTaskDate" readonly>
-                </div>
-                <button type="submit" class="btn-submit">Actualizar</button>
-            </form>
-        </div>
-    </div>
-
     <div class="container-list-task">
         <?php if (empty($dataTasks['pendientes'])): ?>
             <p>No tienes tareas pendientes.</p>
@@ -112,51 +65,54 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         </details>
     <?php endif; ?>
 
+
+    
+    <!-- Modal para crear tareas -->
+    <div id="taskModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideTaskModal()">&times;</span>
+            <h2>Crear Nueva Tarea</h2>
+            <form id="taskForm" onsubmit="createTask(event)">
+                <div class="form-group">
+                    <label for="taskName">Nombre:</label>
+                    <input type="text" id="taskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDesc">Descripción:</label>
+                    <textarea id="taskDesc"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de creación:</label>
+                    <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
+                </div>
+                <button type="submit" class="btn-submit">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para editar tareas -->
+    <div id="editTaskModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideEditTaskModal()">&times;</span>
+            <h2>Editar Tarea</h2>
+            <form id="editTaskForm" onsubmit="updateTask(event)">
+                <input type="hidden" id="editTaskId">
+                <div class="form-group">
+                    <label for="editTaskName">Nombre:</label>
+                    <input type="text" id="editTaskName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTaskDesc">Descripción:</label>
+                    <textarea id="editTaskDesc"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de creación:</label>
+                    <input type="text" id="editTaskDate" readonly>
+                </div>
+                <button type="submit" class="btn-submit">Actualizar</button>
+            </form>
+        </div>
+    </div>
+
+
 <?php endif; ?>
-
-<script>
-// Función independiente para mostrar el modal de edición
-function handleEditTaskClick(event) {
-    // Detener inmediatamente la propagación del evento
-    event.stopImmediatePropagation();
-    event.preventDefault();
-    
-    // Obtener datos directamente del botón clickeado
-    const button = event.currentTarget;
-    const taskId = button.getAttribute('data-id');
-    const taskName = button.getAttribute('data-name');
-    const taskDesc = button.getAttribute('data-desc');
-    const taskDate = button.getAttribute('data-date');
-    
-    // Decodificar valores
-    const decodedName = decodeURIComponent(taskName);
-    const decodedDesc = decodeURIComponent(taskDesc);
-    
-    // Mostrar modal
-    const editModal = document.getElementById('editTaskModal');
-    document.getElementById('editTaskId').value = taskId;
-    document.getElementById('editTaskName').value = decodedName;
-    document.getElementById('editTaskDesc').value = decodedDesc;
-    document.getElementById('editTaskDate').value = new Date(taskDate).toLocaleDateString('es-ES');
-    editModal.style.display = 'flex';
-    document.getElementById('editTaskName').focus();
-}
-
-// Asignación directa de eventos después de cargar el DOM
-document.addEventListener('DOMContentLoaded', function() {
-    const editButtons = document.querySelectorAll('.edit-task');
-    
-    editButtons.forEach(button => {
-        // Remover cualquier listener previo para evitar duplicados
-        button.removeEventListener('click', handleEditTaskClick);
-        // Asignar el nuevo listener
-        button.addEventListener('click', handleEditTaskClick, true); // Usar captura
-    });
-});
-
-// Función para actualizar tarea (sin cambios)
-function updateTask(event) {
-    event.preventDefault();
-    // ... (código existente)
-}
-</script>
