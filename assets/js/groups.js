@@ -1,6 +1,7 @@
 function initGroupFunctions() {
 
     // Inicializar formulario para crear grupo
+    // ruta del form: /api/groups/create
     inicializarFormularioAjax('#formCrearGrupo', {
         closeModalOnSuccess: true,
         resetOnSuccess: true,
@@ -11,6 +12,7 @@ function initGroupFunctions() {
     });
 
     // Inicializar formulario para renombrar grupo
+    // ruta del form: /api/groups/rename
     inicializarFormularioAjax('#formRenombrarGrupo', {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
@@ -46,7 +48,7 @@ function btnEliminarGrupo() {
 }
 
 // Función para abrir grupo y cargar inventarios
-function abrirGrupo(idGroup) {
+function abrirGrupo(idGroup, scrollUpRequired = true) {
     const divGroups = document.getElementById('groups');
     const divInventories = document.getElementById('inventories');
 
@@ -63,16 +65,17 @@ function abrirGrupo(idGroup) {
         document.getElementById('group-name').innerText = grupoName;
 
         iniciarBusqueda('searchInventory');
-        inicializarFormularioCrearInventario(); // TODO:
+        initInventoryFunctions();
 
         // si hay un inventario almacenado, abrir
         if (localStorage.getItem('openInventory')) {
             const idInventory = localStorage.getItem('openInventory');
             abrirInventario(idInventory);
-        } else {
+        } else 
             localStorage.setItem('openGroup', idGroup);
-            window.scrollTo(0, 0);
-        }
+            
+        if (scrollUpRequired)
+            window.scrollTo(0, 0);  
     })
     .catch(error => {
         console.error('Error:', error);

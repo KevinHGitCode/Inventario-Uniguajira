@@ -1,18 +1,74 @@
-function renombrarInventario() {
-    console.log('renombrarInventario');
+// Función principal para inicializar todas las funciones de inventario
+function initInventoryFunctions() {
+    // Inicializar formulario para crear inventario
+    inicializarFormularioAjax('#formCrearInventario', {
+        closeModalOnSuccess: true,
+        resetOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            const grupoId = localStorage.getItem('openGroup');
+            abrirGrupo(grupoId);
+        }
+    });
+
+    // Inicializar formulario para renombrar inventario
+    inicializarFormularioAjax('#formRenombrarInventario', {
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            const grupoId = localStorage.getItem('openGroup');
+            abrirGrupo(grupoId);
+        }
+    });
+
+    // Inicializar formulario para actualizar inventario
+    inicializarFormularioAjax('#formActualizarInventario', {
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            const grupoId = localStorage.getItem('openGroup');
+            abrirGrupo(grupoId);
+        }
+    });
+
 }
 
-function editarInventario() {
-    console.log('editarInventario');
-
-}
-
+// Función para abrir el modal de renombrar inventario
+function btnRenombrarInventario() {
+    console.log(selectedItem); // mensaje de depuración
+    const id = selectedItem.id;
+    const nombreActual = selectedItem.name;
     
-function eliminarInventario() {
-    console.log('eliminarInventario');
+    document.getElementById("renombrarInventarioId").value = id;
+    document.getElementById("renombrarInventarioNombre").value = nombreActual;
+
+    mostrarModal('#modalRenombrarInventario');
 }
 
-function abrirInventario(idInventory) {
+// Función para abrir el modal de editar inventario (puede ser la misma que renombrar)
+function btnEditarInventario() {  // TODO:
+    const id = selectedItem.id;
+    const cardInventory = document.querySelector('.card-item.selected')
+    console.log(cardInventory.dataset)
+}
+
+// Función para eliminar inventario
+function btnEliminarInventario() {
+    const idInventario = selectedItem.id;
+
+    eliminarRegistro({
+        url: `/api/inventories/delete/${idInventario}`,
+        onSuccess: (response) => {
+            if (response.success) {
+                const grupoId = localStorage.getItem('openGroup');
+                abrirGrupo(grupoId, false);
+            }
+            showToast(response);
+        }
+    });
+}
+
+function abrirInventario(idInventory, scrollUpRequired = true) {
     const divGoodsInventory = document.getElementById('goods-inventory');
     const divInventories = document.getElementById('inventories');
     
@@ -51,84 +107,4 @@ function cerrarInventario() {
     input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
 
     localStorage.removeItem('openInventory');
-}
-
-
-function escapeHtml(unsafe) {
-    return unsafe?.toString().replace(/[&<"'>]/g, match => {
-        switch(match) {
-            case '&': return '&amp;';
-            case '<': return '&lt;';
-            case '>': return '&gt;';
-            case '"': return '&quot;';
-            case "'": return '&#039;';
-        }
-    }) || '';
-}
-
-
-
-// -----------------------------------------------------
-// ------------------- Inventories ---------------------
-// -----------------------------------------------------
-
-// Función para inicializar el formulario de Crear Inventario
-function inicializarFormularioCrearInventario() {
-    const form = document.getElementById("formCrearInventario");
-    const modal = document.getElementById("modalCrearInventario");
-
-    if (!form) return;
-
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        
-        // Asumiendo que tenemos el ID del grupo actual en alguna variable global
-        // o lo podemos obtener de la URL
-        const grupoId = obtenerGrupoIdActual(); // Esta función debería implementarse
-        
-        // Agregar el grupoId al formData
-        formData.append("grupo_id", grupoId);
-
-        fetch("/api/inventario/create", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(response => {
-            showToast(response);
-
-            if (response.success) {
-                modal.style.display = "none";
-                form.reset();
-                setTimeout(() => {
-                    // Recargar los inventarios del grupo actual
-                    abrirGrupo(grupoId); // Asumiendo que esta función ya existe
-                }, 1500);
-            }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            showToast({
-                success: false,
-                message: 'Error: No se pudo crear el inventario. Intente nuevamente.'
-            });
-        });
-    });
-}
-
-
-
-// Función auxiliar para obtener el ID del grupo actual
-// Esta es una función de ejemplo, deberás adaptarla según tu implementación
-function obtenerGrupoIdActual() {
-    // Podrías obtener el ID del grupo de una variable global
-    // o de un atributo data en algún elemento HTML
-    // o de la URL actual
-    
-    // Ejemplo de obtención desde la URL: /inventario?grupo=123
-    const urlParams = new URLSearchParams(window.location.search);
-    const grupoId = urlParams.get('grupo');
-    
-    return grupoId || 0; // Devuelve 0 o algún valor predeterminado si no hay ID
 }

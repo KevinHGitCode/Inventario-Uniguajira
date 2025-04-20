@@ -19,6 +19,7 @@ class ctlInventory  {
     // para navegacion
     public function getInventoriesOfGroup($id_group) {
         $dataInventories = $this->group->getInventoriesByGroup($id_group);
+        $dataIdGroup = $id_group;
         require 'app/views/inventory/inventories.php';
     }
 
@@ -58,9 +59,9 @@ class ctlInventory  {
     public function rename() {
         header('Content-Type: application/json');
 
-        if (!validateHttpRequest('POST', ['id', 'nombre'])) { return; }
+        if (!validateHttpRequest('POST', ['inventory_id', 'nombre'])) { return; }
 
-        $id = $_POST['id'];
+        $id = $_POST['inventory_id'];
         $newName = $_POST['nombre'];
 
         $resultado = $this->inventory->updateName($id, $newName);

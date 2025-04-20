@@ -21,7 +21,7 @@
     </div>
     
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <button id="btnCrearInventorio" class="create-btn" onclick="mostrarModal('#modalCrearInventario')">Crear</button>
+    <button class="create-btn" onclick="mostrarModal('#modalCrearInventario')">Crear</button>
     <?php endif; ?>
             
 </div>
@@ -31,13 +31,13 @@
 <div id="control-bar-inventory" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
-        <button class="control-btn" title="Renombrar" onclick="renombrarInventario()">
+        <button class="control-btn" title="Renombrar" onclick="btnRenombrarInventario()">
             <i class="fas fa-pen"></i>
         </button>
-        <button class="control-btn" title="Editar" onclick="editarInventario()">
+        <button class="control-btn" title="Editar" onclick="btnEditarInventario()">
             <i class="fas fa-edit"></i>
         </button>
-        <button class="control-btn" title="Eliminar" onclick="eliminarInventario()">
+        <button class="control-btn" title="Eliminar" onclick="btnEliminarInventario()">
             <i class="fas fa-trash"></i>
         </button>
         <!-- <button class="control-btn" title="Más acciones">
@@ -105,15 +105,16 @@
     <div class="modal-content">
         <span class="close" onclick="ocultarModal('#modalCrearInventario')">&times;</span>
         <h2>Nuevo Inventario</h2>
-        <form id="formCrearInventario" action="/api/inventario/create" method="POST">
+        <form 
+            id="formCrearInventario" 
+            action="/api/inventories/create" 
+            method="POST"
+        >
+            <!-- TODO: este input tiene riesgo de quedar vacio si la creacion se vuelve dinamica y no llama a loadContend -->
+            <input type="hidden" name="grupo_id" value="<?= $dataIdGroup ?>" required />
             <div>
                 <label>Nombre del inventario:</label>
                 <input type="text" name="nombre" required />
-            </div>
-
-            <div>
-                <label>Fecha:</label>
-                <input type="date" name="fecha" required />
             </div>
 
             <div style="margin-top: 10px">
@@ -128,28 +129,23 @@
     </div>
 </div>
 
-
 <!-- ---------------------------------------------------------------------- -->
 
-
-<!-- Modal Actualizar Inventario -->
-<div id="modalActualizarInventario" class="modal" style="display: none">
+<!-- Modal renombrar Inventario -->
+<div id="modalRenombrarInventario" class="modal" style="display: none">
     <div class="modal-content">
-        <span id="cerrarModalActualizarInventario" class="close">&times;</span>
-        <h2>Actualizar Inventario</h2>
-        <form id="formActualizarInventario">
-            <input type="hidden" name="id" id="actualizarInventarioId" />
-
+        <span class="close" onclick="ocultarModal('#modalRenombrarInventario')">&times;</span>
+        <h2>Renombrar Inventario</h2>
+        <form 
+            id="formRenombrarInventario"
+            action="/api/inventories/rename"
+            method="POST"
+        >
+            <input type="hidden" name="inventory_id" id="renombrarInventarioId" />
             <div>
                 <label>Nombre del inventario:</label>
-                <input type="text" name="nombre" id="actualizarInventarioNombre" required />
+                <input type="text" name="nombre" id="renombrarInventarioNombre" required />
             </div>
-
-            <div>
-                <label>Fecha:</label>
-                <input type="date" name="fecha" id="actualizarInventarioFecha" required />
-            </div>
-
             <div style="margin-top: 10px">
                 <button type="submit" class="create-btn">Guardar Cambios</button>
             </div>

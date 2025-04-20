@@ -76,12 +76,16 @@ function inicializarFormularioAjax(formSelector, options = {}) {
         // Realizar la petición AJAX
         fetch(action, fetchConfig)
             .then(response => {
-                try {
-                    return response.json();
-                } catch (e) {
-                    console.error('Error al parsear la respuesta JSON:', e);
-                    return { success: false, message: 'Error al procesar la respuesta' };
-                }
+                return response.json()
+                    .catch(e => {
+                        // Este error aparece cuando una ruta del accion de un formulario no se cuentra
+                        // Ocacionando que el servidor responda con la pagina de 404
+                        // Este html no se puede parsear a JSON, por lo que se lanza un error
+                        console.warn('No se pudo parsear el JSON, \n' + 
+                            'posiblemente este retornando un html\n' + 
+                            'Descripcion del error:', e);
+                        return { success: false, message: 'Error al procesar la respuesta' };
+                    });
             })
             .then(responseData => {
 
@@ -90,30 +94,28 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     settings.onSuccess(responseData, form);
                     
                     // Resetear formulario si está configurado
-                    if (settings.resetOnSuccess) {
+                    if (settings.resetOnSuccess) 
                         form.reset();
-                    }
                     
                     // Cerrar modal asociado si está configurado
                     if (settings.closeModalOnSuccess) {
                         const modal = form.closest('.modal');
-                        if (modal) {
+                        if (modal) 
                             modal.style.display = 'none';
-                        }
                     }
                     
                     // Redireccionar si está configurado
-                    if (settings.redirectOnSuccess) {
+                    if (settings.redirectOnSuccess) 
                         window.location.href = settings.redirectOnSuccess;
-                    }
+                    
                 } else {
                     // Acciones en caso de error
                     settings.onError(responseData, form);
 
                     // Si path existe, mostrar un error por consola
-                    if (responseData.path) {
-                        console.error(`Revise que la ruta ${responseData.path} exista.`);
-                    }
+                    if (responseData.path) 
+                        console.error(`Revise que la ruta ${responseData.path} exista.\nError al enviar el formulario ${formSelector}`);
+                    
                 }
             })
             .catch(error => {
