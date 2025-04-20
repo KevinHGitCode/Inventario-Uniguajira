@@ -33,10 +33,13 @@
         <span id="cerrarModalEditarPerfil" onclick="ocultarModal('#modalEditarPerfil')" class="close"> &times;</span>
         <h2>Editar Usuario</h2>
         </h2>
-        <form id="formEditarPerfil" 
-                action="/api/users/editProfile" 
-                method="POST" 
-                enctype="multipart/form-data">
+        <form 
+            id="formEditarPerfil" 
+            action="/api/users/editProfile" 
+            method="POST" 
+            enctype="multipart/form-data"
+            autocomplete="off"
+        >
             <input type="hidden" name="id" id="Id_Usuario" value="<?= htmlspecialchars($_SESSION['user_id']) ?>" />
 
             <div>

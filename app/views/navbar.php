@@ -78,6 +78,7 @@
                 action="/api/users/update"
                 method="POST" 
                 enctype="multipart/form-data"
+                autocomplete="off"
             >
                 <div>
                     <label for="ActualizarContraseña">Nueva Contraseña:</label>

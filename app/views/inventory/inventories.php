@@ -109,6 +109,7 @@
             id="formCrearInventario" 
             action="/api/inventories/create" 
             method="POST"
+            autocomplete="off"
         >
             <!-- TODO: este input tiene riesgo de quedar vacio si la creacion se vuelve dinamica y no llama a loadContend -->
             <input type="hidden" name="grupo_id" value="<?= $dataIdGroup ?>" required />
@@ -140,6 +141,7 @@
             id="formRenombrarInventario"
             action="/api/inventories/rename"
             method="POST"
+            autocomplete="off"
         >
             <input type="hidden" name="inventory_id" id="renombrarInventarioId" />
             <div>

@@ -70,6 +70,7 @@
                 action="/api/goods/create"
                 method="POST"
                 enctype="multipart/form-data"
+                autocomplete="off"
             >
                 <div>
                     <label for="nombreBien">Nombre:</label>
@@ -98,7 +99,7 @@
         <div class="modal-content">
             <span id="cerrarModalActualizarBien" class="close" onclick="ocultarModal('#modalActualizarBien')">&times;</span>
             <h2>Actualizar Bien</h2>
-            <form id="formActualizarBien" action="/api/goods/update" enctype="multipart/form-data">
+            <form id="formActualizarBien" action="/api/goods/update" autocomplete="off" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="actualizarId" />
 
                 <div>

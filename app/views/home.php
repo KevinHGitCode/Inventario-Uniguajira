@@ -72,7 +72,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         <div class="modal-content">
             <span class="close-modal" onclick="hideTaskModal()">&times;</span>
             <h2>Crear Nueva Tarea</h2>
-            <form id="taskForm" onsubmit="createTask(event)">
+            <form id="taskForm" autocomplete="off" onsubmit="createTask(event)">
                 <div class="form-group">
                     <label for="taskName">Nombre:</label>
                     <input type="text" id="taskName" required>
@@ -95,7 +95,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         <div class="modal-content">
             <span class="close-modal" onclick="hideEditTaskModal()">&times;</span>
             <h2>Editar Tarea</h2>
-            <form id="editTaskForm" onsubmit="updateTask(event)">
+            <form id="editTaskForm" autocomplete="off" onsubmit="updateTask(event)">
                 <input type="hidden" id="editTaskId">
                 <div class="form-group">
                     <label for="editTaskName">Nombre:</label>

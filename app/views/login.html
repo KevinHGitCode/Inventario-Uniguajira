@@ -217,7 +217,7 @@
         </div>-->
         
         <h2>Iniciar Sesión</h2>
-        <form action="/api/login" method="POST" class="FormularioAjax">
+        <form action="/api/login" method="POST">
             <!-- Campo de Usuario -->
             <div class="form-group">
                 <label for="username">Usuario</label>
@@ -255,7 +255,7 @@
     <script src="assets/js/helpers/submitForm.js"></script>
     <script>
         // Inicializar el formulario de login
-        inicializarFormularioAjax('form[action="/api/login"', {
+        inicializarFormularioAjax('form[action="/api/login"]', {
             onSuccess: () => {},
             redirectOnSuccess: '/'
         });

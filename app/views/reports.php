@@ -2,7 +2,7 @@
   <h2>Generar Reporte de Bienes</h2>
 
   <!-- Filtros -->
-  <form id="form-filtros-reportes" class="card p-3 mb-4">
+  <form id="form-filtros-reportes" class="card p-3 mb-4" autocomplete="off">
     <div class="row mb-3">
       <!-- Sede o Edificio -->
       <div class="col-md-4">
@@ -39,7 +39,7 @@
 
   <!-- Tabla de bienes seleccionables -->
   <div id="tabla-bienes" class="table-responsive d-none">
-    <form id="form-generar-reporte">
+    <form id="form-generar-reporte" autocomplete="off">
       <table class="table table-bordered table-hover">
         <thead>
           <tr>

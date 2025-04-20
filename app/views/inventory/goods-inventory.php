@@ -90,7 +90,7 @@
     <div class="modal-content">
         <span class="close" onclick="ocultarModal('#modalCrearBien')">&times;</span>
         <h2>Nuevo Bien</h2>
-        <form id="formCrearBien" action="/api/bien/create" method="POST" enctype="multipart/form-data">
+        <form id="formCrearBien" autocomplete="off" action="/api/bien/create" method="POST" enctype="multipart/form-data">
             <input type="hidden" id="inventarioIdBien" name="inventarioId" value="" />
             
             <div>

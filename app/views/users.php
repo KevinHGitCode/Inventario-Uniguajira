@@ -30,10 +30,11 @@
             >
             <h2>Nuevo Usuario</h2>
             <form
-                method="POST"
                 id="formCrearUser"
-                enctype="multipart/form-data"
                 action="/api/users/create"
+                method="POST"
+                enctype="multipart/form-data"
+                autocomplete="off"
             >
                 <div>
                     <label for="crear-nombre">Nombre:</label>
@@ -92,6 +93,7 @@
                 id="formEditarUser"
                 enctype="multipart/form-data"
                 action="/api/users/edit"
+                autocomplete="off"
             >
                 <input type="hidden" name="id" id="edit-id" />
                 <div>

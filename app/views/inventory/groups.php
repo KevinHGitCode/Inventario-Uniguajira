@@ -107,6 +107,7 @@
             id="formCrearGrupo"
             action="/api/groups/create"
             method="POST"
+            autocomplete="off"
         >
             <div>
                 <label for="nombreGrupo">Nombre del grupo:</label>
@@ -134,6 +135,7 @@
         <form 
             id="formRenombrarGrupo" 
             action="/api/groups/rename"
+            autocomplete="off"
         >
             <input type="hidden" name="id" id="grupoRenombrarId" />
 
