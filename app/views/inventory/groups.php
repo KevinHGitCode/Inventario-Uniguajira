@@ -109,8 +109,8 @@
             method="POST"
         >
             <div>
-                <label>Nombre del grupo:</label>
-                <input type="text" name="nombre" required />
+                <label for="nombreGrupo">Nombre del grupo:</label>
+                <input type="text" name="nombre" id="nombreGrupo" required />
             </div>
             <div style="margin-top: 10px">
                 <button 
@@ -138,7 +138,7 @@
             <input type="hidden" name="id" id="grupoRenombrarId" />
 
             <div>
-                <label>Nuevo Nombre:</label>
+                <label for="grupoRenombrarNombre">Nuevo Nombre:</label>
                 <input
                     type="text"
                     name="nombre"

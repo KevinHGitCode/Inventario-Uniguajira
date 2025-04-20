@@ -80,7 +80,7 @@
                 enctype="multipart/form-data"
             >
                 <div>
-                    <label>Nueva Contraseña:</label>
+                    <label for="ActualizarContraseña">Nueva Contraseña:</label>
                     <input
                         type="password"
                         name="nueva_contraseña"
@@ -90,7 +90,7 @@
                 </div>
 
                 <div>
-                    <label>Repita la nueva Contraseña:</label>
+                    <label for="ActualizarContraseñaRepetida">Repita la nueva Contraseña:</label>
                     <input
                         type="password"
                         name="confirmar_contraseña"
@@ -100,7 +100,7 @@
                 </div>
 
                 <div>
-                    <label>Digite su contraseña actual para confirmar:</label>
+                    <label for="ContraseñaActual">Digite su contraseña actual para confirmar:</label>
                     <input
                         type="password"
                         name="contraseña"

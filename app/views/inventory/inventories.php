@@ -113,8 +113,8 @@
             <!-- TODO: este input tiene riesgo de quedar vacio si la creacion se vuelve dinamica y no llama a loadContend -->
             <input type="hidden" name="grupo_id" value="<?= $dataIdGroup ?>" required />
             <div>
-                <label>Nombre del inventario:</label>
-                <input type="text" name="nombre" required />
+                <label for="nombreInventario">Nombre del inventario:</label>
+                <input type="text" name="nombre" id="nombreInventario" required />
             </div>
 
             <div style="margin-top: 10px">
@@ -143,7 +143,7 @@
         >
             <input type="hidden" name="inventory_id" id="renombrarInventarioId" />
             <div>
-                <label>Nombre del inventario:</label>
+                <label for="renombrarInventarioNombre">Nombre del inventario:</label>
                 <input type="text" name="nombre" id="renombrarInventarioNombre" required />
             </div>
             <div style="margin-top: 10px">

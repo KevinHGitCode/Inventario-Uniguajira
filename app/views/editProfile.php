@@ -40,7 +40,7 @@
             <input type="hidden" name="id" id="Id_Usuario" value="<?= htmlspecialchars($_SESSION['user_id']) ?>" />
 
             <div>
-                <label>Nombre:</label>
+                <label for="actualizarNombre">Nombre:</label>
                 <input
                     type="text"
                     name="nombre"
@@ -51,7 +51,7 @@
             </div>
 
             <div>
-                <label>Nombre Usuario:</label>
+                <label for="actualizarNombreUsuario">Nombre Usuario:</label>
                 <input
                     type="text"
                     name="nombre_usuario"
@@ -62,7 +62,7 @@
             </div>
 
             <div>
-                <label>Email:</label>
+                <label for="actualizarEmail">Email:</label>
                 <input
                     type="text"
                     name="email"
@@ -73,7 +73,7 @@
             </div>
 
             <div>
-                <label>Imagen (opcional):</label>
+                <label for="actualizarImagen">Imagen (opcional):</label>
                 <input
                     type="file"
                     name="imagen"
@@ -83,7 +83,7 @@
             </div>
 
             <div>
-                <label>Digite su contraseña para confirmar</label>
+                <label for="password">Digite su contraseña para confirmar</label>
                 <input
                     type="password"
                     name="contraseña"

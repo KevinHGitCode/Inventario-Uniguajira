@@ -94,101 +94,12 @@
             <input type="hidden" id="inventarioIdBien" name="inventarioId" value="" />
             
             <div>
-                <label>Nombre del bien:</label>
-                <input type="text" name="nombre" required />
-            </div>
-
-            <div>
-                <label>Cantidad:</label>
-                <input type="number" name="cantidad" min="1" value="1" required />
-            </div>
-
-            <div>
-                <label>Imagen:</label>
-                <input type="file" name="imagen" accept="image/*" />
+                <label for="nombreBien">Nombre del bien:</label>
+                <input type="text" name="nombre" id="nombreBien" required />
             </div>
 
             <div style="margin-top: 10px">
                 <button type="submit" class="create-btn">Guardar</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Renombrar Bien -->
-<div id="modalRenombrarBien" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalRenombrarBien')">&times;</span>
-        <h2>Renombrar Bien</h2>
-        <form id="formRenombrarBien" action="/api/bien/rename" method="POST">
-            <input type="hidden" id="renombrarBienId" name="id" value="" />
-            
-            <div>
-                <label>Nuevo nombre:</label>
-                <input type="text" id="renombrarBienNombre" name="nombre" required />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar Cambios</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Cambiar Cantidad -->
-<div id="modalCambiarCantidad" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalCambiarCantidad')">&times;</span>
-        <h2>Cambiar Cantidad</h2>
-        <form id="formCambiarCantidad" action="/api/bien/updateQuantity" method="POST">
-            <input type="hidden" id="cambiarCantidadBienId" name="id" value="" />
-            
-            <div>
-                <label>Bien:</label>
-                <input type="text" id="cambiarCantidadBienNombre" readonly />
-            </div>
-            
-            <div>
-                <label>Nueva cantidad:</label>
-                <input type="number" id="cambiarCantidadValor" name="cantidad" min="1" required />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Actualizar Cantidad</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal Mover Bien -->
-<div id="modalMoverBien" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalMoverBien')">&times;</span>
-        <h2>Mover Bien a Otro Inventario</h2>
-        <form id="formMoverBien" action="/api/bien/move" method="POST">
-            <input type="hidden" id="moverBienId" name="bienId" value="" />
-            <input type="hidden" id="moverBienInventarioActualId" name="inventarioActualId" value="" />
-            
-            <div>
-                <label>Bien:</label>
-                <input type="text" id="moverBienNombre" readonly />
-            </div>
-            
-            <div>
-                <label>Cantidad a mover:</label>
-                <input type="number" id="moverBienCantidad" name="cantidad" min="1" required />
-            </div>
-            
-            <div>
-                <label>Inventario destino:</label>
-                <select id="moverBienInventarioDestinoId" name="inventarioDestinoId" required>
-                    <option value="">Seleccione un inventario...</option>
-                    <!-- Las opciones se cargarán dinámicamente con JS -->
-                </select>
-            </div>
-
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Mover Bien</button>
             </div>
         </form>
     </div>

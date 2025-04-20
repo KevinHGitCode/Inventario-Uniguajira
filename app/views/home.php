@@ -82,7 +82,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                     <textarea id="taskDesc"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Fecha de creación:</label>
+                    <label for="taskDate">Fecha de creación:</label>
                     <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
                 </div>
                 <button type="submit" class="btn-submit">Guardar</button>
@@ -106,7 +106,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                     <textarea id="editTaskDesc"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Fecha de creación:</label>
+                    <label for="editTaskDate">Fecha de creación:</label>
                     <input type="text" id="editTaskDate" readonly>
                 </div>
                 <button type="submit" class="btn-submit">Actualizar</button>

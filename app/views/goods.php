@@ -72,19 +72,19 @@
                 enctype="multipart/form-data"
             >
                 <div>
-                    <label>Nombre:</label>
-                    <input type="text" name="nombre" required />
+                    <label for="nombreBien">Nombre:</label>
+                    <input type="text" name="nombre" id="nombreBien" required />
                 </div>
                 <div>
-                    <label>Tipo:</label>
-                    <select name="tipo" required>
+                    <label for="tipoBien">Tipo:</label>
+                    <select name="tipo" id="tipoBien" required>
                         <option value="1">Cantidad</option>
                         <option value="2">Serial</option>
                     </select>
                 </div>
                 <div>
-                    <label>Imagen:</label>
-                    <input type="file" name="imagen" accept="image/*" />
+                    <label for="imagenBien">Imagen:</label>
+                    <input type="file" name="imagen" id="imagenBien" accept="image/*" />
                 </div>
                 <div style="margin-top: 10px">
                     <button type="submit" class="create-btn">Guardar</button>
@@ -102,7 +102,7 @@
                 <input type="hidden" name="id" id="actualizarId" />
 
                 <div>
-                    <label>Nombre:</label>
+                    <label for="actualizarNombre">Nombre:</label>
                     <input
                         type="text"
                         name="nombre"
@@ -112,7 +112,7 @@
                 </div>
 
                 <div>
-                    <label>Imagen (opcional):</label>
+                    <label for="actualizarImagen">Imagen (opcional):</label>
                     <input
                         type="file"
                         name="imagen"
