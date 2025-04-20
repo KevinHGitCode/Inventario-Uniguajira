@@ -10,12 +10,14 @@ class ctlGroup  {
         $this->group = new Groups();
     }
     
+
+    // $router->add('/api/groups', 'ctlGroup', 'getAll');
     public function getAll() {  // TODO: Not used yet
         $allGrupos = $this->group->getAllGroups();
         echo json_encode($allGrupos);
     }
 
-    public function create() {  // TODO: Not used yet
+    public function create() {
         header('Content-Type: application/json');
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -31,7 +33,6 @@ class ctlGroup  {
             return;
         }
     
-        $this->group = new Groups();
         $id = $this->group->createGroup($nombre);
     
         if ($id !== false) {
@@ -42,7 +43,7 @@ class ctlGroup  {
         }
     }
     
-    public function rename() {  // TODO: Not used yet
+    public function rename() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
@@ -68,7 +69,7 @@ class ctlGroup  {
         }
     }
 
-    public function delete($id) {  // TODO: Not used yet
+    public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Método no permitido.']);

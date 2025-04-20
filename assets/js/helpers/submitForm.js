@@ -104,13 +104,16 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     
                     // Redireccionar si está configurado
                     if (settings.redirectOnSuccess) {
-                        setTimeout(() => {
-                            window.location.href = settings.redirectOnSuccess;
-                        }, 500);
+                        window.location.href = settings.redirectOnSuccess;
                     }
                 } else {
                     // Acciones en caso de error
                     settings.onError(responseData, form);
+
+                    // Si path existe, mostrar un error por consola
+                    if (responseData.path) {
+                        console.error(`Revise que la ruta ${responseData.path} exista.`);
+                    }
                 }
             })
             .catch(error => {

@@ -33,7 +33,19 @@ class Router {
         }
 
         // Si no se encuentra ninguna ruta
-        require 'app/views/errors/not-found.html';
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            require "app/views/errors/not-found.html";  // Para solicitudes GET, redirigir a la página 404
+        } else {
+            // Para otras solicitudes (POST, PUT, etc.), devolver respuesta JSON
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Ruta incorrecta', 
+                'path' => $requestUri
+            ]);
+        }
+
+        exit;
     }
 }
 
