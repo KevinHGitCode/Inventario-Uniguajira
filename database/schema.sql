@@ -18,6 +18,14 @@ CREATE INDEX idx_usuarios_nombre_usuario ON usuarios(nombre_usuario);
 CREATE INDEX idx_usuarios_email ON usuarios(email);
 CREATE INDEX idx_usuarios_rol ON usuarios(rol);
 
+
+-- AGREGAR RESTRICCIONES (COMENTADO)
+-- Validar email en usuarios
+-- ALTER TABLE usuarios 
+-- ADD CONSTRAINT check_email_format 
+-- CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$');
+
+
 -- 
 -- ---------------------------------------------------------
 --
@@ -39,6 +47,14 @@ CREATE INDEX idx_tareas_fecha ON tareas(fecha);
 CREATE INDEX idx_tareas_fecha_creacion ON tareas(fecha_creacion);
 CREATE INDEX idx_tareas_fecha_completado ON tareas(fecha_completado);
 CREATE INDEX idx_tareas_estado ON tareas(estado);
+
+-- AGREGAR RESTRICCIONES
+-- Validar fechas coherentes en tareas
+ALTER TABLE tareas
+ADD CONSTRAINT check_fecha_completado
+CHECK (estado = 'por hacer' AND fecha_completado IS NULL OR 
+       estado = 'completado' AND fecha_completado IS NOT NULL AND 
+       fecha_completado >= fecha_creacion);
 
 -- 
 -- ---------------------------------------------------------
@@ -91,12 +107,12 @@ CREATE INDEX idx_inventarios_estado_conservacion ON inventarios(estado_conservac
 
 CREATE TABLE bienes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    -- nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) COLLATE utf8mb4_0900_ai_ci NOT NULL UNIQUE,  -- Collate `ai_ci` significa "accent insensitive, case insensitive" 
     tipo ENUM('Cantidad', 'Serial') NOT NULL,  -- ENUM para tipos de bienes
     imagen VARCHAR(255)  -- Campo para almacenar la ruta de la imagen
 );
 
-CREATE INDEX idx_bienes_nombre ON bienes(nombre);
 CREATE INDEX idx_bienes_tipo ON bienes(tipo);  -- Índice para el campo ENUM
 
 -- 
@@ -131,6 +147,12 @@ CREATE TABLE bienes_cantidad (
 CREATE INDEX idx_bienes_cantidad_bien_inventario_id ON bienes_cantidad(bien_inventario_id);
 CREATE INDEX idx_bienes_cantidad_cantidad ON bienes_cantidad(cantidad);
 
+-- AGREGAR RESTRICCIONES
+-- Validar que cantidad sea positiva
+ALTER TABLE bienes_cantidad
+ADD CONSTRAINT check_cantidad_positiva
+CHECK (cantidad >= 0);
+
 -- 
 -- ---------------------------------------------------------
 --
@@ -156,6 +178,13 @@ CREATE INDEX idx_bienes_equipos_serial ON bienes_equipos(serial);
 CREATE INDEX idx_bienes_equipos_estado ON bienes_equipos(estado);
 CREATE INDEX idx_bienes_equipos_fecha_ingreso ON bienes_equipos(fecha_ingreso);
 CREATE INDEX idx_bienes_equipos_fecha_salida ON bienes_equipos(fecha_salida);
+
+
+-- AGREGAR RESTRICCIONES
+-- Validar fechas coherentes en bienes_equipos
+ALTER TABLE bienes_equipos
+ADD CONSTRAINT check_fechas_coherentes
+CHECK (fecha_salida IS NULL OR fecha_salida >= fecha_ingreso);
 
 
 -- 
