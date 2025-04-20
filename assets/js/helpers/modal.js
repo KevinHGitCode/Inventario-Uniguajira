@@ -13,7 +13,7 @@
  * Esta implementación evita problemas comunes como el cierre accidental durante la selección
  * de texto o al arrastrar elementos dentro del modal.
  * 
- * @version 3.0
+ * @version 3.1
  * @date 2025-04-20
  */
 
@@ -30,6 +30,10 @@ function mostrarModal(selectorModal) {
     
     // Mostramos el modal
     modal.style.display = "flex";
+
+    // Deshabilitar la deselección mientras el modal está abierto
+    // Esto maneja la funcionalidad en selection.js
+    allowDeselection = false;
     
     // Datos del estado del clic para este modal
     const estadoModal = {
@@ -91,5 +95,16 @@ function ocultarModal(selectorModal) {
         
         // Eliminamos la referencia del Map
         modales.delete(selectorModal);
+    }
+
+    // Volver a permitir la deselección cuando se cierra el modal
+    // allowDeselection = true;
+
+    // Retrasar la reactivación de la deselección para evitar que
+    // el mismo clic que cierra el modal cause una deselección
+    if (typeof allowDeselection !== 'undefined') {
+        setTimeout(() => {
+            allowDeselection = true;
+        }, 100); // Pequeño retraso de 100ms
     }
 }

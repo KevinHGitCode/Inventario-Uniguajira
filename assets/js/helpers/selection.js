@@ -1,5 +1,30 @@
+/**
+ * selection.js - Utilidades para manejo de selección de elementos
+ * 
+ * Este archivo contiene funciones para gestionar la selección de elementos en la aplicación.
+ * Proporciona funcionalidades para seleccionar y deseleccionar elementos, así como para
+ * actualizar la barra de control correspondiente al tipo de elemento seleccionado.
+ * 
+ * Reglas de comportamiento:
+ * - Solo se puede tener un elemento seleccionado a la vez
+ * - Al seleccionar un elemento se muestra su barra de control específica
+ * - Un elemento seleccionado se puede deseleccionar haciendo clic en él nuevamente
+ * - La selección se limpia al hacer clic fuera de cualquier elemento seleccionable
+ * - La barra de control muestra el nombre del elemento seleccionado
+ * 
+ * La implementación incluye protección contra deselección accidental cuando hay modales activos,
+ * permitiendo interacciones simultáneas entre el sistema de modales y el sistema de selección.
+ * 
+ * @version 2.0
+ * @date 2025-04-20
+ */
+
+
 // Variable para almacenar el elemento seleccionado
 let selectedItem = null;
+
+// Variable para controlar si se permite la deselección
+let allowDeselection = true;
 
 // Función para seleccionar un elemento
 function toggleSelectItem(element) {
@@ -51,6 +76,9 @@ function clearSelection() {
 
 // Manejador de eventos para clicks fuera de los elementos
 function handleOutsideClick(event) {
+    // Si la deselección no está permitida, no hacer nada
+    if (!allowDeselection) return;
+
     // Si se hace clic en la barra de control, no deseleccionar
     if (event.target.closest('.control-bar')) return;
     
