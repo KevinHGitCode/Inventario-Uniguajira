@@ -86,7 +86,10 @@ function abrirInventario(idInventory, scrollUpRequired = true) {
 
         iniciarBusqueda('searchGoodInventory');
         localStorage.setItem('openInventory', idInventory);
-        window.scrollTo(0, 0);
+        initGoodsInventoryFunctions();
+
+        if (scrollUpRequired)
+            window.scrollTo(0, 0);
     })
     .catch(error => {
         console.error('Error:', error);

@@ -31,15 +31,13 @@
 <div id="control-bar-good" class="control-bar">
     <div class="selected-name">1 seleccionado</div>
     <div class="control-actions">
-        <button class="control-btn" title="Renombrar" onclick="btnRenombrarBien()">
-            <i class="fas fa-pen"></i>
-        </button>
         <button class="control-btn" title="Cambiar cantidad" onclick="btnCambiarCantidadBien()">
             <i class="fas fa-sort-numeric-up"></i>
         </button>
-        <button class="control-btn" title="Mover" onclick="btnMoverBien()">
+        <!-- TODO: Not implement yet -->
+        <!-- <button class="control-btn" title="Mover" onclick="btnMoverBien()">
             <i class="fas fa-exchange-alt"></i>
-        </button>
+        </button> -->
         <button class="control-btn" title="Eliminar" onclick="btnEliminarBien()">
             <i class="fas fa-trash"></i>
         </button>
@@ -90,16 +88,105 @@
     <div class="modal-content">
         <span class="close" onclick="ocultarModal('#modalCrearBien')">&times;</span>
         <h2>Nuevo Bien</h2>
-        <form id="formCrearBien" autocomplete="off" action="/api/bien/create" method="POST" enctype="multipart/form-data">
-            <input type="hidden" id="inventarioIdBien" name="inventarioId" value="" />
-            
-            <div>
+        <form id="formCrearBien" autocomplete="off" action="/api/goods-inventory/create" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="inventarioId" name="inventarioId" />
+            <div id="search-container">
+                <input type="hidden" id="bien_id" name="bien_id"  />
                 <label for="nombreBien">Nombre del bien:</label>
-                <input type="text" name="nombre" id="nombreBien" required />
+                <input type="text" name="nombre" id="nombreBien" class="form-control" placeholder="Buscar..." required />
+                <ul class="suggestions"></ul>
+            </div>
+
+            <div style="display: none">
+                <label for="cantidadBien">Cantidad:</label>
+                <input type="number" name="cantidad" id="cantidadBien" min="1" />
+            </div>
+
+            <div style="display: none">
+                <label for="descripcionBien">Descripción:</label>
+                <textarea name="descripcion" id="descripcionBien"></textarea>
+            </div>
+
+            <div style="display: none">
+                <label for="marcaBien">Marca:</label>
+                <input type="text" name="marca" id="marcaBien" />
+            </div>
+
+            <div style="display: none">
+                <label for="modeloBien">Modelo:</label>
+                <input type="text" name="modelo" id="modeloBien" />
+            </div>
+
+            <div style="display: none">
+                <label for="serialBien">Serial:</label>
+                <input type="text" name="serial" id="serialBien" />
+            </div>
+
+            <div style="display: none">
+                <label for="estadoBien">Estado:</label>
+                <select name="estado" id="estadoBien">
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                    <option value="en mantenimiento">En mantenimiento</option>
+                </select>
+            </div>
+
+            <div style="display: none">
+                <label for="colorBien">Color:</label>
+                <input type="text" name="color" id="colorBien" />
+            </div>
+
+            <div style="display: none">
+                <label for="condicionBien">Condición técnica:</label>
+                <input type="text" name="condicion_tecnica" id="condicionBien" />
+            </div>
+
+            <div style="display: none">
+                <label for="fechaIngresoBien">Fecha de ingreso:</label>
+                <input type="date" name="fecha_ingreso" id="fechaIngresoBien" />
             </div>
 
             <div style="margin-top: 10px">
                 <button type="submit" class="create-btn">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Modal para Cambiar Cantidad de Bien -->
+<div id="modalCambiarCantidadBien" class="modal" style="display: none">
+    <div class="modal-content">
+        <span class="close" onclick="ocultarModal('#modalCambiarCantidadBien')">&times;</span>
+        <h2>Cambiar Cantidad</h2>
+        <form id="formCambiarCantidadBien" action="/api/goods-inventory/update-quantity" method="POST" autocomplete="off">
+            <input type="hidden" name="bien_id" id="cambiarCantidadBienId" />
+            <div>
+                <label for="cantidadBien">Nueva cantidad:</label>
+                <input type="number" min="0" name="cantidad" id="cantidadBien" required />
+            </div>
+            <div style="margin-top: 10px">
+                <button type="submit" class="create-btn">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Mover Bien -->
+<div id="modalMoverBien" class="modal" style="display: none">
+    <div class="modal-content">
+        <span class="close" onclick="ocultarModal('#modalMoverBien')">&times;</span>
+        <h2>Mover Bien</h2>
+        <form id="formMoverBien" action="/api/goods-inventory/move" method="POST" autocomplete="off">
+            <input type="hidden" name="bien_id" id="moverBienId" />
+            <div>
+                <label for="inventarioDestinoId">Inventario destino:</label>
+                <select name="inventario_destino_id" id="inventarioDestinoId" required>
+                    <!-- Las opciones se cargarán dinámicamente con JavaScript -->
+                </select>
+            </div>
+            <div style="margin-top: 10px">
+                <button type="submit" class="create-btn">Mover Bien</button>
             </div>
         </form>
     </div>

@@ -4,6 +4,24 @@ require_once 'app/models/Goods.php';
 require_once 'app/helpers/imageHelper.php';
 
 class ctlGoods {
+
+    public function getJson() {
+        header('Content-Type: application/json');
+        $goodsModel = new Goods();
+        $allGoods = $goodsModel->getAllGoods();
+        
+        // Filtrar solo id, bien (nombre) y tipo
+        $filteredGoods = array_map(function($good) {
+            return [
+                'id' => $good['id'],
+                'bien' => $good['nombre'],
+                'tipo' => $good['tipo']
+            ];
+        }, $allGoods);
+        
+        echo json_encode($filteredGoods);
+    }
+
     public function create() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = trim($_POST['nombre']);
@@ -64,7 +82,6 @@ class ctlGoods {
             echo "Método no permitido.";
         }
     }
-    
 
 
     public function delete($id) {
@@ -98,7 +115,6 @@ class ctlGoods {
             echo json_encode(['success' => false, 'message' => 'Error al eliminar el bien.']);
         }
     }
-    
     
 
     public function update() {
