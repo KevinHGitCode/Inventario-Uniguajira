@@ -67,6 +67,7 @@
     <script src="assets/js/goods.js"></script>
     <script src="assets/js/helpers/modal.js"></script>
     <script src="assets/js/helpers/selection.js"></script>
+    <script src="assets/js/helpers/autocomplete.js"></script>
     <?php endif; ?>
 
     <script src="assets/js/user.js"></script>
