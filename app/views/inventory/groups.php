@@ -14,7 +14,9 @@
                     type="text"
                     placeholder="Buscar o agregar grupos..."
                 />
-                <i class="search-icon fas fa-search"></i>
+                <svg class="search-icon">
+                    <use href="/assets/sprites.svg#search" />
+                </svg>
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
@@ -54,7 +56,9 @@
                     >
                         <!-- inicio contenido -->
                         <div class="card-left">
-                            <i class="fas fa-layer-group icon-folder"></i>
+                            <svg class="icon-folder">
+                                <use href="/assets/sprites.svg#layer-group" />
+                            </svg>
                         </div>
                         
                         <div class="card-center">

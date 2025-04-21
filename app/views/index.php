@@ -11,10 +11,12 @@
     <link href="assets/images/favicon-uniguajira-32x32.webp" rel="icon" type="image/png" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Este font-awesome sirve para los iconos de inventario -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> -->
+    <link rel="preload" href="/assets/sprites.svg" as="image" type="image/svg+xml">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600&family=Space+Grotesk:wght@400;500&display=swap">
-    <!-- "'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'" -->
     <link rel="stylesheet" href="assets/css/.get.css">
     <link rel="stylesheet" href="assets/css/components/.get.css">
     <link rel="stylesheet" href="assets/css/responsive/.get.css">
