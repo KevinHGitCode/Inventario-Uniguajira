@@ -14,21 +14,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600&family=Space+Grotesk:wght@400;500&display=swap">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/navbar.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/toast.css">
-    <link rel="stylesheet" href="assets/css/userMenu.css">
-    <link rel="stylesheet" href="assets/css/home.css">
-    <link rel="stylesheet" href="assets/css/profile.css">
-    <link rel="stylesheet" href="assets/css/goods.css">
-    <link rel="stylesheet" href="assets/css/components.css">
-    <link rel="stylesheet" href="assets/css/tasks.css">
-    <link rel="stylesheet" href="assets/css/selection.css">
-    <link rel="stylesheet" href="assets/css/responsive/responsive.css">
-    <link rel="stylesheet" href="assets/css/responsive/goodsResponsive.css">
-    <link rel="stylesheet" href="assets/css/responsive/inventoryResponsive.css">
+    <!-- "'https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap'" -->
+    <link rel="stylesheet" href="assets/css/.get.css">
+    <link rel="stylesheet" href="assets/css/components/.get.css">
+    <link rel="stylesheet" href="assets/css/responsive/.get.css">
 
 </head>
 
