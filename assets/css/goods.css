@@ -12,25 +12,26 @@
 }
 
 .bien-card {
-    background: #ffffff;
+    background: #fff;
     padding: 15px;
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
     border: 2px solid #e0e0e0; /* Borde sutil y elegante */
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .bien-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 8px rgb(0 0 0 / 40%);
 }
 
 .bien-image{
     width: 120px;
     height: 100px;
+
     /* border-radius: 12px; */
     object-fit: cover;
     margin-right: 16px;
@@ -40,8 +41,10 @@
 .bien-icon{
     width: 16px;
     height: 16px;
+
     /* border-radius: 12px; */
     object-fit: cover;
+
     /* margin-right: 16px;
     border-radius: 8px; */
 }
@@ -53,6 +56,7 @@
     h3 {
         font-size: 20px;
         margin: 0;
+
         /* font-weight: bold; */
     }
 
@@ -78,90 +82,5 @@
     a:hover {
         color: #a3333d;
         cursor: pointer;
-    }
-}
-
-
-/* Estilo del modal */
-/* Fondo del modal */
-.modal {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-.modal-content h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.modal-content form > div {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-content label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.modal-content input,
-.modal-content select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.modal-content .create-btn {
-    background-color: #a31927;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.modal-content .create-btn:hover {
-    background-color: #45a049;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
     }
 }

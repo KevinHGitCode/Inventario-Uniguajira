@@ -112,6 +112,7 @@
 
 
 /* ------------------------ */
+
 /* Contenedor principal de la cuadrícula */
 .card-grid {
     display: grid;
@@ -124,13 +125,13 @@
 
 /* Estilos para las tarjetas individuales */
 .card {
-    background: #ffffff;
+    background: #fff;
     border-radius: 12px;
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
     border: 2px solid #e0e0e0;
     padding: 16px;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -139,7 +140,7 @@
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 30%);
 }
 
 /* Sección izquierda - Icono */

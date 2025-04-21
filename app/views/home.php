@@ -65,7 +65,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         </details>
     <?php endif; ?>
 
-
+<!-- TODO: Hacer que los modales usen las clases correstas -->
     
     <!-- Modal para crear tareas -->
     <div id="taskModal" class="modal" style="display:none;">

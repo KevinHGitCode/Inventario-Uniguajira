@@ -1,12 +1,10 @@
-/*Colors*/
+/* Colors */
 :root {
     --background-color: #F8FAFC;
     --text-color: #4A5568;
-
     --text-selected-color: #434395d2;
     --background-selected: #e1e3ec;
     --background-hover: #e4edf765;
-
     --border-color: #7d7f82;
 }
 
@@ -28,10 +26,12 @@
     background-color: var(--background-color);
     transition: width 0.5s ease;
 }
+
 .sidebar.menu-toggle {
     /* Cambia el ancho del sidebar cuando se activa el toggle del menú */
     width: 14rem;
 }
+
 .sidebar a {
     /* Estilo de los enlaces dentro del sidebar */
     display: flex;
@@ -52,12 +52,14 @@
     background-color: var(--background-selected);
     font-weight: 500;
 }
+
 .sidebar a.search {
     /* Estilo del enlace de búsqueda */
     padding: 1rem 0.7rem;
     border-bottom: 2px solid var(--border-color);
     margin-bottom: 0.2rem;
 }
+
 .sidebar img {
     /* Estilo de las imágenes dentro del sidebar */
     width: 1.6rem;

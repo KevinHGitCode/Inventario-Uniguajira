@@ -1,7 +1,6 @@
-/*Colors*/
+/* Colors */
 :root {
     --border-color: #E6E9ED;
-
     --border-radius: 8px;
 }
 
@@ -10,7 +9,7 @@
  */
 
 
-/*Menu de Usuario*/
+/* Menu de Usuario */
 .user-menu {
     /* border: 2px solid red; */
     position: fixed;
@@ -24,7 +23,7 @@
     position: absolute;
     right: 0;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
     border-radius: var(--border-radius);
     transition: transform 0.2s ease, opacity 0.2s ease;
     transform: scale(1);
@@ -33,6 +32,7 @@
 }
 
 /* Actualización: Usar solo la clase 'hidden' */
+
 /* TODO: Actualizar la clase hidden por otro nombre */
 .user-menu-content.hidden {
     transform: scale(0.2);
@@ -59,6 +59,7 @@
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
 }
+
 .user-menu-content button:last-child {
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
@@ -75,4 +76,3 @@
     gap: 8px;
     text-decoration: none;
 }
-

@@ -1,4 +1,4 @@
-@media (max-width: 500px) {
+@media (width <= 500px) {
     .top-bar {
         flex-direction: column;
         align-items: stretch;
@@ -26,7 +26,7 @@
     }
 
     .bien-image {
-        margin: 0 0 10px 0;
+        margin: 0 0 10px;
     }
 
     .actions {

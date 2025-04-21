@@ -78,23 +78,6 @@
     margin-bottom: 8px;
 }
 
-.create-btn {
-    margin-top: 15px;
-    padding: 10px 30px;
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.create-btn:hover {
-    background-color: #357ABD;
-}
-
 .perfil-img {
     width: 300px;
     height: 300px;
