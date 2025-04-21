@@ -1,4 +1,5 @@
 .container-perfil {
+    height: 100%;
     width: 100%;
     max-width: 800px;
     margin: 50px auto;
@@ -11,19 +12,19 @@
 }
 
 .card-perfil {
-    background: #ffffff;
+    background: #fff;
     padding: 10px;
     border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
     border: 3px solid #e0e0e0; /* Borde sutil y elegante */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-perfil:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgb(0 0 0 / 20%);
     transform: translateY(-5px);
 }
 
@@ -36,14 +37,16 @@
 }
 
 .perfil-img {
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto;
     border: 5px solid #f5f5f5;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 10%);
 }
+
+
 
 .perfil-img img {
     width: 100%;
@@ -76,15 +79,4 @@
     font-size: 16px;
     color: #888;
     margin-bottom: 8px;
-}
-
-.perfil-img {
-    width: 300px;
-    height: 300px;
-    object-fit: cover;
-    border: 3px solid #dee2e6;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    display: block;
-    margin: 0 auto 1rem auto;
 }

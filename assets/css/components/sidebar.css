@@ -12,7 +12,6 @@
 
 /* Sidebar */
 .sidebar {
-    /* Establece el margen superior, ancho, altura y posición fija del sidebar */
     margin-top: 4rem;
     width: 4rem;
     height: 100%;
@@ -27,13 +26,13 @@
     transition: width 0.5s ease;
 }
 
+/* Cambia el ancho del sidebar cuando se activa el toggle del menú */
 .sidebar.menu-toggle {
-    /* Cambia el ancho del sidebar cuando se activa el toggle del menú */
     width: 14rem;
 }
 
+/* Estilo de los enlaces dentro del sidebar */
 .sidebar a {
-    /* Estilo de los enlaces dentro del sidebar */
     display: flex;
     align-items: center;
     gap: 1.3rem;
@@ -53,15 +52,7 @@
     font-weight: 500;
 }
 
-.sidebar a.search {
-    /* Estilo del enlace de búsqueda */
-    padding: 1rem 0.7rem;
-    border-bottom: 2px solid var(--border-color);
-    margin-bottom: 0.2rem;
-}
-
 .sidebar img {
-    /* Estilo de las imágenes dentro del sidebar */
     width: 1.6rem;
 }
 

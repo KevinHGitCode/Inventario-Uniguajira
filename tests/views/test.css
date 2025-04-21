@@ -1,0 +1,19 @@
+.zxy-custom-block {
+    background-color: yellow;
+    padding: 10px;
+}
+
+.zxy-random-paragraph {
+    color: green;
+    font-weight: bold;
+}
+
+.zxy-btn-test {
+    background-color: blue;
+    color: white;
+    border: none;
+}
+
+.zxy-unused-class {
+    display: none;
+}
