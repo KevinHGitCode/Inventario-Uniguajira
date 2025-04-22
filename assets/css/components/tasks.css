@@ -16,13 +16,6 @@
     box-sizing: border-box; /* Incluye padding en el ancho */
 }
 
-@media (width <= 768px) {
-    .container-list-task {
-        grid-template-columns: 1fr;
-        width: 100%;
-    }
-}
-
 /* Efecto hover de tarjetas */
 .task-card:hover {
     transform: translateY(-3px);

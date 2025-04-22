@@ -104,21 +104,3 @@
     background-position: center;
     z-index: 1;
 }
-
-/* Mejoras responsive para la barra de control */
-@media (width <= 768px) {
-    .control-bar {
-        padding: 8px 12px;
-        flex-wrap: wrap;
-    }
-    
-    .selected-name {
-        margin-bottom: 4px;
-        flex-basis: 100%;
-    }
-    
-    .control-actions {
-        flex-basis: 100%;
-        justify-content: space-between;
-    }
-}
