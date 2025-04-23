@@ -173,46 +173,18 @@ class User extends Database {
         }
     }
 
-    // TODO: Problema, el ultimo acceso no se guarda como la hora real
-    // explicaion: la fecha se guarda pero la hora es diferente
     public function updateUltimoAcceso($id) {
         try {
             $query = "UPDATE usuarios SET fecha_ultimo_acceso = NOW() WHERE id = ?";
             $stmt = $this->connection->prepare($query);
             $stmt->bind_param("i", $id);
             $stmt->execute();
+            return $stmt->affected_rows > 0;
         } catch (Exception $e) {
-            throw new Exception("Error al actualizar el último acceso: " . $e->getMessage());
+            return false;
         }
     }
 
-    /**
-     * Elimina un usuario por su ID.
-     *
-     * @param int $id ID del usuario.
-     * @return string Mensaje de éxito o de que no se encontró el usuario.
-     * @throws Exception Si ocurre un error al eliminar el usuario o si se intenta eliminar el usuario con ID 1.
-     */
-    // public function deleteUser($id) {
-    //     try {
-    //         if ($id == 1) {
-    //             throw new Exception("El usuario con ID 1 no puede ser eliminado.");
-    //         }
-
-    //         $query = "DELETE FROM usuarios WHERE id = ?";
-    //         $stmt = $this->connection->prepare($query);
-    //         $stmt->bind_param("i", $id);
-    //         $stmt->execute();
-
-    //         if ($stmt->affected_rows > 0) {
-    //             return "Usuario eliminado exitosamente.";
-    //         } else {
-    //             return "No se encontró un usuario con el ID proporcionado.";
-    //         }
-    //     } catch (Exception $e) {
-    //         throw new Exception("Error al eliminar el usuario: " . $e->getMessage());
-    //     }
-    // }
 
     public function deleteUser($id) {
         // Protección para el usuario con ID 1
@@ -242,9 +214,6 @@ class User extends Database {
      * @return array|false Datos del usuario si la autenticación es exitosa, false en caso contrario.
      * @throws Exception Si ocurre un error al autenticar al usuario.
      */
-    // TODO: Actualizar el metodo, a autenticacion debe ser con nombre de usuario o email
-    // TODO: No debe regresar la contraseña
-    // TODO: Debe distinguir entre mayusculas y minusculas
     public function authentication($identificador, $contraseña) {
         try {
             // Consulta para buscar al usuario por nombre (sensible a mayúsculas y minúsculas)

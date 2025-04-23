@@ -28,11 +28,47 @@ class Database {
             die("Connection failed: " . $this->connection->connect_error);
         }
         // echo "Connected successfully";
+
+        // Establecer la zona horaria para esta conexión
+        // Esto es para colombia pero no funciona en otros paises
+        // $this->connection->query("SET time_zone = '-05:00'"); // Ajusta a tu zona horaria (ejemplo: GMT-5)
+        $this->setTimezone();
+        // Establecer el usuario actual si está disponible
+        if (isset($_SESSION['user_id'])) {
+            $userId = (int)$_SESSION['user_id'];
+            $this->connection->query("SET @usuario_actual = $userId");
+        }
     }
 
     public function getConnection() {
         return $this->connection;
     }
+
+    public function setTimezone() {
+        // Verificar si tenemos el offset de zona horaria en la sesión
+        if (isset($_SESSION['timezone_offset'])) {
+            $timezone_offset = $this->connection->real_escape_string($_SESSION['timezone_offset']);
+            
+            // Validar que el formato sea correcto (+/-HH:MM)
+            if (preg_match('/^[+-]\d{2}:\d{2}$/', $timezone_offset)) {
+                // Establecer la zona horaria para esta conexión
+                $this->connection->query("SET time_zone = '$timezone_offset'");
+                // echo "Zona horaria establecida: $timezone_offset";
+            }
+        } 
+        // Si no hay offset en la sesión o no es válido, usar una zona horaria predeterminada
+        else {
+            $this->connection->query("SET time_zone = '-05:00'"); // Zona horaria predeterminada (GMT-5)
+        }
+        
+        // Si quieres verificar que se aplicó correctamente
+        /*
+        $result = $this->connection->query("SELECT NOW() as current_time");
+        $row = $result->fetch_assoc();
+        echo "Hora actual del servidor con zona horaria aplicada: " . $row['current_time'];
+        */
+    }
+    
 
     public function __destruct() {
         $this->connection->close();

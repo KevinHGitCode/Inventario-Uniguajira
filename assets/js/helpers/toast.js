@@ -22,7 +22,7 @@ function showToast(msg) {
     
     const toastElement = document.getElementById(toastId);
     const toast = new bootstrap.Toast(toastElement, {
-        delay: 3000 // Duración de 3 segundos
+        delay: 5000 // Duración de 3 segundos
     });
     toast.show();
     

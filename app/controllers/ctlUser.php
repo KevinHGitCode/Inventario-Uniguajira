@@ -25,6 +25,7 @@ class ctlUser {
         $this->userModel = new User();
     }
 
+
     /**
      * Método para iniciar sesión.
      * 
@@ -56,8 +57,13 @@ class ctlUser {
                 return;
             }
     
+            
             // Iniciar sesión y establecer datos de usuario
             session_start();
+            // Establecer la zona horaria antes
+            $_SESSION['timezone_offset'] = $_POST['timezone_offset'];
+            $_SESSION['timezone_name'] = $_POST['timezone_name'];
+            $this->userModel->setTimezone();
             $_SESSION['user_id'] = $dataUser['id'];
             $_SESSION['user_name'] = $dataUser['nombre'];
             $_SESSION['user_username'] = $dataUser['nombre_usuario'];
@@ -72,7 +78,7 @@ class ctlUser {
             echo json_encode([
                 'success' => true, 
                 'message' => 'Inicio de sesión exitoso',
-                'user' => [
+                'user' => [  // quitar luego
                     'id' => $dataUser['id'],
                     'nombre' => $dataUser['nombre'],
                     'rol' => $dataUser['rol']

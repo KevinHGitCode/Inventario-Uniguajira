@@ -68,7 +68,7 @@ function btnMoverBien() {
 }
 
 // Función para eliminar un bien directamente (alternativa al modal)
-function eliminarBien(idBien) {
+function eliminarBienInventario(idBien) {
     eliminarRegistro({
         url: `/api/goods-inventory/delete/${idBien}`,
         onSuccess: (response) => {
