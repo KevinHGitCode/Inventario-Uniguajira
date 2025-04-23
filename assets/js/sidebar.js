@@ -139,6 +139,7 @@ window.onload = () => {
         loadContent(`/${lastSelected}`);
     } else {
         console.log('No hay elemento guardado o no es válido, cargando la opcion "home".');
+        document.getElementById('home').classList.add('selected');
         loadContent('/home');
     }
 };

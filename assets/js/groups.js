@@ -77,10 +77,10 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
         if (scrollUpRequired)
             window.scrollTo(0, 0);  
     })
-    .catch(error => {
-        console.error('Error:', error);
-        divInventories.innerHTML = '<p>Error al cargar los inventarios</p>';
-    });
+    // .catch(error => {
+    //     console.error('Error:', error);
+    //     divInventories.innerHTML = '<p>Error al cargar los inventarios</p>';
+    // });
 }
 
 // Función para cerrar grupo (mejorada)

@@ -47,7 +47,7 @@ class Groups extends Database {
             SELECT 
                 i.id as id, 
                 i.nombre as nombre, 
-                i.responsable_id as responsable_id, 
+                i.responsable as responsable, 
                 i.fecha_modificacion as fecha_modificacion, 
                 i.estado_conservacion as estado_conservacion,
                 COUNT(DISTINCT b.id) AS cantidad_tipos_bienes,
@@ -58,7 +58,7 @@ class Groups extends Database {
             LEFT JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
             LEFT JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
             WHERE i.grupo_id = ?
-            GROUP BY i.id, i.nombre, i.responsable_id, i.fecha_modificacion, i.estado_conservacion
+            GROUP BY i.id, i.nombre, i.responsable, i.fecha_modificacion, i.estado_conservacion
         ");
         $stmt->bind_param("i", $groupId);
         $stmt->execute();

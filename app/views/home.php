@@ -64,55 +64,52 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         </div>
         </details>
     <?php endif; ?>
-
-<!-- TODO: Hacer que los modales usen las clases correstas -->
     
-    <!-- Modal para crear tareas -->
-    <div id="taskModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-modal" onclick="hideTaskModal()">&times;</span>
-            <h2>Crear Nueva Tarea</h2>
-            <form id="taskForm" autocomplete="off" onsubmit="createTask(event)">
-                <div class="form-group">
-                    <label for="taskName">Nombre:</label>
-                    <input type="text" id="taskName" required>
-                </div>
-                <div class="form-group">
-                    <label for="taskDesc">Descripción:</label>
-                    <textarea id="taskDesc"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="taskDate">Fecha de creación:</label>
-                    <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
-                </div>
-                <button type="submit" class="btn-submit">Guardar</button>
-            </form>
-        </div>
+<!-- Modal para crear tareas -->
+<div id="taskModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="hideTaskModal()">&times;</span>
+        <h2>Crear Nueva Tarea</h2>
+        <form id="taskForm" autocomplete="off" onsubmit="createTask(event)">
+            <div>
+                <label for="taskName">Nombre:</label>
+                <input type="text" id="taskName" required>
+            </div>
+            <div>
+                <label for="taskDesc">Descripción:</label>
+                <textarea id="taskDesc"></textarea>
+            </div>
+            <div>
+                <label for="taskDate">Fecha de creación:</label>
+                <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
+            </div>
+            <button type="submit" class="create-btn">Guardar</button>
+        </form>
     </div>
+</div>
 
-    <!-- Modal para editar tareas -->
-    <div id="editTaskModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-modal" onclick="hideEditTaskModal()">&times;</span>
-            <h2>Editar Tarea</h2>
-            <form id="editTaskForm" autocomplete="off" onsubmit="updateTask(event)">
-                <input type="hidden" id="editTaskId">
-                <div class="form-group">
-                    <label for="editTaskName">Nombre:</label>
-                    <input type="text" id="editTaskName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskDesc">Descripción:</label>
-                    <textarea id="editTaskDesc"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="editTaskDate">Fecha de creación:</label>
-                    <input type="text" id="editTaskDate" readonly>
-                </div>
-                <button type="submit" class="btn-submit">Actualizar</button>
-            </form>
-        </div>
+<!-- Modal para editar tareas -->
+<div id="editTaskModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="hideEditTaskModal()">&times;</span>
+        <h2>Editar Tarea</h2>
+        <form id="editTaskForm" autocomplete="off" onsubmit="updateTask(event)">
+            <input type="hidden" id="editTaskId">
+            <div>
+                <label for="editTaskName">Nombre:</label>
+                <input type="text" id="editTaskName" required>
+            </div>
+            <div>
+                <label for="editTaskDesc">Descripción:</label>
+                <textarea id="editTaskDesc"></textarea>
+            </div>
+            <div>
+                <label for="editTaskDate">Fecha de creación:</label>
+                <input type="text" id="editTaskDate" readonly>
+            </div>
+            <button type="submit" class="create-btn">Actualizar</button>
+        </form>
     </div>
-
+</div>
 
 <?php endif; ?>
