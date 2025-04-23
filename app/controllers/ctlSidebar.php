@@ -1,5 +1,5 @@
 <?php
-require_once 'app/controllers/sessionCheck.php';
+require_once __DIR__ . '/sessionCheck.php';
 
 /**
  * Controlador para manejar las vistas de la barra lateral.

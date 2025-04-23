@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/Groups.php';
 
 
@@ -34,7 +34,7 @@ class ctlGroup  {
         }
     
         $id = $this->group->createGroup($nombre);
-    
+        
         if ($id !== false) {
             echo json_encode(['success' => true, 'message' => 'Grupo creado exitosamente.', 'id' => $id]);
         } else {

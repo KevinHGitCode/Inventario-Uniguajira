@@ -54,7 +54,8 @@ class ctlView {
      */
     public function Profile() {
         //obtener datos de la sesión, incluyendo todos los atributos del usuario
-        session_start();
+        require_once __DIR__ . '/sessionCheck.php';
+
         if (isset($_SESSION['user_id'])) {
             $user_id = $_SESSION['user_id'];
             $user_name = $_SESSION['user_name'];

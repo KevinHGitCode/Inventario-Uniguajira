@@ -5,6 +5,10 @@
 -- 4. Insertar los tipos de bienes
 -- 5. Insertar los bienes en cada salón inventario
 
+-- Este archivo es una trasaccion
+-- El commit esta al final
+START TRANSACTION;
+
 -- 1. Insertar usuarios
 INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol)
 VALUES 
@@ -101,7 +105,7 @@ VALUES
 -- 4. Insertar los tipos de bienes
 INSERT INTO bienes (id, nombre, tipo, imagen)
 VALUES 
-    (1, 'Pupitres', 'Cantidad'. 'assets/uploads/img/goods/img_6805e94287b04.png'),
+    (1, 'Pupitres', 'Cantidad', 'assets/uploads/img/goods/img_6805e94287b04.png'),
     (2, 'Tableros', 'Cantidad', 'assets/uploads/img/goods/img_67fb3abe51fcf.png'),
     (3, 'Abanicos de techo', 'Cantidad', 'assets/uploads/img/goods/img_67fb35f2cc3e3.png'),
     (4, 'Escritorio de docente', 'Cantidad', 'assets/uploads/img/goods/img_67fb350ce3c8d.png'),
@@ -314,3 +318,5 @@ VALUES
     (73, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN023', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
     (73, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN024', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
     (73, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN025', 'activo', 'Negro', 'Buen estado', '2025-03-31');
+
+    COMMIT;

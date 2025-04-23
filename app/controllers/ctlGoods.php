@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/Goods.php';
 require_once 'app/helpers/imageHelper.php';
 

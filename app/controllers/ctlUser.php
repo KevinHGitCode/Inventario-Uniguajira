@@ -116,27 +116,6 @@ class ctlUser {
     }
 
     /**
-     * Método para obtener el perfil de un usuario.
-     * 
-     * Este método recupera la información del perfil de un usuario específico.
-     * 
-     * @TODO: Implementar la lógica para obtener los datos del usuario desde el modelo.
-     */
-    public function profile() {
-        // Validar si existe el parámetro necesario
-        if (!isset($_GET['id'])) {
-            echo "Error: Parámetro faltante para obtener el perfil.";
-            return;
-        }
-
-        // Obtener parámetros desde $_GET
-        $id = $_GET['id'];
-
-        // Validar y procesar los datos
-        echo "Método de perfil llamado para el ID: $id";
-    }
-
-    /**
      * Método para editar la información de un usuario.
      * 
      * Este método actualiza los datos de un usuario existente en el sistema.
