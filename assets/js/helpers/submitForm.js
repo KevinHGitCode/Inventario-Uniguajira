@@ -5,6 +5,7 @@
  * 
  * @param {string} formSelector - Selector CSS para identificar el/los formulario(s) (ej: ".FormularioAjax")
  * @param {Object} options - Opciones de configuración
+ * @param {Function} options.onBefore - Función llamada antes de enviar la petición, puede modificar o validar datos
  * @param {Function} options.onSuccess - Función llamada cuando el servidor responde exitosamente
  * @param {Function} options.onError - Función llamada cuando ocurre un error
  * @param {boolean} options.showConfirm - Mostrar diálogo de confirmación antes de enviar (default: false)
@@ -12,17 +13,24 @@
  * @param {boolean} options.resetOnSuccess - Resetear el formulario después de éxito (default: false)
  * @param {boolean} options.closeModalOnSuccess - Cerrar modal asociado (el modal contenedor a de tener la clase modal) (default: false)
  * @param {string} options.redirectOnSuccess - URL para redireccionar después de éxito
+ * @param {Object} options.headers - Headers HTTP adicionales para la petición
+ * @param {string} options.contentType - Tipo de contenido a enviar (default: null, se usará FormData)
+ * @param {Object|Function} options.customBody - Objeto o función que retorna el body personalizado
  */
 function inicializarFormularioAjax(formSelector, options = {}) {
     // Opciones por defecto
     const defaultOptions = {
+        onBefore: null, // Nueva opción para ejecutar código antes del envío
         onSuccess: response => showToast(response),
         onError: error => showToast(error),
         showConfirm: false,
         confirmMessage: '¿Estás seguro de enviar este formulario?',
         resetOnSuccess: false,
         closeModalOnSuccess: false,
-        redirectOnSuccess: null
+        redirectOnSuccess: null,
+        headers: {}, // Nuevo: headers personalizados
+        contentType: null, // Nuevo: tipo de contenido personalizado
+        customBody: null // Nuevo: body personalizado (objeto o función)
     };
     
     // Combinar opciones default con las proporcionadas
@@ -52,20 +60,72 @@ function inicializarFormularioAjax(formSelector, options = {}) {
             return; // El usuario canceló el envío
         }
         
-        // Crear objeto FormData con los datos del formulario
-        const formData = new FormData(this);
+        // Referencia al formulario para usar en promesas
+        const form = this;
         
         // Obtener método y acción del formulario
         const method = this.getAttribute('method') || 'POST';
         const action = this.getAttribute('action');
         
-        // Referencia al formulario para usar en promesas
-        const form = this;
+        // Preparar headers
+        const headers = {
+            // Headers predeterminados
+            'X-Requested-With': 'XMLHttpRequest',
+            ...settings.headers
+        };
+        
+        // Preparar el body según las opciones
+        let body;
+        
+        // Si hay una función o objeto customBody, usarlo
+        if (settings.customBody) {
+            if (typeof settings.customBody === 'function') {
+                // Si es una función, ejecutarla pasando el formulario
+                body = settings.customBody(form);
+            } else {
+                // Si es un objeto, usarlo directamente
+                body = settings.customBody;
+            }
+            
+            // Si se especificó un contentType y no está ya en los headers
+            if (settings.contentType && !headers['Content-Type']) {
+                headers['Content-Type'] = settings.contentType;
+                
+                // Si es application/json y el body no es string, convertirlo
+                if (settings.contentType === 'application/json' && typeof body !== 'string') {
+                    body = JSON.stringify(body);
+                }
+            }
+        } else {
+            // Comportamiento por defecto: usar FormData
+            body = new FormData(form);
+        }
+        
+        // Ejecutar callback onBefore si existe
+        if (settings.onBefore && typeof settings.onBefore === 'function') {
+            // El callback puede modificar o validar datos
+            const beforeResult = settings.onBefore(form, { body, headers, method, action });
+            
+            // Si el callback retorna false explícitamente, detener el envío
+            if (beforeResult === false) {
+                return;
+            }
+            
+            // Si el callback retorna un objeto, usarlo para actualizar la configuración
+            if (beforeResult && typeof beforeResult === 'object') {
+                // Permitir que onBefore modifique estos valores
+                if (beforeResult.body !== undefined) body = beforeResult.body;
+                if (beforeResult.headers !== undefined) Object.assign(headers, beforeResult.headers);
+                if (beforeResult.method !== undefined) method = beforeResult.method;
+                if (beforeResult.action !== undefined) action = beforeResult.action;
+            }
+        }
         
         // Configuración del fetch
         const fetchConfig = {
             method: method.toUpperCase(),
-            body: formData,
+            headers,
+            body,
             mode: 'cors',
             cache: 'no-cache'
         };

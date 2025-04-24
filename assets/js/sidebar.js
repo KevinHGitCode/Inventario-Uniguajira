@@ -65,11 +65,15 @@ function loadContent(path, scrollUpRequired = true) {
 
         switch (path) {
             case '/profile': editarPerfil(); break;
+
+            case '/home': 
+                if (typeof initFormsTask === 'function') initFormsTask();
+                break;
                 
             case '/goods':
                 iniciarBusqueda('searchGood');
                 // TODO: hacer un init goods
-                if (typeof initFormCrearBien === 'function') initFormCrearBien();
+                if (typeof initFormsBien === 'function') initFormsBien();
                 break;
                 
             case '/users':

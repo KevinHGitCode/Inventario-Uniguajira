@@ -63,34 +63,23 @@
     <script src="assets/js/helpers/toast.js"></script>
     <script src="assets/js/helpers/submitForm.js"></script>
     <script>
-        // Obtener el formulario
-        const form = document.querySelector('form[action="/api/login"]');
-
-        // Crear un input oculto para el offset de zona horaria (lo que MySQL realmente necesita)
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'timezone_offset';
-
-        // Calcular el offset en formato que MySQL entienda: +HH:MM o -HH:MM
-        const offset = -new Date().getTimezoneOffset();
-        const horas = Math.floor(Math.abs(offset) / 60);
-        const minutos = Math.abs(offset) % 60;
-        const signo = offset >= 0 ? '+' : '-';
-        hiddenInput.value = `${signo}${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
-
-        // Agregar también el nombre de la zona horaria para referencia (opcional)
-        const tzNameInput = document.createElement('input');
-        tzNameInput.type = 'hidden';
-        tzNameInput.name = 'timezone_name';
-        tzNameInput.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-        // Agregarlos al formulario
-        form.appendChild(hiddenInput);
-        form.appendChild(tzNameInput);
-
-
         // Inicializar el formulario de login
         inicializarFormularioAjax('form[action="/api/login"]', {
+            onBefore: (form, config) => {
+                // Calcular el offset en formato que MySQL entienda: +HH:MM o -HH:MM
+                const offset = -new Date().getTimezoneOffset();
+                const horas = Math.floor(Math.abs(offset) / 60);
+                const minutos = Math.abs(offset) % 60;
+                const signo = offset >= 0 ? '+' : '-';
+                const timezoneOffset = `${signo}${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
+                
+                // Obtener el nombre de la zona horaria
+                const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                
+                // Agregar los datos de zona horaria al FormData existente
+                config.body.append('timezone_offset', timezoneOffset);
+                config.body.append('timezone_name', timezoneName);
+            },
             onSuccess: () => { },
             redirectOnSuccess: '/'
         });

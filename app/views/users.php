@@ -1,7 +1,7 @@
 <?php require_once 'app/controllers/sessionCheck.php'; ?>
 
 <div class="container">
-    <?php // echo $_SESSION['timezone_offset'] . ' ' . $_SESSION['timezone_name'] ?>
+    <?php echo $_SESSION['timezone_offset'] . ' ' . $_SESSION['timezone_name'] ?>
     <h2>Lista de Usuarios</h2>
 
     <div class="top-bar">

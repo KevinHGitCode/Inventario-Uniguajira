@@ -1,6 +1,16 @@
-function initFormCrearBien() {
+function initFormsBien() {
+    // inicializar formulario de crear bien
     inicializarFormularioAjax('#formCrearBien', {
         resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            loadContent('/goods', false);
+        }
+    });
+
+    // inicializar formulario de actualizar bien
+    inicializarFormularioAjax('#formActualizarBien', {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
             showToast(response);
@@ -29,13 +39,4 @@ function ActualizarBien(id, nombre) {
 
     // Mostrar el modal
     mostrarModal('#modalActualizarBien')
-    
-    // Configurar el manejo del formulario con tu nueva función
-    inicializarFormularioAjax('#formActualizarBien', {
-        closeModalOnSuccess: true,
-        onSuccess: (response) => {
-            showToast(response);
-            loadContent('/goods', false);
-        }
-    });
 }

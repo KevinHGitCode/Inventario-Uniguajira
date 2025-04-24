@@ -1,9 +1,10 @@
 // Métodos que quedaron en la versión simplificada
 
-// showTaskModal - Abre el modal para crear tareas
-// hideTaskModal - Cierra el modal para crear tareas
-// showEditTaskModal - Abre el modal para editar tareas
-// hideEditTaskModal - Cierra el modal para editar tareas
+// showTaskModal (replaced) - Abre el modal para crear tareas
+// hideTaskModal (replaced) - Cierra el modal para crear tareas
+// showEditTaskModal -> btnEditTask - Abre el modal para editar tareas
+// hideEditTaskModal (replaced) - Cierra el modal para editar tareas
+
 // createTask - Crea una nueva tarea
 // updateTask - Actualiza una tarea existente
 // toggleTask - Cambia el estado de una tarea (completada/pendiente)
@@ -12,100 +13,120 @@
 // moveTaskToProperSection - Mueve tarjetas de tarea entre secciones
 // sortTasksByDate - Ordena las tareas por fecha
 
-
-// Funciones para modales
-const showTaskModal = () => {
-    document.getElementById('taskModal').style.display = 'flex';
-    document.getElementById('taskName').focus();
-};
-
-const hideTaskModal = () => {
-    document.getElementById('taskModal').style.display = 'none';
-};
-
-const showEditTaskModal = (id, name, description, date) => {
+function btnEditTask(id, name, description, date) {
     document.getElementById('editTaskId').value = id;
     document.getElementById('editTaskName').value = decodeURIComponent(name);
     document.getElementById('editTaskDesc').value = decodeURIComponent(description);
     document.getElementById('editTaskDate').value = new Date(date).toLocaleDateString('es-ES');
     
-    document.getElementById('editTaskModal').style.display = 'flex';
-    document.getElementById('editTaskName').focus();
-};
-
-const hideEditTaskModal = () => {
-    document.getElementById('editTaskModal').style.display = 'none';
+    // document.getElementById('editTaskName').focus();
+    mostrarModal('#editTaskModal');
 };
 
 // Operaciones CRUD
-const createTask = (event) => {
-    event.preventDefault();
-    
-    const taskName = document.getElementById('taskName').value.trim();
-    const taskDesc = document.getElementById('taskDesc').value.trim();
-    
-    if (!taskName) {
-        showNotification('El nombre de la tarea es requerido', 'error');
-        return;
-    }
 
-    fetch('/api/tasks/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+
+function initFormsTask() {
+    // Para crear tareas
+    inicializarFormularioAjax('#taskForm', {
+        onBefore: (form, config) => {
+            const taskName = document.getElementById('taskName').value.trim();
+            if (!taskName) {
+                showNotification('El nombre de la tarea es requerido', 'error');
+                return false; // Cancelar envío
+            }
         },
-        body: JSON.stringify({ name: taskName, description: taskDesc })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            hideTaskModal();
-            document.getElementById('taskForm').reset();
+        closeModalOnSuccess: true,
+        resetOnSuccess: true,
+        onSuccess: (data) => {
             loadContent('/home');
             showNotification('Tarea creada exitosamente', 'success');
-        } else {
-            showNotification(data.error || 'Error al crear tarea', 'error');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Error en la conexión', 'error');
     });
-};
 
-const updateTask = (event) => {
-    event.preventDefault();
-    
-    const taskData = {
-        id: document.getElementById('editTaskId').value,
-        name: document.getElementById('editTaskName').value,
-        description: document.getElementById('editTaskDesc').value
-    };
-
-    fetch('/api/tasks/update', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+    // Para actualizar tareas
+    inicializarFormularioAjax('#editTaskForm', {
+        contentType: 'application/json',
+        customBody: (form) => {
+            return {
+                id: document.getElementById('editTaskId').value,
+                name: document.getElementById('editTaskName').value,
+                description: document.getElementById('editTaskDesc').value
+            };
         },
-        body: JSON.stringify(taskData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
+        onSuccess: (data) => {
             loadContent('/home');
-            hideEditTaskModal();
             showNotification('Tarea actualizada exitosamente', 'success');
-        } else {
-            showNotification(data.error || 'Error al actualizar tarea', 'error');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Error en la conexión', 'error');
     });
-};
+}
+
+// const createTask = (event) => {
+//     event.preventDefault();
+    
+//     const taskName = document.getElementById('taskName').value.trim();
+//     const taskDesc = document.getElementById('taskDesc').value.trim();
+    
+//     if (!taskName) {
+//         showNotification('El nombre de la tarea es requerido', 'error');
+//         return;
+//     }
+
+//     fetch('/api/tasks/create', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-Requested-With': 'XMLHttpRequest'
+//         },
+//         body: JSON.stringify({ name: taskName, description: taskDesc })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             document.getElementById('taskForm').reset();
+//             loadContent('/home');
+//             showNotification('Tarea creada exitosamente', 'success');
+//         } else {
+//             showNotification(data.error || 'Error al crear tarea', 'error');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         showNotification('Error en la conexión', 'error');
+//     });
+// };
+
+// const updateTask = (event) => {
+//     event.preventDefault();
+    
+//     const taskData = {
+//         id: document.getElementById('editTaskId').value,
+//         name: document.getElementById('editTaskName').value,
+//         description: document.getElementById('editTaskDesc').value
+//     };
+
+//     fetch('/api/tasks/update', {
+//         method: 'PUT',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'X-Requested-With': 'XMLHttpRequest'
+//         },
+//         body: JSON.stringify(taskData)
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.success) {
+//             loadContent('/home');
+//             showNotification('Tarea actualizada exitosamente', 'success');
+//         } else {
+//             showNotification(data.error || 'Error al actualizar tarea', 'error');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error:', error);
+//         showNotification('Error en la conexión', 'error');
+//     });
+// };
 
 const toggleTask = (taskId, button) => {
     fetch('/api/tasks/toggle', {

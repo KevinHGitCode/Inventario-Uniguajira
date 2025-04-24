@@ -61,8 +61,8 @@ class ctlUser {
             // Iniciar sesión y establecer datos de usuario
             session_start();
             // Establecer la zona horaria antes
-            $_SESSION['timezone_offset'] = $_POST['timezone_offset'];
-            $_SESSION['timezone_name'] = $_POST['timezone_name'];
+            $_SESSION['timezone_offset'] = $_POST['timezone_offset'] ?? -5; // UTC-5 para Colombia
+            $_SESSION['timezone_name'] = $_POST['timezone_name'] ?? 'America/Bogota';
             $this->userModel->setTimezone();
             $_SESSION['user_id'] = $dataUser['id'];
             $_SESSION['user_name'] = $dataUser['nombre'];

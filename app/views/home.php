@@ -7,7 +7,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
 <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'administrador'): ?>
     <div class="header-tasks">
         <h2 class="tittle-list-task">Tareas pendientes</h2>
-        <button class="add-task-button" onclick="showTaskModal()" aria-label="Agregar tarea">+</button>
+        <button class="add-task-button" onclick="mostrarModal('#taskModal')">+</button>
     </div>
 
     <div class="container-list-task">
@@ -26,7 +26,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                         </div>
                     </div>
                     <p class="task-date"><?= formatDate($task['fecha']) ?></p>
-                    <button class="button edit-task" onclick="showEditTaskModal(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
+                    <button class="button edit-task" onclick="btnEditTask(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
@@ -53,7 +53,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                         </div>
                     </div>
                     <p class="task-date"><?= formatDate($task['fecha']) ?></p>
-                    <button class="button edit-task" onclick="showEditTaskModal(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
+                    <button class="button edit-task" onclick="btnEditTask(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
@@ -68,20 +68,20 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
 <!-- Modal para crear tareas -->
 <div id="taskModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="close" onclick="hideTaskModal()">&times;</span>
+        <span class="close" onclick="ocultarModal('#taskModal')">&times;</span>
         <h2>Crear Nueva Tarea</h2>
-        <form id="taskForm" autocomplete="off" onsubmit="createTask(event)">
+        <form id="taskForm" autocomplete="off" action="/api/tasks/create" method="POST">
             <div>
                 <label for="taskName">Nombre:</label>
-                <input type="text" id="taskName" required>
+                <input type="text" id="taskName" name="name" required>
             </div>
             <div>
                 <label for="taskDesc">Descripción:</label>
-                <textarea id="taskDesc"></textarea>
+                <textarea id="taskDesc" name="description"></textarea>
             </div>
             <div>
                 <label for="taskDate">Fecha de creación:</label>
-                <input type="text" id="taskDate" value="<?= date('d/m/Y') ?>" readonly>
+                <input type="text" id="taskDate" name="date" value="<?= date('d/m/Y') ?>" readonly>
             </div>
             <button type="submit" class="create-btn">Guardar</button>
         </form>
@@ -91,9 +91,12 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
 <!-- Modal para editar tareas -->
 <div id="editTaskModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <span class="close" onclick="hideEditTaskModal()">&times;</span>
+        <span class="close" onclick="ocultarModal('#editTaskModal')">&times;</span>
         <h2>Editar Tarea</h2>
-        <form id="editTaskForm" autocomplete="off" onsubmit="updateTask(event)">
+        <form id="editTaskForm" autocomplete="off" 
+            action="/api/tasks/update"
+            method="PUT"
+        >
             <input type="hidden" id="editTaskId">
             <div>
                 <label for="editTaskName">Nombre:</label>

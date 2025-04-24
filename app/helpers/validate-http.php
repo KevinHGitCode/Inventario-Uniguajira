@@ -40,7 +40,7 @@ function validateHttpRequest($method, $requiredFields = [],) {
     // Validar campos requeridos
     $missingFields = [];
     foreach ($requiredFields as $field) {
-        if (!isset($data[$field]) || $data[$field] === '') {
+        if (!isset($data[$field]) || trim($data[$field]) === '') {
             $missingFields[] = $field;
         }
     }

@@ -9,7 +9,13 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /login");
+    http_response_code(401); // Unauthorized
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Debe iniciar sesion antes'
+    ]);
+
+    // header("Location: /login");
     exit();
 }
 

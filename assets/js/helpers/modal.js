@@ -16,6 +16,7 @@
  * @version 3.1
  * @date 2025-04-20
  */
+// TODO: agregar focus al primer input no hidden 
 
 // Variable global para cada modal
 const modales = new Map();
