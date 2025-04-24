@@ -5,20 +5,26 @@
 -- 4. Insertar los tipos de bienes
 -- 5. Insertar los bienes en cada salón inventario
 
+-- Primer administrador
+INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil)
+VALUES 
+    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador', NULL) -- Contraseña: admin
+
+SET @usuario_actual = 1
+
 -- Este archivo es una trasaccion
 -- El commit esta al final
 START TRANSACTION;
 
 -- 1. Insertar usuarios
-INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol)
+INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil)
 VALUES 
-    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador'), -- Contraseña: admin
-    ('Daniel', 'Danie1l6', 'daniel@email.com', '$2y$10$Z6Q86q9MRsyZdSrcpSjFA.uvfq1mS1U2DkaVwXp1EtHtJhNyXkDRC', 'administrador'), -- Contraseña: 1234
-    ('Luis', 'luis', 'luis@email.com', '$2y$10$WuTyyr1liA1oXkq1baarA./Yjf6n9bO3o68LzKtYY9XyUlZXTwOFm', 'administrador'), -- Contraseña: 1234
-    ('Renzo', 'renzo', 'renzo@email.com', '$2y$10$4xh8/0LXMaebWN69C.0QwOPfKkJ.QTHQFgrhnZO0O9wKon495/xhG', 'administrador'), -- Contraseña: 1234
-    ('Kevin', 'kevin', 'kevin@email.com', '$2y$10$NwbZSqVtN5E6vMTu8nCxrejlRYYZRVxKHs0QK/3zfxmKlkgOXv/sm', 'administrador'), -- Contraseña: 1234
-    ('Consultor', 'consultor', 'consultor@email.com', '$2y$10$Ki86sKsnOrXFUI.RoGyAsum9hcbzR5KJQZ269hqEjThJ0vrHIS3ou', 'consultor'); -- Contraseña: consul
-
+    ('Luis', 'luis', 'luis@email.com', '$2y$10$WuTyyr1liA1oXkq1baarA./Yjf6n9bO3o68LzKtYY9XyUlZXTwOFm', 'administrador', 'assets/uploads/img/users/img_6800192cdc6ed.jpg'), -- Contraseña: 1234
+    ('Renzo', 'renzo', 'renzo@email.com', '$2y$10$4xh8/0LXMaebWN69C.0QwOPfKkJ.QTHQFgrhnZO0O9wKon495/xhG', 'administrador', NULL), -- Contraseña: 1234
+    ('Kevin', 'kevin', 'kevin@email.com', '$2y$10$NwbZSqVtN5E6vMTu8nCxrejlRYYZRVxKHs0QK/3zfxmKlkgOXv/sm', 'administrador', 'assets/uploads/img/users/img_67fdce71908d3.jpeg'), -- Contraseña: 1234
+    ('Consultor', 'consultor', 'consultor@email.com', '$2y$10$Ki86sKsnOrXFUI.RoGyAsum9hcbzR5KJQZ269hqEjThJ0vrHIS3ou', 'consultor', NULL), -- Contraseña: consul
+    ('Consultora', 'consultora', 'consultora@email.com', '$2y$10$Ki86sKsnOrXFUI.RoGyAsum9hcbzR5KJQZ269hqEjThJ0vrHIS3ou', 'consultor', NULL), -- Contraseña: consul
+    ('Daniel', 'Danie1l6', 'daniel@email.com', '$2y$10$Z6Q86q9MRsyZdSrcpSjFA.uvfq1mS1U2DkaVwXp1EtHtJhNyXkDRC', 'administrador', 'assets/uploads/img/users/img_67fdb3e8c59f7.jpg'); -- Contraseña: 1234
 
 -- ---------------------------------------------------------------------------------------------------------
 -- Insertar tareas

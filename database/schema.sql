@@ -27,7 +27,6 @@ CREATE TABLE tareas (
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
     fecha DATE,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('por hacer', 'completado') NOT NULL DEFAULT 'por hacer',
     usuario_id INT NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
@@ -35,7 +34,6 @@ CREATE TABLE tareas (
 
 CREATE INDEX idx_tareas_usuario_id ON tareas(usuario_id);
 CREATE INDEX idx_tareas_fecha ON tareas(fecha);
-CREATE INDEX idx_tareas_fecha_creacion ON tareas(fecha_creacion);
 CREATE INDEX idx_tareas_estado ON tareas(estado);
 
 -- 
@@ -175,8 +173,6 @@ CREATE TABLE reportes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     carpeta_id INT,  -- Relación con carpetas_reportes
     nombre VARCHAR(100) NOT NULL,
-    responsable VARCHAR(100),
-    total_bienes INT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     descripcion TEXT,  -- Contenido detallado del reporte
     FOREIGN KEY (carpeta_id) REFERENCES carpetas_reportes(id) ON DELETE SET NULL
@@ -185,7 +181,6 @@ CREATE TABLE reportes (
 -- Crear índices para la tabla reportes
 CREATE INDEX idx_reportes_carpeta_id ON reportes(carpeta_id);
 CREATE INDEX idx_reportes_nombre ON reportes(nombre);
-CREATE INDEX idx_reportes_responsable ON reportes(responsable);
 CREATE INDEX idx_reportes_fecha_creacion ON reportes(fecha_creacion);
 
 -- 
