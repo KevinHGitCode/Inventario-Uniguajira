@@ -9,13 +9,18 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401); // Unauthorized
-    echo json_encode([
-        'success' => false, 
-        'message' => 'Debe iniciar sesion antes'
-    ]);
+    $acceptsJson = strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false;
+    $isApiCall = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 
-    // header("Location: /login");
+    if ($acceptsJson || $isApiCall) {
+        http_response_code(401); // Unauthorized
+        echo json_encode([
+            'success' => false,
+            'message' => 'Debe iniciar sesión antes'
+        ]);
+    } else {
+        header("Location: /login");
+    }
+
     exit();
 }
-
