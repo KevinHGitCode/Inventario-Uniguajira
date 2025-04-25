@@ -65,7 +65,6 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
         document.getElementById('group-name').innerText = grupoName;
 
         iniciarBusqueda('searchInventory');
-        initInventoryFunctions();
 
         // si hay un inventario almacenado, abrir
         if (localStorage.getItem('openInventory')) {

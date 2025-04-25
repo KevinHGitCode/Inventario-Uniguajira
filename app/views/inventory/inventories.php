@@ -1,4 +1,4 @@
-<?php require_once 'app/controllers/sessionCheck.php'; ?>
+<!-- < ?php require_once 'app/controllers/sessionCheck.php'; ?> -->
 
 <!-- En este h2 se insertara el nombre del grupo (inventory.js) -->
 <div class="back-and-title">
@@ -92,65 +92,4 @@
             <p>No hay inventarios disponibles</p>
         </div>
     <?php endif; ?>
-</div>
-
-
-<!-- TODO: Cambiar de lugar -->
-
-<!-- ---------------------------------------------------------------------- -->
-
-
-<!-- Modal Crear Inventario -->
-<div id="modalCrearInventario" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalCrearInventario')">&times;</span>
-        <h2>Nuevo Inventario</h2>
-        <form 
-            id="formCrearInventario" 
-            action="/api/inventories/create" 
-            method="POST"
-            autocomplete="off"
-        >
-            <!-- TODO: este input tiene riesgo de quedar vacio si la creacion se vuelve dinamica y no llama a loadContend -->
-            <input type="hidden" name="grupo_id" value="<?= $dataIdGroup ?>" required />
-            <div>
-                <label for="nombreInventario">Nombre del inventario:</label>
-                <input type="text" name="nombre" id="nombreInventario" required />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button 
-                id="btnCrearInventario"
-                type="submit" 
-                class="create-btn">
-                    Guardar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- ---------------------------------------------------------------------- -->
-
-<!-- Modal renombrar Inventario -->
-<div id="modalRenombrarInventario" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalRenombrarInventario')">&times;</span>
-        <h2>Renombrar Inventario</h2>
-        <form 
-            id="formRenombrarInventario"
-            action="/api/inventories/rename"
-            method="POST"
-            autocomplete="off"
-        >
-            <input type="hidden" name="inventory_id" id="renombrarInventarioId" />
-            <div>
-                <label for="renombrarInventarioNombre">Nombre del inventario:</label>
-                <input type="text" name="nombre" id="renombrarInventarioNombre" required />
-            </div>
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar Cambios</button>
-            </div>
-        </form>
-    </div>
 </div>

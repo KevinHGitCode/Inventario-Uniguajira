@@ -64,21 +64,17 @@ function loadContent(path, scrollUpRequired = true) {
         }
 
         switch (path) {
-            case '/profile': editarPerfil(); break;
 
             case '/home': 
-                if (typeof initFormsTask === 'function') initFormsTask();
                 break;
                 
             case '/goods':
                 iniciarBusqueda('searchGood');
                 // TODO: hacer un init goods
-                if (typeof initFormsBien === 'function') initFormsBien();
                 break;
                 
             case '/users':
                 activarBusquedaEnTabla();
-                if (typeof initUserFunctions === 'function') initUserFunctions();
                 break;
                 
             case '/inventory':
@@ -87,7 +83,6 @@ function loadContent(path, scrollUpRequired = true) {
                 // comprobamos que existe al menos una funcion de gruops.js
                 // significa que se cargaron los archivos del rol administrador
                 if (typeof initGroupFunctions === 'function') {
-                    initGroupFunctions();
                     initializeSelection();
 
                     // si hay un grupo almacenado, abrir
@@ -133,7 +128,7 @@ links.forEach(link => {
 
 // cuando se carga la pagina, cargar la última opción seleccionada
 // o hacer click en el elemento con id home si no hay nada guardado
-window.onload = () => {
+function cargarUltimaSeleccion() {
     const lastSelected = localStorage.getItem('lastSelected');
     const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'reports']; // Lista de rutas válidas
 

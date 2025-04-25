@@ -44,6 +44,16 @@
 
     <!-- TODO: Crear un modal que para usar innerHTML -->
 
+    <!-- Solucion temporal: cargar todos los modales una sola vez -->
+    <?php // incluir los modales para el administrador
+    if ($_SESSION['user_rol'] === 'administrador') {
+        include __DIR__ . '/modals/modals.profile.php';
+        include __DIR__ . '/modals/modals.task.php';
+        include __DIR__ . '/modals/modals.good.php';
+        include __DIR__ . '/modals/modals.inventory.php';
+        include __DIR__ . '/modals/modals.user.php';
+    } ?>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/sidebar.js"></script>
@@ -66,6 +76,7 @@
     <script src="assets/js/inventory.js"></script>
     <script src="assets/js/groups.js"></script>
     <script src="assets/js/goodsInventory.js"></script>
+    <script src="assets/js/onLoaded.js"></script>
 </body>
 
 </html>
