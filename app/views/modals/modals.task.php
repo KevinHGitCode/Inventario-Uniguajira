@@ -1,7 +1,6 @@
-
 <!-- Modal para crear tareas -->
-<div id="taskModal" class="modal" style="display:none;">
-    <div class="modal-content">
+<div id="taskModal" class="modal">
+    <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#taskModal')">&times;</span>
         <h2>Crear Nueva Tarea</h2>
         <form id="taskForm" autocomplete="off" action="/api/tasks/create" method="POST">
@@ -17,14 +16,16 @@
                 <label for="taskDate">Fecha de creación:</label>
                 <input type="text" id="taskDate" name="date" value="<?= date('d/m/Y') ?>" readonly>
             </div>
-            <button type="submit" class="create-btn">Guardar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar</button>
+            </div>
         </form>
     </div>
 </div>
 
 <!-- Modal para editar tareas -->
-<div id="editTaskModal" class="modal" style="display:none;">
-    <div class="modal-content">
+<div id="editTaskModal" class="modal">
+    <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#editTaskModal')">&times;</span>
         <h2>Editar Tarea</h2>
         <form id="editTaskForm" autocomplete="off" 
@@ -44,7 +45,9 @@
                 <label for="editTaskDate">Fecha de creación:</label>
                 <input type="text" id="editTaskDate" readonly>
             </div>
-            <button type="submit" class="create-btn">Actualizar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Actualizar</button>
+            </div>
         </form>
     </div>
 </div>

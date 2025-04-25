@@ -34,8 +34,8 @@ function eliminarBien(id) {
 function ActualizarBien(id, nombre) {
     // Configurar los valores iniciales del formulario
     document.getElementById("actualizarId").value = id;
-    document.getElementById("actualizarNombre").value = nombre;
-    document.getElementById("actualizarImagen").value = ""; // Limpiar imagen seleccionada
+    document.getElementById("actualizarNombreBien").value = nombre;
+    document.getElementById("actualizarImagenBien").value = ""; // Limpiar imagen seleccionada
 
     // Mostrar el modal
     mostrarModal('#modalActualizarBien')

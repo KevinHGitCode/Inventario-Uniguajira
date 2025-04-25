@@ -1,12 +1,11 @@
-
-    <!-- Los formularios solo se cargan para el administrador -->
-    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <?php endif; ?>
+<!-- Los formularios solo se cargan para el administrador -->
+<?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+<?php endif; ?>
 
 <!-- Modal -->
-<div id="modalCrear" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalCrear')">&times;</span>
+<div id="modalCrearBien" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearBien')">&times;</span>
         <h2>Nuevo Bien</h2>
         <form
             id="formCrearBien"
@@ -30,43 +29,43 @@
                 <label for="imagenBien">Imagen:</label>
                 <input type="file" name="imagen" id="imagenBien" accept="image/*" />
             </div>
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal Actualizar -->
-<div id="modalActualizarBien" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalActualizarBien" class="modal">
+    <div class="modal-content modal-content-medium">
         <span id="cerrarModalActualizarBien" class="close" onclick="ocultarModal('#modalActualizarBien')">&times;</span>
         <h2>Actualizar Bien</h2>
         <form id="formActualizarBien" action="/api/goods/update" autocomplete="off" enctype="multipart/form-data">
             <input type="hidden" name="id" id="actualizarId" />
 
             <div>
-                <label for="actualizarNombre">Nombre:</label>
+                <label for="actualizarNombreBien">Nombre:</label>
                 <input
                     type="text"
                     name="nombre"
-                    id="actualizarNombre"
+                    id="actualizarNombreBien"
                     required
                 />
             </div>
 
             <div>
-                <label for="actualizarImagen">Imagen (opcional):</label>
+                <label for="actualizarImagenBien">Imagen (opcional):</label>
                 <input
                     type="file"
                     name="imagen"
-                    id="actualizarImagen"
+                    id="actualizarImagenBien"
                     accept="image/*"
                 />
             </div>
 
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">
                     Guardar Cambios
                 </button>
             </div>

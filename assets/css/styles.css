@@ -48,7 +48,7 @@ body {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    min-width: 320px; /* Garantiza un ancho mínimo para el body */
+    min-width: 375px; /* Garantiza un ancho mínimo para el body */
     overflow-x: hidden; /* Previene scroll horizontal en caso de contenido muy ancho */
 }
 
@@ -88,6 +88,9 @@ p {
     max-width: 100%; /* Asegura que respete el ancho del contenedor */
 }
 
+.me-2 {
+    margin-right: 0.5rem;
+}
 
 .hidden{
     display: none;

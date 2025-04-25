@@ -161,7 +161,7 @@ function inicializarFormularioAjax(formSelector, options = {}) {
                     if (settings.closeModalOnSuccess) {
                         const modal = form.closest('.modal');
                         if (modal) 
-                            modal.style.display = 'none';
+                            modal.classList.remove("active");
                     }
                     
                     // Redireccionar si está configurado

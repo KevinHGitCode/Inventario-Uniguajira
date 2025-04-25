@@ -61,73 +61,6 @@ function initFormsTask() {
     });
 }
 
-// const createTask = (event) => {
-//     event.preventDefault();
-    
-//     const taskName = document.getElementById('taskName').value.trim();
-//     const taskDesc = document.getElementById('taskDesc').value.trim();
-    
-//     if (!taskName) {
-//         showNotification('El nombre de la tarea es requerido', 'error');
-//         return;
-//     }
-
-//     fetch('/api/tasks/create', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-Requested-With': 'XMLHttpRequest'
-//         },
-//         body: JSON.stringify({ name: taskName, description: taskDesc })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.success) {
-//             document.getElementById('taskForm').reset();
-//             loadContent('/home');
-//             showNotification('Tarea creada exitosamente', 'success');
-//         } else {
-//             showNotification(data.error || 'Error al crear tarea', 'error');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//         showNotification('Error en la conexión', 'error');
-//     });
-// };
-
-// const updateTask = (event) => {
-//     event.preventDefault();
-    
-//     const taskData = {
-//         id: document.getElementById('editTaskId').value,
-//         name: document.getElementById('editTaskName').value,
-//         description: document.getElementById('editTaskDesc').value
-//     };
-
-//     fetch('/api/tasks/update', {
-//         method: 'PUT',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-Requested-With': 'XMLHttpRequest'
-//         },
-//         body: JSON.stringify(taskData)
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.success) {
-//             loadContent('/home');
-//             showNotification('Tarea actualizada exitosamente', 'success');
-//         } else {
-//             showNotification(data.error || 'Error al actualizar tarea', 'error');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//         showNotification('Error en la conexión', 'error');
-//     });
-// };
-
 const toggleTask = (taskId, button) => {
     fetch('/api/tasks/toggle', {
         method: 'PATCH',
@@ -155,30 +88,17 @@ const toggleTask = (taskId, button) => {
     });
 };
 
-const deleteTask = (taskId, element) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-        return;
-    }
+const deleteTask = (taskId) => {
 
-    fetch(`/api/tasks/delete/${taskId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+    eliminarRegistro({
+        url: `/api/tasks/delete/${taskId}`,
+        onSuccess: (response) => {
+            if (response.success) {
+                loadContent('/goods', false);
+            }
+            showToast(response);
+
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            element.closest('.task-card').remove();
-            showNotification('Tarea eliminada correctamente', 'success');
-        } else {
-            throw new Error(data.error || 'Error al eliminar la tarea');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification(error.message, 'error');
     });
 };
 

@@ -51,16 +51,17 @@ function btnEliminarGrupo() {
 function abrirGrupo(idGroup, scrollUpRequired = true) {
     const divGroups = document.getElementById('groups');
     const divInventories = document.getElementById('inventories');
+    const divContent = document.getElementById('inventories-content');
 
     // Mostrar loader
-    divInventories.innerHTML = '<p>Cargando inventarios...</p>';
+    divContent.innerHTML = '<p>Cargando inventarios...</p>';
     divGroups.classList.add('hidden');
     divInventories.classList.remove('hidden');
 
     fetch(`/api/get/inventories/${idGroup}`)
     .then(res => res.text())
     .then(html => {
-        divInventories.innerHTML = html;
+        divContent.innerHTML = html;
         const grupoName = document.getElementById(`group-name${idGroup}`).textContent;
         document.getElementById('group-name').innerText = grupoName;
 
@@ -76,10 +77,10 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
         if (scrollUpRequired)
             window.scrollTo(0, 0);  
     })
-    // .catch(error => {
-    //     console.error('Error:', error);
-    //     divInventories.innerHTML = '<p>Error al cargar los inventarios</p>';
-    // });
+    .catch(error => {
+        console.error('Error:', error);
+        divContent.innerHTML = '<p>Error al cargar los inventarios</p>';
+    });
 }
 
 // Función para cerrar grupo (mejorada)

@@ -1,7 +1,7 @@
 // Función para inicializar todas las funciones de bienes del inventario
 function initGoodsInventoryFunctions() {
     // Inicializar formulario para crear bien
-    inicializarFormularioAjax('#formCrearBien', {
+    inicializarFormularioAjax('#formCrearBienInventario', {
         closeModalOnSuccess: true,
         resetOnSuccess: true,
         onSuccess: (response) => {

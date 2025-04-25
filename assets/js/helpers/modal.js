@@ -30,7 +30,7 @@ function mostrarModal(selectorModal) {
     if (!modal) return;
     
     // Mostramos el modal
-    modal.style.display = "flex";
+    modal.classList.add("active");
 
     // Deshabilitar la deselección mientras el modal está abierto
     // Esto maneja la funcionalidad en selection.js
@@ -85,7 +85,7 @@ function ocultarModal(selectorModal) {
     if (!modal) return;
     
     // Ocultamos el modal
-    modal.style.display = "none";
+    modal.classList.remove("active");
     
     // Obtenemos los handlers guardados
     const estadoModal = modales.get(selectorModal);

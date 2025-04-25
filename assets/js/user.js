@@ -34,7 +34,7 @@ function btnEditarUser(element) {
     document.getElementById('edit-nombre_usuario').value = nombreUsuario;
     document.getElementById('edit-email').value = email;
 
-    mostrarModal('#modalEditar');
+    mostrarModal('#modalEditarUsuario');
 }
 
 

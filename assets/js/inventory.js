@@ -70,17 +70,18 @@ function btnEliminarInventario() {
 
 function abrirInventario(idInventory, scrollUpRequired = true) {
     const divGoodsInventory = document.getElementById('goods-inventory');
+    const divContent = document.getElementById('goods-inventory-content');
     const divInventories = document.getElementById('inventories');
     
     // Mostrar loader mientras carga
-    divGoodsInventory.innerHTML = '<p>Cargando bienes...</p>';
+    divContent.innerHTML = '<p>Cargando bienes...</p>';
     divGoodsInventory.classList.remove('hidden');
     divInventories.classList.add('hidden');
 
     fetch(`/api/get/goodsInventory/${idInventory}`)
     .then(res => res.text())
     .then(html => {
-        divGoodsInventory.innerHTML = html;
+        divContent.innerHTML = html;
         const inventoryName = document.getElementById(`inventory-name${idInventory}`).textContent;
         document.getElementById('inventory-name').innerText = inventoryName;
 
@@ -92,7 +93,7 @@ function abrirInventario(idInventory, scrollUpRequired = true) {
     })
     .catch(error => {
         console.error('Error:', error);
-        divGoodsInventory.innerHTML = '<p>Error al cargar los bienes</p>';
+        divContent.innerHTML = '<p>Error al cargar los bienes</p>';
     });
 
 }

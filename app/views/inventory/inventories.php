@@ -1,52 +1,5 @@
 <!-- < ?php require_once 'app/controllers/sessionCheck.php'; ?> -->
 
-<!-- En este h2 se insertara el nombre del grupo (inventory.js) -->
-<div class="back-and-title">
-    <span id="group-name" class="location">Grupo</span>
-    <button class="btn-back" onclick="cerrarGrupo()">
-        <i class="fas fa-arrow-left me-2"></i>
-        <span>Volver</span>
-    </button>
-</div>
-
-<div class="top-bar">
-    <div class="search-container">
-        <input
-            id="searchInventory"
-            class="search-bar searchInput"
-            type="text"
-            placeholder="Buscar o agregar inventarios"
-        />
-        <i class="search-icon fas fa-search"></i>
-    </div>
-    
-    <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-    <button class="create-btn" onclick="mostrarModal('#modalCrearInventario')">Crear</button>
-    <?php endif; ?>
-            
-</div>
-
-<!-- Barra de control para inventarios -->
-<?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-<div id="control-bar-inventory" class="control-bar">
-    <div class="selected-name">1 seleccionado</div>
-    <div class="control-actions">
-        <button class="control-btn" title="Renombrar" onclick="btnRenombrarInventario()">
-            <i class="fas fa-pen"></i>
-        </button>
-        <button class="control-btn" title="Editar" onclick="btnEditarInventario()">
-            <i class="fas fa-edit"></i>
-        </button>
-        <button class="control-btn" title="Eliminar" onclick="btnEliminarInventario()">
-            <i class="fas fa-trash"></i>
-        </button>
-        <!-- <button class="control-btn" title="Más acciones">
-            <i class="fas fa-ellipsis-v"></i>
-        </button> -->
-    </div>
-</div>
-<?php endif; ?>
-
 <div class="card-grid">
     <?php if (isset($dataInventories)): ?>
         <?php foreach ($dataInventories as $inventory): ?>

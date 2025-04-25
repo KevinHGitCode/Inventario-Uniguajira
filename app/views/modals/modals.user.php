@@ -1,14 +1,11 @@
-
 <!-- ====================================================== -->
 <!-- ============== MODALES DE USER.PHP =================== -->
 <!-- ====================================================== -->
 
 <!-- Modal crear usuario-->
-<div id="modalCrear" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalCrear')"
-            >&times;</span
-        >
+<div id="modalCrearUsuaio" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearUsuaio')">&times;</span>
         <h2>Nuevo Usuario</h2>
         <form
             id="formCrearUser"
@@ -57,17 +54,17 @@
                 </select>
             </div>
 
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal Editar Usuario -->
-<div id="modalEditar" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close">&times;</span>
+<div id="modalEditarUsuario" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalEditarUsuario')">&times;</span>
         <h2>Editar Usuario</h2>
         <form
             method="POST"
@@ -112,34 +109,34 @@
                 </select>
             </div> -->
 
-            <div style="margin-top: 10px">
-                <button type="submit" class="edit-btn">Actualizar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Actualizar</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal Confirmar Eliminación -->
-<div id="modalConfirmarEliminar" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close">&times;</span>
+<div id="modalConfirmarEliminar" class="modal">
+    <div class="modal-content modal-content-small">
+        <span class="close" onclick="ocultarModal('#modalConfirmarEliminar')">&times;</span>
         <h2>Confirmar Eliminación</h2>
         <p>
             ¿Estás seguro de que deseas eliminar este usuario? Esta acción
             no se puede deshacer.
         </p>
         <input type="hidden" id="delete-user-id" />
-        <div>
+        <div class="form-actions">
             <button
                 id="btnCancelarEliminar"
-                class="cancel-btn"
+                class="btn cancel-btn"
                 onclick="ocultarModal('#modalConfirmarEliminar')"
             >
                 Cancelar
             </button>
             <button
                 id="btnConfirmarEliminar"
-                class="delete-btn"
+                class="btn submit-btn"
                 data-id=""
                 onclick="eliminarUser(this)"
             >

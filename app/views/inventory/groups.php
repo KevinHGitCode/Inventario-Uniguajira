@@ -4,7 +4,7 @@
     <h1>Inventario</h1>
 
     <div id="groups">
-        <h2 class="text-secondary fs-5 fw-normal mb-4">Grupos</h2>
+        <h2 class="location">Grupos</h2>
 
         <div class="top-bar">
             <div class="search-container">
@@ -90,10 +90,106 @@
     </div>
 
     <div id="inventories" class="hidden">
-        <!-- Content for inventorys -->
+        <!-- En este h2 se insertara el nombre del grupo (inventory.js) -->
+        <div class="back-and-title">
+            <span id="group-name" class="location">Grupo</span>
+            <button class="btn-back" onclick="cerrarGrupo()">
+                <i class="fas fa-arrow-left me-2"></i>
+                <span>Volver</span>
+            </button>
+        </div>
+
+        <div class="top-bar">
+            <div class="search-container">
+                <input
+                    id="searchInventory"
+                    class="search-bar searchInput"
+                    type="text"
+                    placeholder="Buscar o agregar inventarios"
+                />
+                <i class="search-icon fas fa-search"></i>
+            </div>
+            
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+            <button class="create-btn" onclick="mostrarModal('#modalCrearInventario')">Crear</button>
+            <?php endif; ?>
+                    
+        </div>
+
+        <!-- Barra de control para inventarios -->
+        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+        <div id="control-bar-inventory" class="control-bar">
+            <div class="selected-name">1 seleccionado</div>
+            <div class="control-actions">
+                <button class="control-btn" title="Renombrar" onclick="btnRenombrarInventario()">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="control-btn" title="Editar" onclick="btnEditarInventario()">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="control-btn" title="Eliminar" onclick="btnEliminarInventario()">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <!-- <button class="control-btn" title="Más acciones">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button> -->
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <div id="inventories-content">
+            <!-- Content for inventorys -->
+        </div>
     </div>
 
     <div id="goods-inventory" class="hidden">
-        <!-- Content for bienes-inventario -->
+        <!-- En este h2 se insertara el nombre del inventario (inventory.js) -->
+        <div class="back-and-title">
+            <span id="inventory-name" class="location">Bienes en el Inventario</span>
+            <button class="btn-back" onclick="cerrarInventario()">
+                <i class="fas fa-arrow-left me-2"></i>
+                <span>Volver</span>
+            </button>
+        </div>
+
+        <div class="top-bar">
+            <div class="search-container">
+                <input
+                    id="searchGoodInventory"
+                    class="search-bar searchInput"
+                    type="text"
+                    placeholder="Buscar o agregar bienes"
+                />
+                <i class="search-icon fas fa-search"></i>
+            </div>
+
+            <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+            <button id="btnCrear" class="create-btn" onclick="mostrarModal('#modalCrearBienInventario')">Crear</button>
+            <?php endif; ?>
+            
+        </div>
+
+        <!-- Barra de control para bienes -->
+        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+        <div id="control-bar-good" class="control-bar">
+            <div class="selected-name">1 seleccionado</div>
+            <div class="control-actions">
+                <button class="control-btn" title="Cambiar cantidad" onclick="btnCambiarCantidadBien()">
+                    <i class="fas fa-sort-numeric-up"></i>
+                </button>
+                <!-- TODO: Not implement yet -->
+                <!-- <button class="control-btn" title="Mover" onclick="btnMoverBien()">
+                    <i class="fas fa-exchange-alt"></i>
+                </button> -->
+                <button class="control-btn" title="Eliminar" onclick="btnEliminarBien()">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <div id="goods-inventory-content">
+            <!-- Content for bienes-inventario -->
+        </div>
     </div>
 </div>

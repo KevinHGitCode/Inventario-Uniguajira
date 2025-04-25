@@ -1,15 +1,16 @@
-/* Estilos generales para la tabla */
 .container {
   max-width: 100%;
   padding: 20px;
 }
 
+/* Tabla general */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 5px rgb(0 0 0 / 10%);
+  border: 1px solid #dee2e6;
 }
 
 div > table {
@@ -20,11 +21,7 @@ div > table {
   -webkit-overflow-scrolling: touch;
 }
 
-.table-bordered {
-  border: 1px solid #dee2e6;
-}
-
-.table thead th {
+thead th {
   background-color: #f8f9fa;
   color: #333;
   font-weight: 600;
@@ -37,24 +34,24 @@ div > table {
   z-index: 1;
 }
 
-.table tbody td {
+tbody td {
   padding: 12px 15px;
   border-bottom: 1px solid #dee2e6;
   vertical-align: middle;
 }
 
-.table tbody tr:hover {
+tbody tr:hover {
   background-color: #f8f9fa;
 }
 
-/* Estilos específicos para celdas de acciones */
+/* Celdas de acciones */
 .actions-cell {
   width: 80px;
   text-align: center;
   white-space: nowrap;
 }
 
-/* Estilos para el menú desplegable */
+/* Menú desplegable */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -85,7 +82,6 @@ div > table {
   overflow: hidden;
 }
 
-/* Ajuste para la última fila */
 tr:last-child .dropdown .dropdown-content {
   bottom: 100%;
   top: auto;
@@ -107,7 +103,7 @@ tr:last-child .dropdown .dropdown-content {
   display: block;
 }
 
-/* Estilos para iconos (si los usas) */
+/* Iconos */
 .dropdown-content a i {
   margin-right: 8px;
   width: 16px;
@@ -121,7 +117,7 @@ tr:last-child .dropdown .dropdown-content {
   color: #dc3545;
 }
 
-/* Estilos para botones */
+/* Botones */
 .cancel-btn {
   background-color: #6c757d;
   color: white;

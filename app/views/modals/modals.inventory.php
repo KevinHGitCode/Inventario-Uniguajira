@@ -1,7 +1,6 @@
-
 <!-- Modal Crear Grupo -->
-<div id="modalCrearGrupo" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalCrearGrupo" class="modal">
+    <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#modalCrearGrupo')">&times;</span>
         <h2>Nuevo Grupo</h2>
         <form
@@ -14,11 +13,11 @@
                 <label for="nombreGrupo">Nombre del grupo:</label>
                 <input type="text" name="nombre" id="nombreGrupo" required />
             </div>
-            <div style="margin-top: 10px">
+            <div class="form-actions">
                 <button 
                     type="submit" 
                     id="create-btn-grupo" 
-                    class="create-btn">
+                    class="btn submit-btn">
                     Guardar
                 </button>
             </div>
@@ -29,8 +28,8 @@
 
 <!-- ---------------------------------------------------------------------- -->
 <!-- Modal Renombrar Grupo -->
-<div id="modalRenombrarGrupo" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalRenombrarGrupo" class="modal">
+    <div class="modal-content modal-content-small">
         <span id="cerrarModalRenombrarGrupo" class="close" onclick="ocultarModal('#modalRenombrarGrupo')">&times;</span>
         <h2>Renombrar Grupo</h2>
         <form 
@@ -50,8 +49,8 @@
                 />
             </div>
 
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">
                     Guardar Cambios
                 </button>
             </div>
@@ -63,8 +62,8 @@
 
 
 <!-- Modal Crear Inventario -->
-<div id="modalCrearInventario" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalCrearInventario" class="modal">
+    <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#modalCrearInventario')">&times;</span>
         <h2>Nuevo Inventario</h2>
         <form 
@@ -80,11 +79,11 @@
                 <input type="text" name="nombre" id="nombreInventario" required />
             </div>
 
-            <div style="margin-top: 10px">
+            <div class="form-actions">
                 <button 
                 id="btnCrearInventario"
                 type="submit" 
-                class="create-btn">
+                class="btn submit-btn">
                     Guardar
                 </button>
             </div>
@@ -95,8 +94,8 @@
 <!-- ---------------------------------------------------------------------- -->
 
 <!-- Modal renombrar Inventario -->
-<div id="modalRenombrarInventario" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalRenombrarInventario" class="modal">
+    <div class="modal-content modal-content-small">
         <span class="close" onclick="ocultarModal('#modalRenombrarInventario')">&times;</span>
         <h2>Renombrar Inventario</h2>
         <form 
@@ -110,8 +109,8 @@
                 <label for="renombrarInventarioNombre">Nombre del inventario:</label>
                 <input type="text" name="nombre" id="renombrarInventarioNombre" required />
             </div>
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar Cambios</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar Cambios</button>
             </div>
         </form>
     </div>
@@ -121,11 +120,11 @@
 
 
 <!-- Modal Crear Bien -->
-<div id="modalCrearBien" class="modal" style="display: none">
-    <div class="modal-content">
-        <span class="close" onclick="ocultarModal('#modalCrearBien')">&times;</span>
+<div id="modalCrearBienInventario" class="modal">
+    <div class="modal-content modal-content-large">
+        <span class="close" onclick="ocultarModal('#modalCrearBienInventario')">&times;</span>
         <h2>Nuevo Bien</h2>
-        <form id="formCrearBien" autocomplete="off" action="/api/goods-inventory/create" method="POST" enctype="multipart/form-data">
+        <form id="formCrearBienInventario" autocomplete="off" action="/api/goods-inventory/create" method="POST" enctype="multipart/form-data">
             <input type="hidden" id="inventarioId" name="inventarioId" />
             <div id="search-container">
                 <input type="hidden" id="bien_id" name="bien_id"  />
@@ -134,57 +133,63 @@
                 <ul class="suggestions"></ul>
             </div>
 
-            <div style="display: none">
-                <label for="cantidadBien">Cantidad:</label>
-                <input type="number" name="cantidad" id="cantidadBien" min="1" />
+            <div class="scrollable-content">
+                <div>
+                    <label for="cantidadBien">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidadBien" min="1" />
+                </div>
+
+                <div>
+                    <label for="descripcionBien">Descripción:</label>
+                    <textarea name="descripcion" id="descripcionBien"></textarea>
+                </div>
+
+                <div class="inline-fields">
+                    <div>
+                        <label for="marcaBien">Marca:</label>
+                        <input type="text" name="marca" id="marcaBien" />
+                    </div>
+
+                    <div>
+                        <label for="modeloBien">Modelo:</label>
+                        <input type="text" name="modelo" id="modeloBien" />
+                    </div>
+                </div>
+
+                <div>
+                    <label for="serialBien">Serial:</label>
+                    <input type="text" name="serial" id="serialBien" />
+                </div>
+
+                <div>
+                    <label for="estadoBien">Estado:</label>
+                    <select name="estado" id="estadoBien">
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                        <option value="en mantenimiento">En mantenimiento</option>
+                    </select>
+                </div>
+
+                <div class="inline-fields">
+                    <div>
+                        <label for="colorBien">Color:</label>
+                        <input type="text" name="color" id="colorBien" />
+                    </div>
+
+                    <div>
+                        <label for="condicionBien">Condición técnica:</label>
+                        <input type="text" name="condicion_tecnica" id="condicionBien" />
+                    </div>
+                </div>
+
+                <div>
+                    <label for="fechaIngresoBien">Fecha de ingreso:</label>
+                    <input type="date" name="fecha_ingreso" id="fechaIngresoBien" />
+                </div>
             </div>
 
-            <div style="display: none">
-                <label for="descripcionBien">Descripción:</label>
-                <textarea name="descripcion" id="descripcionBien"></textarea>
-            </div>
-
-            <div style="display: none">
-                <label for="marcaBien">Marca:</label>
-                <input type="text" name="marca" id="marcaBien" />
-            </div>
-
-            <div style="display: none">
-                <label for="modeloBien">Modelo:</label>
-                <input type="text" name="modelo" id="modeloBien" />
-            </div>
-
-            <div style="display: none">
-                <label for="serialBien">Serial:</label>
-                <input type="text" name="serial" id="serialBien" />
-            </div>
-
-            <div style="display: none">
-                <label for="estadoBien">Estado:</label>
-                <select name="estado" id="estadoBien">
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                    <option value="en mantenimiento">En mantenimiento</option>
-                </select>
-            </div>
-
-            <div style="display: none">
-                <label for="colorBien">Color:</label>
-                <input type="text" name="color" id="colorBien" />
-            </div>
-
-            <div style="display: none">
-                <label for="condicionBien">Condición técnica:</label>
-                <input type="text" name="condicion_tecnica" id="condicionBien" />
-            </div>
-
-            <div style="display: none">
-                <label for="fechaIngresoBien">Fecha de ingreso:</label>
-                <input type="date" name="fecha_ingreso" id="fechaIngresoBien" />
-            </div>
-
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar</button>
             </div>
         </form>
     </div>
@@ -192,8 +197,8 @@
 
 
 <!-- Modal para Cambiar Cantidad de Bien -->
-<div id="modalCambiarCantidadBien" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalCambiarCantidadBien" class="modal">
+    <div class="modal-content modal-content-small">
         <span class="close" onclick="ocultarModal('#modalCambiarCantidadBien')">&times;</span>
         <h2>Cambiar Cantidad</h2>
         <form id="formCambiarCantidadBien" action="/api/goods-inventory/update-quantity" method="POST" autocomplete="off">
@@ -202,16 +207,16 @@
                 <label for="cantidadBien">Nueva cantidad:</label>
                 <input type="number" min="0" name="cantidad" id="cantidadBien" required />
             </div>
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Guardar Cambios</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar Cambios</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal para Mover Bien -->
-<div id="modalMoverBien" class="modal" style="display: none">
-    <div class="modal-content">
+<div id="modalMoverBien" class="modal">
+    <div class="modal-content modal-content-small">
         <span class="close" onclick="ocultarModal('#modalMoverBien')">&times;</span>
         <h2>Mover Bien</h2>
         <form id="formMoverBien" action="/api/goods-inventory/move" method="POST" autocomplete="off">
@@ -222,8 +227,8 @@
                     <!-- Las opciones se cargarán dinámicamente con JavaScript -->
                 </select>
             </div>
-            <div style="margin-top: 10px">
-                <button type="submit" class="create-btn">Mover Bien</button>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Mover Bien</button>
             </div>
         </form>
     </div>
