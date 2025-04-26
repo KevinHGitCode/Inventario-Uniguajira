@@ -53,18 +53,17 @@
             </li>
             <?php endif; ?>
             
-            <!-- Opción comentada que puedes descomentar si es necesario
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <li>
                 <a 
-                    onclick="loadContent('app/views/record.php')"
+                    onclick="loadContent('/record')"
                 >
                     <img src="assets/icons/historial.svg" alt="">
                     <span>Historial</span>
                 </a>
             </li>
             <?php endif; ?>
-            -->
+           
         </ul>
     </nav>
 </div>

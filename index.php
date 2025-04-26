@@ -18,6 +18,7 @@ $router->add('/goods', 'ctlSidebar', 'goods');
 $router->add('/inventory', 'ctlSidebar', 'inventory');
 $router->add('/reports', 'ctlSidebar', 'reports');
 $router->add('/users', 'ctlSidebar', 'users');
+$router->add('/record', 'ctlSidebar', 'record');
 
 
 // Rutas para el navbar (ok)

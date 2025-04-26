@@ -101,4 +101,20 @@ class ctlSidebar {
 
        
     }
+    
+    /**
+     * Muestra la vista de registros (records).
+     * Obtiene los últimos registros desde el modelo y los pasa a la vista.
+     *
+     * @return void
+     */
+    public function record() {
+        require_once __DIR__ . '/../models/Record.php';
+        $record = new Record();
+      
+        $dataRecords = $record->getLastRecords(); // Obtener los últimos registros desde el modelo
+
+        // Pasar los datos a la vista de registros
+        require __DIR__ . '/../views/record.php';
+    }
 }
