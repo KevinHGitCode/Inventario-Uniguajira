@@ -41,8 +41,6 @@
         <div id="main-content"></div>
     </main>
 
-    <!-- TODO: Crear un modal que para usar innerHTML -->
-
     <!-- Solucion temporal: cargar todos los modales una sola vez -->
     <?php // incluir los modales para el administrador
     if ($_SESSION['user_rol'] === 'administrador') {
@@ -75,6 +73,7 @@
     <script src="assets/js/inventory/inventory.js"></script>
     <script src="assets/js/inventory/groups.js"></script>
     <script src="assets/js/inventory/goodsInventory.js"></script>
+    <script src="assets/js/inventory/formGoodInventory.js"></script>
     <script src="assets/js/onLoaded.js"></script>
 </body>
 

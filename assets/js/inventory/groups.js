@@ -22,6 +22,19 @@ function initGroupFunctions() {
     });
 }
 
+function mostrarModalCrearInventario() {
+    // Obtener el ID del grupo actual del localStorage
+    const currentGroupId = localStorage.getItem('openGroup');
+    
+    // Establecer el valor en el campo oculto
+    if (currentGroupId) {
+        document.getElementById('grupo_id_crear_inventario').value = currentGroupId;
+    }
+    
+    // Mostrar el modal
+    mostrarModal('#modalCrearInventario');
+}
+
 function btnRenombrarGrupo() {
     console.log(selectedItem); // mensaje de depuración
     const id = selectedItem.id;
@@ -53,6 +66,15 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
     const divInventories = document.getElementById('inventories');
     const divContent = document.getElementById('inventories-content');
 
+    // Almacenar el ID del grupo actual para usar en modales
+    localStorage.setItem('currentGroupId', idGroup);
+    
+    // Actualizar el campo oculto en el modal de crear inventario
+    const grupoIdInput = document.getElementById('grupo_id_crear_inventario');
+    if (grupoIdInput) {
+        grupoIdInput.value = idGroup;
+    }
+
     // Mostrar loader
     divContent.innerHTML = '<p>Cargando inventarios...</p>';
     divGroups.classList.add('hidden');
@@ -71,8 +93,9 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
         if (localStorage.getItem('openInventory')) {
             const idInventory = localStorage.getItem('openInventory');
             abrirInventario(idInventory);
-        } else 
+        } else {
             localStorage.setItem('openGroup', idGroup);
+        }
             
         if (scrollUpRequired)
             window.scrollTo(0, 0);  

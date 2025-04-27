@@ -72,8 +72,7 @@
             method="POST"
             autocomplete="off"
         >
-            <!-- TODO: este input tiene riesgo de quedar vacio si la creacion se vuelve dinamica y no llama a loadContend -->
-            <input type="hidden" name="grupo_id" value="<?= $dataIdGroup ?>" required />
+            <input type="hidden" name="grupo_id" id="grupo_id_crear_inventario" required />
             <div>
                 <label for="nombreInventario">Nombre del inventario:</label>
                 <input type="text" name="nombre" id="nombreInventario" required />
@@ -128,8 +127,8 @@
         <form id="formCambiarCantidadBien" action="/api/goods-inventory/update-quantity" method="POST" autocomplete="off">
             <input type="hidden" name="bien_id" id="cambiarCantidadBienId" />
             <div>
-                <label for="cantidadBien">Nueva cantidad:</label>
-                <input type="number" min="0" name="cantidad" id="cantidadBien" required />
+                <label for="cambiarCantidadBien">Nueva cantidad:</label>
+                <input type="number" min="0" name="cantidad" id="cambiarCantidadBien" required />
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn submit-btn">Guardar Cambios</button>

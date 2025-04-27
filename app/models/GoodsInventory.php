@@ -114,39 +114,18 @@ class GoodsInventory extends Database {
      * @return bool Resultado de la operación.
      */
     public function addSerial($inventoryId, $goodId, $details) {
-        // Primero verificamos si el bien ya existe en el inventario
         $bienInventarioId = $this->getBienInventarioId($goodId, $inventoryId);
-        
+
         if (!$bienInventarioId) {
-            // Si no existe, creamos el registro en bienes_inventarios
             $stmt = $this->connection->prepare("
                 INSERT INTO bienes_inventarios (bien_id, inventario_id) 
                 VALUES (?, ?)
             ");
             $stmt->bind_param("ii", $goodId, $inventoryId);
-            if (!$stmt->execute()) {
-                return false;
-            }
-            
+            $stmt->execute();
             $bienInventarioId = $this->connection->insert_id;
         }
-        
-        // Verificar que el serial no exista ya
-        $stmt = $this->connection->prepare("
-            SELECT COUNT(*) as count FROM bienes_equipos 
-            WHERE serial = ? AND bien_inventario_id = ?
-        ");
-        $stmt->bind_param("si", $details['serial'], $bienInventarioId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        
-        if ($row['count'] > 0) {
-            // El serial ya existe para este bien en este inventario
-            return false;
-        }
-        
-        // Insertar el bien de tipo serial
+
         $stmt = $this->connection->prepare("
             INSERT INTO bienes_equipos (
                 bien_inventario_id, 

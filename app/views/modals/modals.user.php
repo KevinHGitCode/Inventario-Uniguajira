@@ -13,45 +13,54 @@
             method="POST"
             enctype="multipart/form-data"
             autocomplete="off"
+            class="form-grid"
         >
-            <div>
-                <label for="crear-nombre">Nombre:</label>
-                <input
-                    type="text"
-                    name="nombre"
-                    id="crear-nombre"
-                    required
-                />
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="crear-nombre">Nombre:</label>
+                    <input
+                        type="text"
+                        name="nombre"
+                        id="crear-nombre"
+                        required
+                    />
+                </div>
+
+                <div class="form-column">
+                    <label for="crear-nombre_usuario">Nombre de Usuario:</label>
+                    <input
+                        type="text"
+                        name="nombre_usuario"
+                        id="crear-nombre_usuario"
+                        required
+                    />
+                </div>
             </div>
 
-            <div>
-                <label for="crear-nombre_usuario">Nombre de Usuario:</label>
-                <input
-                    type="text"
-                    name="nombre_usuario"
-                    id="crear-nombre_usuario"
-                    required
-                />
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="crear-email">Email:</label>
+                    <input type="text" name="email" id="crear-email" required />
+                </div>
+                <div class="form-column">
+                    <label for="crear-contraseña">Contraseña:</label>
+                    <input
+                        type="password"
+                        name="contraseña"
+                        id="crear-contraseña"
+                        required
+                    />
+                </div>
             </div>
-            <div>
-                <label for="crear-email">Email:</label>
-                <input type="text" name="email" id="crear-email" required />
-            </div>
-            <div>
-                <label for="crear-contraseña">Contraseña:</label>
-                <input
-                    type="password"
-                    name="contraseña"
-                    id="crear-contraseña"
-                    required
-                />
-            </div>
-            <div>
-                <label for="crear-rol">Rol:</label>
-                <select name="rol" id="crear-rol" required>
-                    <option value="1">Admin</option>
-                    <option value="2">User</option>
-                </select>
+
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="crear-rol">Rol:</label>
+                    <select name="rol" id="crear-rol" required>
+                        <option value="1">Admin</option>
+                        <option value="2">User</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-actions">

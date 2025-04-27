@@ -111,7 +111,7 @@
             </div>
             
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button class="create-btn" onclick="mostrarModal('#modalCrearInventario')">Crear</button>
+            <button class="create-btn" onclick="mostrarModalCrearInventario()">Crear</button>
             <?php endif; ?>
                     
         </div>

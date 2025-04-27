@@ -16,7 +16,7 @@
             >
 
                 <img
-                    src="<?= htmlspecialchars($good['imagen']) ?>"
+                    src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/goods/default.jpg') ?>"
                     class="bien-image"
                     alt="<?= htmlspecialchars($good['bien']) ?>"
                 />

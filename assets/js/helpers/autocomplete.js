@@ -17,9 +17,11 @@
  * - Cierra las sugerencias al hacer clic fuera del contenedor o al presionar Escape
  * - Resalta visualmente la parte coincidente del texto en las sugerencias
  * - Previene el envío de formularios al presionar Enter cuando hay sugerencias activas
+ * - Mantiene el elemento activo visible en la lista scrollable
+ * - Restaura la posición del scroll al inicio cuando se realiza una nueva búsqueda
  *
- * @version 2.1
- * @date 2025-04-26
+ * @version 2.4
+ * @date 2025-04-27
  */
 
 /**
@@ -38,348 +40,240 @@
  * @param {string} options.noDataText - Texto a mostrar cuando no hay datos disponibles (default: 'No hay datos disponibles')
  * @returns {Object} - Objeto con métodos públicos (recargarDatos)
  */
-function initAutocompleteSearch(containerSelector, options = {}) {
-    // Opciones por defecto
-    const defaultOptions = {
-        dataUrl: '/api/data',
-        inputSelector: 'input',
-        listSelector: '.suggestions',
-        dataKey: null, // Se determinará automáticamente
-        idKey: null, // Se determinará automáticamente
-        hiddenInputSelector: null,
-        onSelect: null,
-        noMatchText: 'No hay coincidencias',
-        noDataText: 'No hay datos disponibles'
-    };
-    
-    // Combinar opciones default con las proporcionadas
-    const settings = { ...defaultOptions, ...options };
-    
-    // Variables y referencias DOM
+function initAutocompleteSearch(containerSelector, options) {
     const container = document.querySelector(containerSelector);
-    if (!container) {
-        console.error(`Contenedor no encontrado: ${containerSelector}`);
-        return { recargarDatos: () => {} };
+    const input = container.querySelector(options.inputSelector);
+    const list = container.querySelector(options.listSelector);
+    const hiddenInput = container.querySelector(options.hiddenInputSelector);
+    
+    let activeIndex = -1;
+    let items = [];
+    let filteredItems = [];
+    
+    // Función para ocultar sugerencias
+    function ocultarSugerencias() {
+        list.innerHTML = '';
+        list.style.display = 'none';
+        activeIndex = -1;
     }
     
-    const inputField = container.querySelector(settings.inputSelector);
-    const suggestionsList = container.querySelector(settings.listSelector);
-    const hiddenInput = settings.hiddenInputSelector ? 
-                       document.querySelector(settings.hiddenInputSelector) : null;
-    
-    let dataItems = [];
-    let isActive = false;
-    let selectedIndex = -1;
-    
-    /**
-     * Carga los datos desde la URL especificada
-     */
-    function cargarDatos() {
-        fetch(settings.dataUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error al consultar datos desde ${settings.dataUrl}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                dataItems = data;
-                console.log('Datos cargados:', dataItems.length, '\n', dataItems);
-                
-                // Si no se especificaron las claves, intentamos determinarlas
-                if (!settings.idKey && dataItems.length > 0) {
-                    // El primer key como ID por defecto
-                    settings.idKey = Object.keys(dataItems[0])[0];
-                }
-                
-                if (!settings.dataKey && dataItems.length > 0) {
-                    // El segundo key como texto visible por defecto, o el primero si no hay segundo
-                    const keys = Object.keys(dataItems[0]);
-                    settings.dataKey = keys.length > 1 ? keys[1] : keys[0];
-                }
-            })
-            .catch(error => {
-                console.error('Error cargando datos:', error);
-                dataItems = [];
-            });
+    // Función para hacer scroll al elemento activo
+    function scrollToActiveItem() {
+        const activeItem = list.querySelector('li.active');
+        if (!activeItem) return;
+        
+        // Obtener posiciones y dimensiones
+        const listRect = list.getBoundingClientRect();
+        const itemRect = activeItem.getBoundingClientRect();
+        
+        // Verificar si el elemento está fuera de la vista
+        if (itemRect.top < listRect.top) {
+            // Si está por encima del área visible
+            list.scrollTop -= (listRect.top - itemRect.top);
+        } else if (itemRect.bottom > listRect.bottom) {
+            // Si está por debajo del área visible
+            list.scrollTop += (itemRect.bottom - listRect.bottom);
+        }
     }
     
-    /**
-     * Muestra sugerencias basadas en el texto ingresado
-     */
-    function mostrarSugerencias() {
-        const query = inputField.value.toLowerCase().trim();
+    // Función para mostrar sugerencias
+    function mostrarSugerencias(sugerencias) {
+        list.innerHTML = '';
+        list.style.display = 'block';
+        // Resetear el scroll de la lista al inicio
+        list.scrollTop = 0;
         
-        // Limpiar sugerencias anteriores
-        suggestionsList.innerHTML = '';
-        selectedIndex = -1;
-        
-        // Si no hay texto, ocultar sugerencias
-        if (!query) {
-            ocultarSugerencias();
+        if (sugerencias.length === 0) {
+            const li = document.createElement('li');
+            li.classList.add('text-danger');
+            li.textContent = options.noMatchText || 'Sin coincidencias';
+            list.appendChild(li);
             return;
         }
         
-        // Si no hay datos disponibles
-        if (!dataItems || dataItems.length === 0) {
-            mostrarMensaje(settings.noDataText, 'text-danger');
-            isActive = true;
-            return;
-        }
+        filteredItems = sugerencias;
         
-        // Filtrar elementos que coincidan con la búsqueda
-        const matches = dataItems.filter(item => 
-            item[settings.dataKey].toLowerCase().includes(query)
-        );
-        
-        // Si no hay coincidencias
-        if (matches.length === 0) {
-            mostrarMensaje(settings.noMatchText, 'text-danger');
-            isActive = true;
-            return;
-        }
-        
-        // Si hay una coincidencia exacta, no mostrar sugerencias
-        const exactMatch = matches.length === 1 && 
-                          matches[0][settings.dataKey].toLowerCase() === query;
-        
-        if (exactMatch) {
-            ocultarSugerencias();
-            return;
-        }
-        
-        // Mostrar las coincidencias
-        suggestionsList.classList.remove('d-none');
-        isActive = true;
-        
-        // Crear sugerencias
-        matches.forEach((item, index) => {
-            const listItem = document.createElement('li');
-            listItem.className = 'list-group-item list-group-item-action';
-            listItem.dataset.id = item[settings.idKey];
+        sugerencias.forEach((item, index) => {
+            const li = document.createElement('li');
+            const valor = input.value.trim().toLowerCase();
+            const texto = item.bien;
             
-            // Resaltar parte coincidente
-            const text = item[settings.dataKey];
-            const textLower = text.toLowerCase();
-            const position = textLower.indexOf(query);
+            // Resaltar la parte coincidente del texto
+            const textoLower = texto.toLowerCase();
+            const inicio = textoLower.indexOf(valor);
             
-            if (position !== -1) {
-                listItem.innerHTML = text.substring(0, position) + 
-                                    '<strong>' + text.substring(position, position + query.length) + '</strong>' + 
-                                    text.substring(position + query.length);
+            if (inicio >= 0) {
+                const fin = inicio + valor.length;
+                const parteAntes = texto.substring(0, inicio);
+                const parteCoincidente = texto.substring(inicio, fin);
+                const parteDespues = texto.substring(fin);
+                
+                // Usar innerHTML para permitir la etiqueta <strong>
+                li.innerHTML = parteAntes + '<strong>' + parteCoincidente + '</strong>' + parteDespues;
             } else {
-                listItem.textContent = text;
+                li.textContent = texto;
             }
             
-            // Asignar eventos
-            listItem.addEventListener('mouseover', () => {
-                desseleccionarTodos();
-                listItem.classList.add('active');
-                selectedIndex = index;
-            });
+            li.dataset.index = index;
             
-            listItem.addEventListener('mouseout', () => {
-                listItem.classList.remove('active');
-            });
-            
-            listItem.addEventListener('click', () => {
+            li.addEventListener('click', () => {
                 seleccionarItem(item);
+                ocultarSugerencias();
             });
             
-            suggestionsList.appendChild(listItem);
+            li.addEventListener('mouseover', () => {
+                activeIndex = index;
+                marcarItemActivo();
+            });
+            
+            list.appendChild(li);
         });
-    }
-    
-    /**
-     * Oculta la lista de sugerencias
-     */
-    function ocultarSugerencias() {
-        suggestionsList.classList.add('d-none');
-        isActive = false;
-    }
-    
-    /**
-     * Muestra un mensaje en la lista de sugerencias
-     * @param {string} text - Texto del mensaje
-     * @param {string} className - Clase CSS adicional para el mensaje
-     */
-    function mostrarMensaje(text, className = '') {
-        suggestionsList.innerHTML = '';
-        suggestionsList.classList.remove('d-none');
         
-        const messageItem = document.createElement('li');
-        messageItem.className = `list-group-item ${className}`;
-        messageItem.textContent = text;
-        
-        suggestionsList.appendChild(messageItem);
+        // Si solo hay una sugerencia, marcarla como activa
+        if (sugerencias.length === 1) {
+            activeIndex = 0;
+            marcarItemActivo();
+        }
     }
     
-    /**
-     * Selecciona un item de la lista de sugerencias
-     * @param {Object} item - Objeto de datos seleccionado
-     */
+    // Función para marcar item activo
+    function marcarItemActivo() {
+        const items = list.querySelectorAll('li');
+        items.forEach(item => item.classList.remove('active'));
+        
+        if (activeIndex >= 0 && activeIndex < items.length) {
+            items[activeIndex].classList.add('active');
+            // Asegurar que el elemento activo esté visible en la lista
+            scrollToActiveItem();
+        }
+    }
+    
+    // Función para seleccionar un item
     function seleccionarItem(item) {
-        inputField.value = item[settings.dataKey];
+        input.value = item.bien;
+        hiddenInput.value = item.id;
         
-        // Si hay un input oculto, establecer el ID
-        if (hiddenInput) {
-            hiddenInput.value = item[settings.idKey];
-        }
-        
-        // Ejecutar función personalizada si existe
-        if (typeof settings.onSelect === 'function') {
-            settings.onSelect(item);
-        }
-        
-        // Ocultar sugerencias inmediatamente
+        // Ocultar las sugerencias inmediatamente al seleccionar
         ocultarSugerencias();
+        
+        // Ejecutar la función de callback si existe
+        if (typeof options.onSelect === 'function') {
+            options.onSelect(item);
+        }
     }
     
-    /**
-     * Quita la selección de todos los elementos
-     */
-    function desseleccionarTodos() {
-        const items = suggestionsList.querySelectorAll('.list-group-item');
-        items.forEach(item => {
-            item.classList.remove('active');
-        });
-    }
-    
-    /**
-     * Maneja las teclas para navegación
-     * @param {KeyboardEvent} event - Evento de teclado
-     */
-    function manejarTeclas(event) {
-        if (!isActive) return;
+    // Manejar eventos de teclado
+    input.addEventListener('keydown', (e) => {
+        // Si las sugerencias están ocultas y no es la tecla Enter, no hacer nada
+        if (list.style.display === 'none' && e.key !== 'Enter') {
+            return;
+        }
         
-        const items = suggestionsList.querySelectorAll('.list-group-item-action');
-        if (items.length === 0) return;
-        
-        switch (event.key) {
+        switch (e.key) {
             case 'ArrowDown':
-                event.preventDefault();
-                selectedIndex = (selectedIndex + 1) % items.length;
-                actualizarSeleccion(items);
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, filteredItems.length - 1);
+                marcarItemActivo();
                 break;
-                
+            
             case 'ArrowUp':
-                event.preventDefault();
-                selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-                actualizarSeleccion(items);
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                marcarItemActivo();
                 break;
-                
+            
             case 'Enter':
-                event.preventDefault();
-                // Si hay elemento seleccionado
-                if (selectedIndex >= 0 && selectedIndex < items.length) {
-                    const selectedId = items[selectedIndex].dataset.id;
-                    const selectedItem = dataItems.find(item => item[settings.idKey] == selectedId);
-                    if (selectedItem) {
-                        seleccionarItem(selectedItem);
-                    }
-                } 
-                // Si solo hay un elemento y no hay selección
-                else if (items.length === 1) {
-                    const selectedId = items[0].dataset.id;
-                    const selectedItem = dataItems.find(item => item[settings.idKey] == selectedId);
-                    if (selectedItem) {
-                        seleccionarItem(selectedItem);
-                    }
+                e.preventDefault();
+                if (activeIndex >= 0 && filteredItems[activeIndex]) {
+                    seleccionarItem(filteredItems[activeIndex]);
+                } else if (filteredItems.length === 1) {
+                    // Si solo hay una sugerencia, seleccionarla automáticamente
+                    seleccionarItem(filteredItems[0]);
                 }
                 break;
-                
+            
             case 'Escape':
+                e.preventDefault();
                 ocultarSugerencias();
                 break;
         }
-    }
+    });
     
-    /**
-     * Actualiza visualmente la selección en la lista
-     * @param {NodeList} items - Lista de elementos
-     */
-    function actualizarSeleccion(items) {
-        desseleccionarTodos();
+    // Buscar al escribir (sin debounce, respuesta inmediata)
+    input.addEventListener('input', () => {
+        const valor = input.value.trim().toLowerCase();
         
-        if (selectedIndex >= 0 && selectedIndex < items.length) {
-            items[selectedIndex].classList.add('active');
-            
-            // Asegurar que el elemento seleccionado sea visible
-            items[selectedIndex].scrollIntoView({
-                block: 'nearest',
-                behavior: 'smooth'
-            });
+        // Resetear el índice activo al cambiar la búsqueda
+        activeIndex = -1;
+        
+        if (valor === '') {
+            ocultarSugerencias();
+            hiddenInput.value = '';
+            return;
         }
-    }
+        
+        if (items.length > 0) {
+            // Filtrar los items ya cargados
+            const sugerencias = items.filter(item => 
+                item.bien.toLowerCase().includes(valor)
+            );
+            mostrarSugerencias(sugerencias);
+        } else {
+            // Cargar datos desde la API
+            fetch(options.dataUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        const li = document.createElement('li');
+                        li.classList.add('text-danger');
+                        li.textContent = options.noDataText || 'No hay datos disponibles';
+                        list.innerHTML = '';
+                        list.appendChild(li);
+                        list.style.display = 'block';
+                        return;
+                    }
+                    
+                    items = data;
+                    const sugerencias = items.filter(item => 
+                        item.bien.toLowerCase().includes(valor)
+                    );
+                    mostrarSugerencias(sugerencias);
+                })
+                .catch(error => {
+                    console.error('Error al cargar datos:', error);
+                    const li = document.createElement('li');
+                    li.classList.add('text-danger');
+                    li.textContent = 'Error al cargar datos';
+                    list.innerHTML = '';
+                    list.appendChild(li);
+                    list.style.display = 'block';
+                });
+        }
+    });
     
-    /**
-     * Cierra las sugerencias al hacer clic fuera
-     * @param {MouseEvent} event - Evento de clic
-     */
-    function clickFuera(event) {
-        if (!container.contains(event.target)) {
+    // Ocultar sugerencias al hacer clic fuera
+    document.addEventListener('click', (e) => {
+        if (!container.contains(e.target)) {
             ocultarSugerencias();
         }
-    }
+    });
     
-    /**
-     * Inicializa eventos y configuración
-     */
-    function inicializar() {
-        // Verificar estructura del DOM
-        if (!inputField) {
-            console.error(`Input no encontrado dentro de ${containerSelector}`);
-            return;
-        }
-        
-        if (!suggestionsList) {
-            console.error(`Lista de sugerencias no encontrada dentro de ${containerSelector}`);
-            return;
-        }
-        
-        // Configurar lista con clases de Bootstrap y estilos
-        suggestionsList.classList.add('list-group');
-        suggestionsList.classList.add('d-none');
-        suggestionsList.style.position = 'absolute';
-        suggestionsList.style.width = '100%';
-        suggestionsList.style.zIndex = '1000';
-        suggestionsList.style.top = '100%'; // Colocar debajo del input
-        suggestionsList.style.maxHeight = '200px'; // Altura máxima
-        suggestionsList.style.overflowY = 'auto'; // Scroll vertical si es necesario
-        suggestionsList.style.marginTop = '2px'; // Espacio entre input y sugerencias
-        suggestionsList.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)'; // Sombra
-        
-        // Asegurar que el contenedor tenga posición relativa
-        if (getComputedStyle(container).position === 'static') {
-            container.style.position = 'relative';
-        }
-        
-        // Cargar datos
-        cargarDatos();
-        
-        // Asignar eventos
-        inputField.addEventListener('input', mostrarSugerencias);
-        inputField.addEventListener('keydown', manejarTeclas);
-        
-        // Mejorar la detección de clics fuera del contenedor
-        document.addEventListener('click', clickFuera);
-        document.addEventListener('touchstart', clickFuera); // Para dispositivos táctiles
-        
-        // Prevenir envío de formulario al presionar Enter cuando hay sugerencias activas
-        inputField.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && isActive) {
-                e.preventDefault();
-            }
-        });
-    }
+    // Inicialización: ocultar sugerencias
+    ocultarSugerencias();
     
-    // Inicializar
-    inicializar();
-    
-    // Devolver métodos públicos
+    // Retornar funciones públicas
     return {
-        recargarDatos: cargarDatos,
-        ocultarSugerencias: ocultarSugerencias
+        ocultarSugerencias,
+        mostrarSugerencias,
+        seleccionarItem,
+        recargarDatos: function() {
+            // Limpiar datos en caché para forzar recarga
+            items = [];
+            // Disparar el evento input si hay texto en el campo
+            if (input.value.trim() !== '') {
+                input.dispatchEvent(new Event('input'));
+            }
+        }
     };
 }
 
