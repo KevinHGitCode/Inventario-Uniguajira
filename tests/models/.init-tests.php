@@ -11,6 +11,7 @@ $availableTestSuites = [
     'Inventory' => 'Inventory.test.php',
     'GoodsInventory' => 'GoodsInventory.test.php',
     'Tasks' => 'Tasks.test.php',
+    'Reports' => 'Reports.test.php',
 ];
 
 // Obtener estilo CSS del TestRunner
