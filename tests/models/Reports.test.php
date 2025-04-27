@@ -73,7 +73,7 @@ $runner->registerTest('renameFolder',
         }
     }, 
     [
-        1,                      // id
+        16,                      // id
         "Carpeta Renombrada"    // newName
     ]
 );
