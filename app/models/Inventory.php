@@ -47,7 +47,10 @@ class Inventory extends Database {
     public function create($name, $grupoId) {
         $stmt = $this->connection->prepare("INSERT INTO inventarios (nombre, grupo_id, fecha_modificacion, estado_conservacion) VALUES (?, ?, NOW(), 1)");
         $stmt->bind_param("si", $name, $grupoId);
-        return $stmt->execute();
+        if ($stmt->execute()) {
+            return $stmt->insert_id; // Return the ID of the created record
+        }
+        return false; // Return false if creation failed
     }
 
     /**
@@ -61,8 +64,7 @@ class Inventory extends Database {
         $stmt = $this->connection->prepare("UPDATE inventarios SET nombre = ?, fecha_modificacion = NOW() WHERE id = ?");
         $stmt->bind_param("si", $name, $id);
         $stmt->execute();
-
-        return $stmt->affected_rows > 0;
+        return $stmt->affected_rows > 0; // Return true if updated, false otherwise
     }
 
     /**
@@ -76,8 +78,7 @@ class Inventory extends Database {
         $stmt = $this->connection->prepare("UPDATE inventarios SET grupo_id = ?, fecha_modificacion = NOW() WHERE id = ?");
         $stmt->bind_param("ii", $grupoId, $id);
         $stmt->execute();
-
-        return $stmt->affected_rows > 0;
+        return $stmt->affected_rows > 0; // Return true if updated, false otherwise
     }
 
     /**
@@ -90,14 +91,12 @@ class Inventory extends Database {
     public function updateConservation($id, $conservation) {
         $validConservations = [1, 2, 3];
         if (!in_array($conservation, $validConservations)) {
-            return false; // Estado no válido
+            return false; // Invalid conservation state
         }
-        
         $stmt = $this->connection->prepare("UPDATE inventarios SET estado_conservacion = ?, fecha_modificacion = NOW() WHERE id = ?");
         $stmt->bind_param("ii", $conservation, $id);
         $stmt->execute();
-    
-        return $stmt->affected_rows > 0;
+        return $stmt->affected_rows > 0; // Return true if updated, false otherwise
     }
 
 
@@ -124,7 +123,7 @@ class Inventory extends Database {
         $stmt->bind_param("i", $id);
         $stmt->execute();
     
-        return $stmt->affected_rows > 0;
+        return $stmt->affected_rows > 0; // Return true if deleted, false otherwise
     }
 }
 

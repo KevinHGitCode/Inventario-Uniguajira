@@ -56,21 +56,29 @@ class Goods extends Database {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
     
-
     /**
      * Crear un nuevo bien.
      * 
      * @param string $nombre Nombre del bien.
      * @param int $tipo Tipo del bien (representado como un entero).
      * @param string $imagenRuta Ruta de la imagen asociada al bien.
-     * @return bool True si la operación fue exitosa, False en caso contrario.
+     * @return int|false ID del bien creado si fue exitoso, False en caso contrario.
      */
     public function create($nombre, $tipo, $imagenRuta) {
+        // Verificar si el nombre ya existe
+        if ($this->existsByName($nombre)) {
+            return false;
+        }
+
         $stmt = $this->connection->prepare("INSERT INTO bienes (nombre, tipo, imagen) VALUES (?, ?, ?)");
         $stmt->bind_param("sis", $nombre, $tipo, $imagenRuta);
-        return $stmt->execute();
+        
+        if ($stmt->execute()) {
+            return $stmt->insert_id; // Retornar el ID del bien recién creado
+        }
+        
+        return false;
     }
-    
     
     /**
      * Modificar el nombre y/o la imagen de un bien.
@@ -88,7 +96,8 @@ class Goods extends Database {
             $stmt = $this->connection->prepare("UPDATE bienes SET nombre = ? WHERE id = ?");
             $stmt->bind_param("si", $nombre, $id);
         }
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
     }
 
     /**
@@ -102,7 +111,8 @@ class Goods extends Database {
     public function delete($id) {
         $stmt = $this->connection->prepare("DELETE FROM bienes WHERE id = ?");
         $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
     }
 
     /**
@@ -118,12 +128,10 @@ class Goods extends Database {
         $result = $stmt->get_result();
         
         if ($row = $result->fetch_assoc()) {
-            error_log("Buscando cantidad del bien $id");
             return (int)$row['total_cantidad'];
-        } else {
-            error_log("Buscando cantidad del bien $id");
-            return 0; // Si no encontró nada, asumimos cantidad 0
         }
+        
+        return 0; // Si no encontró nada, asumimos cantidad 0
     }
 
     /**
@@ -154,7 +162,5 @@ class Goods extends Database {
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }
-    
-    
 }
 ?>
