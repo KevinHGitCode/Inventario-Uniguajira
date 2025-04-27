@@ -75,44 +75,19 @@ class ctlUser {
         ]);
     }
 
-    /**
-     * Método para registrar un nuevo usuario.
-     */
-    public function register() {
-        header('Content-Type: application/json');
-        
-        if (!validateHttpRequest('POST', ['nombre', 'email', 'contraseña', 'rol'])) {
-            return;
-        }
-
-        // Obtener parámetros desde $_POST
-        $nombre = $_POST['nombre'];
-        $nombre_usuario = $_POST['nombre_usuario'] ?? '';
-        $email = $_POST['email'];
-        $contraseña = $_POST['contraseña'];
-        $rol = (int) $_POST['rol'];
-
-        // Crear el nuevo usuario
-        $userId = $this->userModel->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol);
-        
-        if ($userId) {
-            echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente.', 'userId' => $userId]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario.']);
-        }
-    }
 
     /**
      * Método para editar el perfil de un usuario.
      */
     public function editProfile() {
-        session_start();
         header('Content-Type: application/json');
 
         if (!validateHttpRequest('POST', ['nombre', 'nombre_usuario', 'email'])) {
             return;
         }
+
+        session_start();
+        $this->userModel->setCurrentUser();
 
         $id = (int) $_SESSION['user_id'] ?? 0;
         $nombre = trim($_POST['nombre']);
@@ -175,6 +150,9 @@ class ctlUser {
         if (!validateHttpRequest('POST', ['id', 'nombre', 'nombre_usuario', 'email'])) {
             return;
         }
+
+        session_start();
+        $this->userModel->setCurrentUser();
     
         $id = (int) $_POST['id'];
         $nombre = trim($_POST['nombre']);
@@ -228,6 +206,9 @@ class ctlUser {
             return;
         }
 
+        session_start();
+        $this->userModel->setCurrentUser();
+
         // Obtener parámetros desde $_POST
         $nombre = $_POST['nombre'];
         $nombre_usuario = $_POST['nombre_usuario'];
@@ -250,12 +231,14 @@ class ctlUser {
      * Método para actualizar la contraseña de un usuario.
      */
     public function updatePassword() {
-        session_start();
         header('Content-Type: application/json');
 
         if (!validateHttpRequest('POST', ['contraseña', 'nueva_contraseña', 'confirmar_contraseña'])) {
             return;
         }
+
+        session_start();
+        $this->userModel->setCurrentUser();
 
         $id = (int) $_SESSION['user_id'] ?? 0;
         $password = trim($_POST['contraseña']);
@@ -311,6 +294,9 @@ class ctlUser {
             echo json_encode(['success' => false, 'message' => 'ID de usuario inválido']);
             return;
         }
+ 
+        session_start();
+        $this->userModel->setCurrentUser();
         
         // Llamar al modelo para eliminar el usuario
         $resultado = $this->userModel->deleteUser($id);
