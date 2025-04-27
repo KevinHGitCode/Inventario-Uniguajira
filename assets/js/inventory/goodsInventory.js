@@ -8,104 +8,142 @@ function initGoodsInventoryFunctions() {
             showToast(response);
             const inventarioId = localStorage.getItem('openInventory');
             abrirInventario(inventarioId, false);
+        },
+        onBeforeSubmit: () => {
+            // Validación adicional antes de enviar el formulario
+            const bienId = document.getElementById('bien_id').value;
+            if (!bienId) {
+                showToast({success: false, message: 'Debe seleccionar un bien válido'});
+                return false;
+            }
+            return true;
         }
     });
 
-    // Inicializar formulario para cambiar cantidad de bien
-    inicializarFormularioAjax('#formCambiarCantidadBien', {
-        closeModalOnSuccess: true,
-        onSuccess: (response) => {
-            showToast(response);
-            const inventarioId = localStorage.getItem('openInventory');
-            abrirInventario(inventarioId, false);
-        }
-    });
-
-    // Inicializar formulario para mover bien
-    inicializarFormularioAjax('#formMoverBien', {
-        closeModalOnSuccess: true,
-        onSuccess: (response) => {
-            showToast(response);
-            const inventarioId = localStorage.getItem('openInventory');
-            abrirInventario(inventarioId, false);
-        }
-    });
-
+    // Otros inicializadores...
 
     // Uso con el autocomplete
-    const autocomplete = initAutocompleteSearch('#search-container', {
-        dataUrl: '/api/goods/get/json',
-        inputSelector: '#nombreBien',
-        listSelector: '.suggestions',
+    // const autocomplete = initAutocompleteSearch('#search-container', {
+    //     dataUrl: '/api/goods/get/json',
+    //     inputSelector: '#nombreBien',
+    //     listSelector: '.suggestions',
+    //     hiddenInputSelector: '#bien_id',
+    //     onSelect: gestionarCamposBien
+    // });
+
+    
+    // Inicializar el autocompletado para búsqueda de bienes
+    const bienesAutocomplete = initAutocompleteSearch('#search-container', {
+        dataUrl: '/api/goods/get/json', // Ajustar a la ruta correcta de tu API
+        dataKey: 'nombre',           // Campo para mostrar en las sugerencias
+        idKey: 'id',                 // Campo para el valor del ID
         hiddenInputSelector: '#bien_id',
-        onSelect: gestionarCamposBien
-    });
-}
-
-// Función para abrir el modal de cambiar cantidad de bien
-function btnCambiarCantidadBien() {
-    console.log("Click en cambiar cantidad de bien");
-    const id = selectedItem.id;
-    const cantidad = selectedItem.cantidad;
-    
-    document.getElementById("cambiarCantidadBienId").value = id;
-    document.getElementById("cantidadBien").value = cantidad;
-
-    mostrarModal('#modalCambiarCantidadBien');
-}
-
-// Función para abrir el modal de mover bien
-function btnMoverBien() {
-    console.log("Click en mover bien");
-    const id = selectedItem.id;
-    
-    document.getElementById("moverBienId").value = id;
-    
-    // Cargar inventarios disponibles para mover
-    cargarInventariosDisponibles();
-    
-    mostrarModal('#modalMoverBien');
-}
-
-// Función para eliminar un bien directamente (alternativa al modal)
-function eliminarBienInventario(idBien) {
-    eliminarRegistro({
-        url: `/api/goods-inventory/delete/${idBien}`,
-        onSuccess: (response) => {
-            if (response.success) {
-                const inventarioId = localStorage.getItem('openInventory');
-                abrirInventario(inventarioId, false);
+        onSelect: function(item) {
+            console.log('Bien seleccionado:', item);
+            
+            // Mostrar campos dinámicos según el tipo de bien
+            const dynamicFields = document.getElementById('dynamicFields');
+            const camposCantidad = document.getElementById('camposCantidad');
+            const camposSerial = document.getElementById('camposSerial');
+            
+            // Mostrar el contenedor principal
+            dynamicFields.style.display = 'block';
+            
+            // Mostrar campos según el tipo (este es un ejemplo, ajustarlo según tu lógica)
+            if (item.tipo === 'cantidad') {
+                camposCantidad.style.display = 'block';
+                camposSerial.style.display = 'none';
+            } else if (item.tipo === 'serial') {
+                camposCantidad.style.display = 'none';
+                camposSerial.style.display = 'block';
             }
-            showToast(response);
-        }
+        },
+        noMatchText: 'No se encontraron bienes con ese nombre',
+        noDataText: 'No hay bienes disponibles'
+    });
+    
+    // Cuando se abre el modal, asegurarse de que las sugerencias estén ocultas
+    const modalBtn = document.querySelector('[data-target="#modalCrearBienInventario"]');
+    if (modalBtn) {
+        modalBtn.addEventListener('click', function() {
+            bienesAutocomplete.ocultarSugerencias();
+        });
+    }
+    
+    // Cuando se cierra el modal, asegurarse de que las sugerencias estén ocultas
+    document.querySelector('#modalCrearBienInventario .close').addEventListener('click', function() {
+        bienesAutocomplete.ocultarSugerencias();
     });
 }
 
-
+/**
+ * Gestiona la visibilidad de los campos según el tipo de bien seleccionado
+ * @param {Object} item - Objeto del bien seleccionado
+ */
 function gestionarCamposBien(item) {
-    // Obtener el contenedor del campo cantidad
-    const campoCantidad = document.getElementById('cantidadBien').parentElement;
+    console.log("Bien seleccionado:", item);
     
-    // Obtener los contenedores de los campos para bienes de tipo Serial
-    const camposSerial = [
-        document.getElementById('descripcionBien').parentElement,
-        document.getElementById('marcaBien').parentElement,
-        document.getElementById('modeloBien').parentElement,
-        document.getElementById('serialBien').parentElement,
-        document.getElementById('estadoBien').parentElement,
-        document.getElementById('colorBien').parentElement,
-        document.getElementById('condicionBien').parentElement,
-        document.getElementById('fechaIngresoBien').parentElement
-    ];
+    // Mostrar el contenedor principal de campos dinámicos
+    const dynamicFields = document.getElementById('dynamicFields');
+    dynamicFields.style.display = 'block';
+    
+    // Obtener los contenedores de los diferentes tipos de campos
+    const camposCantidad = document.getElementById('camposCantidad');
+    const camposSerial = document.getElementById('camposSerial');
     
     // Ocultar todos los campos primero
-    campoCantidad.style.display = 'none';
-    camposSerial.forEach(campo => campo.style.display = 'none');
+    camposCantidad.style.display = 'none';
+    camposSerial.style.display = 'none';
     
     // Mostrar campos según el tipo
     if (item.tipo === 'Cantidad') {
-        campoCantidad.style.display = 'block';
+        camposCantidad.style.display = 'block';
+        // Establecer el valor mínimo a 1 por defecto
+        document.getElementById('cantidadBien').value = 1;
     } else if (item.tipo === 'Serial') {
-        camposSerial.forEach(campo => campo.style.display = 'block');
+        camposSerial.style.display = 'block';
+        // Limpiar campos del formulario de serial
+        limpiarCamposSerial();
     }
+}
+
+/**
+ * Limpia los campos del formulario de bienes tipo Serial
+ */
+function limpiarCamposSerial() {
+    document.getElementById('descripcionBien').value = '';
+    document.getElementById('marcaBien').value = '';
+    document.getElementById('modeloBien').value = '';
+    document.getElementById('serialBien').value = '';
+    document.getElementById('estadoBien').value = 'activo';
+    document.getElementById('colorBien').value = '';
+    document.getElementById('condicionBien').value = '';
+    
+    // Establecer la fecha actual
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    document.getElementById('fechaIngresoBien').value = formattedDate;
+}
+
+// Al abrir el modal de creación de bien
+function abrirModalCrearBien() {
+    // Obtener el ID del inventario desde localStorage
+    const inventarioId = localStorage.getItem('openInventory');
+    if (!inventarioId) {
+        showToast({ success: false, message: 'No se ha seleccionado un inventario abierto' });
+        return;
+    }
+
+    // Establecer el ID del inventario en el formulario
+    document.getElementById('inventarioId').value = inventarioId;
+
+    // Limpiar el campo de búsqueda
+    document.getElementById('nombreBien').value = '';
+    document.getElementById('bien_id').value = '';
+
+    // Ocultar todos los campos dinámicos
+    document.getElementById('dynamicFields').style.display = 'none';
+
+    // Mostrar el modal
+    mostrarModal('#modalCrearBienInventario');
 }

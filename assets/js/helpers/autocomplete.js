@@ -18,8 +18,8 @@
  * - Resalta visualmente la parte coincidente del texto en las sugerencias
  * - Previene el envío de formularios al presionar Enter cuando hay sugerencias activas
  *
- * @version 2.0
- * @date 2025-04-20
+ * @version 2.1
+ * @date 2025-04-26
  */
 
 /**
@@ -116,8 +116,7 @@ function initAutocompleteSearch(containerSelector, options = {}) {
         
         // Si no hay texto, ocultar sugerencias
         if (!query) {
-            suggestionsList.classList.add('d-none');
-            isActive = false;
+            ocultarSugerencias();
             return;
         }
         
@@ -145,8 +144,7 @@ function initAutocompleteSearch(containerSelector, options = {}) {
                           matches[0][settings.dataKey].toLowerCase() === query;
         
         if (exactMatch) {
-            suggestionsList.classList.add('d-none');
-            isActive = false;
+            ocultarSugerencias();
             return;
         }
         
@@ -193,6 +191,14 @@ function initAutocompleteSearch(containerSelector, options = {}) {
     }
     
     /**
+     * Oculta la lista de sugerencias
+     */
+    function ocultarSugerencias() {
+        suggestionsList.classList.add('d-none');
+        isActive = false;
+    }
+    
+    /**
      * Muestra un mensaje en la lista de sugerencias
      * @param {string} text - Texto del mensaje
      * @param {string} className - Clase CSS adicional para el mensaje
@@ -225,9 +231,8 @@ function initAutocompleteSearch(containerSelector, options = {}) {
             settings.onSelect(item);
         }
         
-        // Ocultar sugerencias
-        suggestionsList.classList.add('d-none');
-        isActive = false;
+        // Ocultar sugerencias inmediatamente
+        ocultarSugerencias();
     }
     
     /**
@@ -284,8 +289,7 @@ function initAutocompleteSearch(containerSelector, options = {}) {
                 break;
                 
             case 'Escape':
-                suggestionsList.classList.add('d-none');
-                isActive = false;
+                ocultarSugerencias();
                 break;
         }
     }
@@ -314,8 +318,7 @@ function initAutocompleteSearch(containerSelector, options = {}) {
      */
     function clickFuera(event) {
         if (!container.contains(event.target)) {
-            suggestionsList.classList.add('d-none');
-            isActive = false;
+            ocultarSugerencias();
         }
     }
     
@@ -334,12 +337,17 @@ function initAutocompleteSearch(containerSelector, options = {}) {
             return;
         }
         
-        // Configurar lista con clases de Bootstrap
+        // Configurar lista con clases de Bootstrap y estilos
         suggestionsList.classList.add('list-group');
         suggestionsList.classList.add('d-none');
         suggestionsList.style.position = 'absolute';
         suggestionsList.style.width = '100%';
         suggestionsList.style.zIndex = '1000';
+        suggestionsList.style.top = '100%'; // Colocar debajo del input
+        suggestionsList.style.maxHeight = '200px'; // Altura máxima
+        suggestionsList.style.overflowY = 'auto'; // Scroll vertical si es necesario
+        suggestionsList.style.marginTop = '2px'; // Espacio entre input y sugerencias
+        suggestionsList.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)'; // Sombra
         
         // Asegurar que el contenedor tenga posición relativa
         if (getComputedStyle(container).position === 'static') {
@@ -352,7 +360,10 @@ function initAutocompleteSearch(containerSelector, options = {}) {
         // Asignar eventos
         inputField.addEventListener('input', mostrarSugerencias);
         inputField.addEventListener('keydown', manejarTeclas);
+        
+        // Mejorar la detección de clics fuera del contenedor
         document.addEventListener('click', clickFuera);
+        document.addEventListener('touchstart', clickFuera); // Para dispositivos táctiles
         
         // Prevenir envío de formulario al presionar Enter cuando hay sugerencias activas
         inputField.addEventListener('keypress', function(e) {
@@ -367,7 +378,8 @@ function initAutocompleteSearch(containerSelector, options = {}) {
     
     // Devolver métodos públicos
     return {
-        recargarDatos: cargarDatos
+        recargarDatos: cargarDatos,
+        ocultarSugerencias: ocultarSugerencias
     };
 }
 

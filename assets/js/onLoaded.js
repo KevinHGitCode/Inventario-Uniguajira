@@ -1,3 +1,4 @@
+// Inicializar funcionalidades cuando el DOM esté listo
 window.onload = () => {
     cargarUltimaSeleccion();
 

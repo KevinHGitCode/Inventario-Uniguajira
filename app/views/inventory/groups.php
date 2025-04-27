@@ -164,7 +164,7 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button id="btnCrear" class="create-btn" onclick="mostrarModal('#modalCrearBienInventario')">Crear</button>
+            <button id="btnCrear" class="create-btn" onclick="abrirModalCrearBien()">Crear</button>
             <?php endif; ?>
             
         </div>

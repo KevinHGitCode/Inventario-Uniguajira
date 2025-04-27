@@ -118,7 +118,7 @@
 
 <!-- --------------------------------------------------------------- -->
 
-<?php include __DIR__ . "modals.good-inventory.php"; ?>
+<?php include __DIR__ . "/modals.good-inventory.php"; ?>
 
 <!-- Modal para Cambiar Cantidad de Bien -->
 <div id="modalCambiarCantidadBien" class="modal">

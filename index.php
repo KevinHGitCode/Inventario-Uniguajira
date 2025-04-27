@@ -64,11 +64,16 @@ $router->add('/api/inventories/rename', 'ctlInventory', 'rename');
 $router->add('/api/inventories/delete/:id', 'ctlInventory', 'delete');
 
 
-// Rutas para la API de bienes de inventario
-$router->add('/api/goods-inventory/create', 'ctlInventory', 'addGood');
-$router->add('/api/goods-inventory/update-quantity', 'ctlInventory', 'updateQuantity');
-$router->add('/api/goods-inventory/move', 'ctlInventory', 'moveGood');
-$router->add('/api/goods-inventory/delete', 'ctlInventory', 'removeGood');
+// Rutas para la API de bienes en inventario
+$router->add('/api/goods-inventory/create', 'ctlGoodInventory', 'create');
+$router->add('/api/goods-inventory/delete/:id', 'ctlGoodInventory', 'delete');
+$router->add('/api/goods-inventory/update-quantity', 'ctlGoodInventory', 'updateQuantity');
+$router->add('/api/goods-inventory/move', 'ctlGoodInventory', 'moveGood');
+
+// $router->add('/api/goods-inventory/create', 'ctlInventory', 'addGood');
+// $router->add('/api/goods-inventory/update-quantity', 'ctlInventory', 'updateQuantity');
+// $router->add('/api/goods-inventory/move', 'ctlInventory', 'moveGood');
+// $router->add('/api/goods-inventory/delete', 'ctlInventory', 'removeGood');
 
 // $router->add('/api/goods-inventory/create', 'ctlGoodsInventory', 'create');
 // $router->add('/api/goods-inventory/delete/:id', 'ctlGoodsInventory', 'delete');
