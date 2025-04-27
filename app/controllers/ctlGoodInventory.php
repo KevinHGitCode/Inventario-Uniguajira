@@ -32,10 +32,8 @@ class ctlGoodInventory {
         $bienTipo = $_POST['bien_tipo'];
 
         if ($bienTipo == 1) {  // tipo cantidad
-            // echo json_encode(['success' => true, 'message' => 'Tipo Cantidad.']);
             $this->handleCantidadType($inventarioId, $bienId);
         } else if ($bienTipo == 2) {  // tipo serial
-            // echo json_encode(['success' => true, 'message' => 'Tipo Serial.']);
             $this->handleSerialType($inventarioId, $bienId);
         } else {
             http_response_code(400);
@@ -59,7 +57,7 @@ class ctlGoodInventory {
         $resultado = $this->goodsInventory->addQuantity($inventarioId, $bienId, $cantidad);
 
         if ($resultado) {
-            echo json_encode(['success' => true, 'message' => 'Bien de tipo cantidad agregado exitosamente.']);
+            echo json_encode(['success' => true, 'message' => 'Bien de tipo cantidad agregado exitosamente.', 'id' => $resultado]);
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'No se pudo agregar el bien de tipo cantidad.']);
@@ -87,7 +85,7 @@ class ctlGoodInventory {
         $resultado = $this->goodsInventory->addSerial($inventarioId, $bienId, $details);
 
         if ($resultado) {
-            echo json_encode(['success' => true, 'message' => 'Bien de tipo serial agregado exitosamente.']);
+            echo json_encode(['success' => true, 'message' => 'Bien de tipo serial agregado exitosamente.', 'id' => $resultado]);
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'No se pudo agregar el bien de tipo serial.']);
@@ -172,4 +170,3 @@ class ctlGoodInventory {
         }
     }
 }
-
