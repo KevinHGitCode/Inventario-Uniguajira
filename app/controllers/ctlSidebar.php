@@ -77,12 +77,12 @@ class ctlSidebar {
      * @return void
      */
     public function reports() {
-        // require_once __DIR__ . '/../models/Groups.php';
-        // $groups = new Groups();
-        // $dataGroups = $groups->getAllGroups(); // Get all groups from the model
+        require_once __DIR__ . '/../models/Reports.php';
+        $reports = new Reports();
+        $dataReportFolders = $reports->getAllFolders(); // Get all groups from the model
 
         // Logic for reports view
-        require __DIR__ . '/../views/reports.php';
+        require __DIR__ . '/../views/reports/reports.php';
     }
 
     /**
