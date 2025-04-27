@@ -34,14 +34,18 @@ class Database {
         // $this->connection->query("SET time_zone = '-05:00'"); // Ajusta a tu zona horaria (ejemplo: GMT-5)
         $this->setTimezone();
         // Establecer el usuario actual si está disponible
-        if (isset($_SESSION['user_id'])) {
-            $userId = (int)$_SESSION['user_id'];
-            $this->connection->query("SET @usuario_actual = $userId");
-        }
+        $this->setCurrentUser();
     }
 
     public function getConnection() {
         return $this->connection;
+    }
+
+    public function setCurrentUser() {
+        if (isset($_SESSION['user_id'])) {
+            $userId = (int)$_SESSION['user_id'];
+            $this->connection->query("SET @usuario_actual = $userId");
+        }
     }
 
     public function setTimezone() {
