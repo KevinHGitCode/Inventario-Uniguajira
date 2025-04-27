@@ -72,9 +72,9 @@
 
     <script src="assets/js/user.js"></script>
     <script src="assets/js/profile.js"></script>
-    <script src="assets/js/inventory.js"></script>
-    <script src="assets/js/groups.js"></script>
-    <script src="assets/js/goodsInventory.js"></script>
+    <script src="assets/js/inventory/inventory.js"></script>
+    <script src="assets/js/inventory/groups.js"></script>
+    <script src="assets/js/inventory/goodsInventory.js"></script>
     <script src="assets/js/onLoaded.js"></script>
 </body>
 
