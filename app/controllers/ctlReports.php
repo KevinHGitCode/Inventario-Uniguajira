@@ -1,8 +1,9 @@
 <?php
 
+require_once __DIR__ . '/sessionCheck.php';
 require_once __DIR__ . '/../models/Reports.php';
 
-class ReportsController
+class ctlReports
 {
     private $reportModel;
 
@@ -43,10 +44,10 @@ class ReportsController
     {
         try {
             $reports = $this->reportModel->getReportsByFolder($folderId);
-            return [
-                'status' => 'success',
-                'data' => $reports
-            ];
+
+            $dataIdFolder = $reports;
+            require 'app/views/reports/reports.php';
+
         } catch (Exception $e) {
             return [
                 'status' => 'error',

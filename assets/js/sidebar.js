@@ -93,6 +93,11 @@ function loadContent(path, scrollUpRequired = true) {
                 }
 
                 break;
+
+            case '/reports':
+                iniciarBusqueda('searchFolder');
+                
+                break;
         }
         
         // Hacer scroll hacia arriba
@@ -130,7 +135,7 @@ links.forEach(link => {
 // o hacer click en el elemento con id home si no hay nada guardado
 function cargarUltimaSeleccion() {
     const lastSelected = localStorage.getItem('lastSelected');
-    const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'reports']; // Lista de rutas válidas
+    const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'reports', "reports"]; // Lista de rutas válidas
 
     if (lastSelected && validPaths.includes(lastSelected)) {
         console.log(`Cargando el elemento guardado: ${lastSelected}`);

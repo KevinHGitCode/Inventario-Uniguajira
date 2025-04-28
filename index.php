@@ -53,6 +53,10 @@ $router->add('/api/goods/update', 'ctlGoods', 'update');
 $router->add('/api/get/inventories/:id_group', 'ctlInventory', 'getInventoriesOfGroup');  // abrir grupo
 $router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');  // abrir inventario
 
+// Rutas para la API de navegacion de '/foldesr' (ok)
+$router->add('/api/reports/getAll/:id_folder', 'ctlReports', 'getReportsByFolder');  // abrir grupo
+$router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');  // abrir inventario
+
 
 // Rutas para la API de grupos (ok)
 $router->add('/api/groups/create', 'ctlGroup', 'create');
@@ -80,6 +84,18 @@ $router->add('/api/goods-inventory/move', 'ctlGoodInventory', 'moveGood');
 // $router->add('/api/goods-inventory/create', 'ctlGoodsInventory', 'create');
 // $router->add('/api/goods-inventory/delete/:id', 'ctlGoodsInventory', 'delete');
 // $router->add('/api/goods-inventory/update', 'ctlGoodsInventory', 'update');
+
+
+// Rutas para la API de carpetas (ok)
+$router->add('/api/folders/create', 'ctlReports', 'createFolder');
+$router->add('/api/folders/rename', 'ctlReports', 'renameFolder');
+$router->add('/api/folders/delete/:id', 'ctlReports', 'deleteFolder');
+
+
+// Rutas para la API de reportes (ok)
+$router->add('/api/reports/create', 'ctlReports', 'create');
+$router->add('/api/reports/rename', 'ctlReports', 'rename');
+$router->add('/api/reports/delete/:id', 'ctlReports', 'delete');
 
 // Mas rutas...
 
