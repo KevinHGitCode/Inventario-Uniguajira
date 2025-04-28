@@ -18,6 +18,34 @@ class Inventory extends Database {
     }
 
     /**
+     * Obtener información de un inventario por su ID.
+     * 
+     * @param int $id ID del inventario.
+     * @return array|false Arreglo asociativo con la información del inventario o false si no existe.
+     */
+    public function getInventoryById($id) {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                nombre, 
+                grupo_id, 
+                fecha_modificacion, 
+                estado_conservacion 
+            FROM inventarios 
+            WHERE id = ?
+        ");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            return false;
+        }
+        
+        return $result->fetch_assoc();
+    }
+
+    /**
      * Obtener todos los inventarios.
      * 
      * @return array Arreglo asociativo con todos los registros de la tabla 'inventarios'.

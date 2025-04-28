@@ -11,6 +11,33 @@ class GoodsInventory extends Database {
         parent::__construct();
     }
 
+
+    /**
+     * Obtener información de un bien en inventario por su ID.
+     * 
+     * @param int $id ID del bien en inventario.
+     * @return array|false Arreglo asociativo con la información del bien en inventario o false si no existe.
+     */
+    public function getGoodInventoryById($id) {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id, 
+                bien_id, 
+                inventario_id
+            FROM bienes_inventarios 
+            WHERE id = ?
+        ");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            return false;
+        }
+        
+        return $result->fetch_assoc();
+    }
+
     /**
      * Obtener todos los bienes de un inventario.
      * 
