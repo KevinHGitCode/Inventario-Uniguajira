@@ -109,6 +109,11 @@ class Goods extends Database {
      * @return bool True si la operación fue exitosa, False en caso contrario.
      */
     public function delete($id) {
+        // Verificar que la cantidad del bien sea 0 antes de eliminarlo
+        if ($this->getQuantityById($id) > 0) {
+            return false; // No se puede eliminar si la cantidad es mayor a 0
+        }
+
         $stmt = $this->connection->prepare("DELETE FROM bienes WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();

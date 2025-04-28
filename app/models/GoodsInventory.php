@@ -75,7 +75,7 @@ class GoodsInventory extends Database {
      * @param int $inventoryId ID del inventario.
      * @param int $goodId ID del bien.
      * @param int $quantity Cantidad a añadir.
-     * @return bool Resultado de la operación.
+     * @return int|false ID del bien_inventario creado si fue exitoso, False si hubo un error.
      */
     public function addQuantity($inventoryId, $goodId, $quantity) {
         // Primero verificamos si el bien ya existe en el inventario
@@ -102,7 +102,9 @@ class GoodsInventory extends Database {
             ON DUPLICATE KEY UPDATE cantidad = cantidad + VALUES(cantidad)
         ");
         $stmt->bind_param("ii", $bienInventarioId, $quantity);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        
+        return $result ? $bienInventarioId : false;
     }
 
     /**
@@ -111,7 +113,7 @@ class GoodsInventory extends Database {
      * @param int $inventoryId ID del inventario.
      * @param int $goodId ID del bien.
      * @param array $details Detalles del bien.
-     * @return bool Resultado de la operación.
+     * @return int|false ID del bien_equipo creado si fue exitoso, False si hubo un error.
      */
     public function addSerial($inventoryId, $goodId, $details) {
         $bienInventarioId = $this->getBienInventarioId($goodId, $inventoryId);
@@ -122,7 +124,9 @@ class GoodsInventory extends Database {
                 VALUES (?, ?)
             ");
             $stmt->bind_param("ii", $goodId, $inventoryId);
-            $stmt->execute();
+            if (!$stmt->execute()) {
+                return false;
+            }
             $bienInventarioId = $this->connection->insert_id;
         }
 
@@ -152,32 +156,16 @@ class GoodsInventory extends Database {
             $details['technical_conditions'], 
             $details['entry_date']
         );
-        return $stmt->execute();
-    }
-
-    /**
-     * Obtener el tipo de un producto.
-     * 
-     * @param int $goodId ID del bien.
-     * @return array|false Datos del tipo de bien o false si no existe.
-     */
-    public function getTipoDeProducto($goodId) {
-        $stmt = $this->connection->prepare("
-            SELECT tipo FROM bienes WHERE id = ?
-        ");
-        $stmt->bind_param("i", $goodId);
-        $stmt->execute();
-        $result = $stmt->get_result();
         
-        if ($result->num_rows === 0) {
-            return false;
+        if ($stmt->execute()) {
+            return $stmt->insert_id;
         }
-        
-        return $result->fetch_assoc();
+        return false;
     }
 
     /**
      * Obtener el ID de bien_inventario para un bien y un inventario.
+     * Obtener la relacion
      * 
      * @param int $goodId ID del bien.
      * @param int $inventoryId ID del inventario.
@@ -227,38 +215,48 @@ class GoodsInventory extends Database {
         // Iniciar transacción
         $this->connection->begin_transaction();
         
-        try {
-            if ($tipo === 'Cantidad') {
-                // Eliminar registro de bienes_cantidad
-                $stmt = $this->connection->prepare("
-                    DELETE FROM bienes_cantidad WHERE bien_inventario_id = ?
-                ");
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-            } else if ($tipo === 'Serial') {
-                // Eliminar registros de bienes_equipos
-                $stmt = $this->connection->prepare("
-                    DELETE FROM bienes_equipos WHERE bien_inventario_id = ?
-                ");
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-            }
-            
-            // Eliminar registro de bienes_inventarios
+        // Eliminar según el tipo
+        if ($tipo === 'Cantidad') {
+            // Eliminar registro de bienes_cantidad
             $stmt = $this->connection->prepare("
-                DELETE FROM bienes_inventarios WHERE id = ?
+                DELETE FROM bienes_cantidad WHERE bien_inventario_id = ?
             ");
             $stmt->bind_param("i", $id);
-            $stmt->execute();
+            $result1 = $stmt->execute();
             
-            // Confirmar transacción
-            $this->connection->commit();
-            return true;
-        } catch (Exception $e) {
-            // Revertir transacción en caso de error
+            if (!$result1) {
+                $this->connection->rollback();
+                return false;
+            }
+        } else if ($tipo === 'Serial') {
+            // Eliminar registros de bienes_equipos
+            $stmt = $this->connection->prepare("
+                DELETE FROM bienes_equipos WHERE bien_inventario_id = ?
+            ");
+            $stmt->bind_param("i", $id);
+            $result1 = $stmt->execute();
+            
+            if (!$result1) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+        
+        // Eliminar registro de bienes_inventarios
+        $stmt = $this->connection->prepare("
+            DELETE FROM bienes_inventarios WHERE id = ?
+        ");
+        $stmt->bind_param("i", $id);
+        $result2 = $stmt->execute();
+        
+        if (!$result2) {
             $this->connection->rollback();
             return false;
         }
+        
+        // Confirmar transacción
+        $this->connection->commit();
+        return true;
     }
 
     /**
@@ -282,15 +280,14 @@ class GoodsInventory extends Database {
      * Mover un bien a otro inventario.
      * 
      * @param int $bienId ID del bien en inventario.
-     * @param int $inventarioDestinoId ID del inventario de destino.
+     * @param int $inventarioDestinoId ID del inventario destino.
      * @return bool Resultado de la operación.
      */
     public function moveGood($bienId, $inventarioDestinoId) {
-        // Obtener información del bien
+        // Obtener información del bien actual
         $stmt = $this->connection->prepare("
-            SELECT bien_id, inventario_id, tipo FROM bienes_inventarios bi
-            JOIN bienes b ON bi.bien_id = b.id
-            WHERE bi.id = ?
+            SELECT bien_id, inventario_id FROM bienes_inventarios 
+            WHERE id = ?
         ");
         $stmt->bind_param("i", $bienId);
         $stmt->execute();
@@ -302,67 +299,141 @@ class GoodsInventory extends Database {
         
         $row = $result->fetch_assoc();
         $goodId = $row['bien_id'];
-        $tipo = $row['tipo'];
+        
+        // Verificar si ya existe el bien en el inventario destino
+        $bienInventarioDestinoId = $this->getBienInventarioId($goodId, $inventarioDestinoId);
         
         // Iniciar transacción
         $this->connection->begin_transaction();
         
-        try {
-            if ($tipo === 'Cantidad') {
-                // Obtener la cantidad actual
+        // Obtener tipo de bien
+        $stmt = $this->connection->prepare("
+            SELECT tipo FROM bienes 
+            WHERE id = ?
+        ");
+        $stmt->bind_param("i", $goodId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $tipoBien = $result->fetch_assoc()['tipo'];
+        
+        if ($tipoBien === 'Cantidad') {
+            // Obtener cantidad actual
+            $stmt = $this->connection->prepare("
+                SELECT cantidad FROM bienes_cantidad 
+                WHERE bien_inventario_id = ?
+            ");
+            $stmt->bind_param("i", $bienId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $cantidad = $result->fetch_assoc()['cantidad'];
+            
+            // Si existe en destino, sumar cantidad
+            if ($bienInventarioDestinoId) {
                 $stmt = $this->connection->prepare("
-                    SELECT cantidad FROM bienes_cantidad 
+                    UPDATE bienes_cantidad 
+                    SET cantidad = cantidad + ? 
                     WHERE bien_inventario_id = ?
                 ");
-                $stmt->bind_param("i", $bienId);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
-                $cantidad = $row['cantidad'];
+                $stmt->bind_param("ii", $cantidad, $bienInventarioDestinoId);
+                $result1 = $stmt->execute();
                 
-                // Añadir al inventario destino
-                $this->addQuantity($inventarioDestinoId, $goodId, $cantidad);
-                
-                // Eliminar del inventario origen
-                $this->delete($bienId);
-            } else if ($tipo === 'Serial') {
-                // Obtener todos los registros de bienes_equipos
+                if (!$result1) {
+                    $this->connection->rollback();
+                    return false;
+                }
+            } else {
+                // Crear nuevo registro en inventario destino
                 $stmt = $this->connection->prepare("
-                    SELECT * FROM bienes_equipos 
-                    WHERE bien_inventario_id = ?
+                    INSERT INTO bienes_inventarios (bien_id, inventario_id) 
+                    VALUES (?, ?)
                 ");
-                $stmt->bind_param("i", $bienId);
-                $stmt->execute();
-                $result = $stmt->get_result();
+                $stmt->bind_param("ii", $goodId, $inventarioDestinoId);
+                $result1 = $stmt->execute();
                 
-                // Para cada equipo, moverlo al nuevo inventario
-                while ($equipo = $result->fetch_assoc()) {
-                    $detalles = [
-                        'description' => $equipo['descripcion'],
-                        'brand' => $equipo['marca'],
-                        'model' => $equipo['modelo'],
-                        'serial' => $equipo['serial'],
-                        'state' => $equipo['estado'],
-                        'color' => $equipo['color'],
-                        'technical_conditions' => $equipo['condiciones_tecnicas'],
-                        'entry_date' => $equipo['fecha_ingreso']
-                    ];
-                    
-                    $this->addSerial($inventarioDestinoId, $goodId, $detalles);
+                if (!$result1) {
+                    $this->connection->rollback();
+                    return false;
                 }
                 
-                // Eliminar del inventario origen
-                $this->delete($bienId);
+                $bienInventarioDestinoId = $this->connection->insert_id;
+                
+                // Insertar cantidad
+                $stmt = $this->connection->prepare("
+                    INSERT INTO bienes_cantidad (bien_inventario_id, cantidad)
+                    VALUES (?, ?)
+                ");
+                $stmt->bind_param("ii", $bienInventarioDestinoId, $cantidad);
+                $result2 = $stmt->execute();
+                
+                if (!$result2) {
+                    $this->connection->rollback();
+                    return false;
+                }
             }
             
-            // Confirmar transacción
-            $this->connection->commit();
-            return true;
-        } catch (Exception $e) {
-            // Revertir transacción en caso de error
+            // Eliminar bien del inventario original
+            $stmt = $this->connection->prepare("
+                DELETE FROM bienes_cantidad 
+                WHERE bien_inventario_id = ?
+            ");
+            $stmt->bind_param("i", $bienId);
+            $result3 = $stmt->execute();
+            
+            if (!$result3) {
+                $this->connection->rollback();
+                return false;
+            }
+            
+        } else if ($tipoBien === 'Serial') {
+            // Para bienes de tipo serial, actualizar el bien_inventario_id
+            if (!$bienInventarioDestinoId) {
+                // Crear el registro en inventario destino
+                $stmt = $this->connection->prepare("
+                    INSERT INTO bienes_inventarios (bien_id, inventario_id) 
+                    VALUES (?, ?)
+                ");
+                $stmt->bind_param("ii", $goodId, $inventarioDestinoId);
+                $result1 = $stmt->execute();
+                
+                if (!$result1) {
+                    $this->connection->rollback();
+                    return false;
+                }
+                
+                $bienInventarioDestinoId = $this->connection->insert_id;
+            }
+            
+            // Actualizar los equipos asociados
+            $stmt = $this->connection->prepare("
+                UPDATE bienes_equipos 
+                SET bien_inventario_id = ? 
+                WHERE bien_inventario_id = ?
+            ");
+            $stmt->bind_param("ii", $bienInventarioDestinoId, $bienId);
+            $result2 = $stmt->execute();
+            
+            if (!$result2) {
+                $this->connection->rollback();
+                return false;
+            }
+        }
+        
+        // Eliminar el registro de bienes_inventarios original
+        $stmt = $this->connection->prepare("
+            DELETE FROM bienes_inventarios 
+            WHERE id = ?
+        ");
+        $stmt->bind_param("i", $bienId);
+        $result4 = $stmt->execute();
+        
+        if (!$result4) {
             $this->connection->rollback();
             return false;
         }
+        
+        // Confirmar transacción
+        $this->connection->commit();
+        return true;
     }
 }
 ?>
