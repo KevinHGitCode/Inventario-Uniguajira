@@ -325,4 +325,14 @@ VALUES
     (73, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN024', 'activo', 'Negro', 'Buen estado', '2025-03-31'),
     (73, 'Computador de escritorio', 'HP', 'ProDesk 400 G6', 'SN025', 'activo', 'Negro', 'Buen estado', '2025-03-31');
 
-    COMMIT;
+-- Insertar nombres de carpetas de reportes
+INSERT INTO carpetas_reportes (nombre)
+VALUES 
+    ("Reportes 2025 - 1"),  -- Carpeta para reportes del primer semestre de 2025
+    ("Reportes 2024 - 2"),  -- Carpeta para reportes del segundo semestre de 2024
+    ("Reportes 2024 - 1"),  -- Carpeta para reportes del primer semestre de 2024
+    ("Reportes 2023 - 2"),  -- Carpeta para reportes del segundo semestre de 2023
+    ("Reportes 2023 - 1"),  -- Carpeta para reportes del primer semestre de 2023
+    ("Reportes 2022 - 2");  -- Carpeta para reportes del segundo semestre de 2022
+
+COMMIT;
