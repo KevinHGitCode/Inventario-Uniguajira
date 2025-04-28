@@ -75,6 +75,34 @@ class ctlUser {
         ]);
     }
 
+    /**
+     * Método para obtener las variables de sesión del usuario logueado en formato JSON.
+     */
+    public function getSessionData() {
+        header('Content-Type: application/json');
+        
+        session_start();
+        
+        if (!isset($_SESSION['user_id'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'No hay usuario logueado.']);
+            return;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'session_data' => [
+                'user_id' => $_SESSION['user_id'],
+                'user_name' => $_SESSION['user_name'],
+                'user_username' => $_SESSION['user_username'],
+                'user_email' => $_SESSION['user_email'],
+                'user_rol' => $_SESSION['user_rol'],
+                'user_img' => $_SESSION['user_img'],
+                'timezone_offset' => $_SESSION['timezone_offset'] ?? null,
+                'timezone_name' => $_SESSION['timezone_name'] ?? null
+            ]
+        ]);
+    }
 
     /**
      * Método para editar el perfil de un usuario.

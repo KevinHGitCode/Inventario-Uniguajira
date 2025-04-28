@@ -70,32 +70,29 @@ function btnEliminarInventario() {
 
 function abrirInventario(idInventory, scrollUpRequired = true) {
     const divGoodsInventory = document.getElementById('goods-inventory');
-    const divContent = document.getElementById('goods-inventory-content');
     const divInventories = document.getElementById('inventories');
     
-    // Mostrar loader mientras carga
-    divContent.innerHTML = '<p>Cargando bienes...</p>';
+    // Mostrar sección de bienes y ocultar inventarios
     divGoodsInventory.classList.remove('hidden');
     divInventories.classList.add('hidden');
 
-    fetch(`/api/get/goodsInventory/${idInventory}`)
-    .then(res => res.text())
-    .then(html => {
-        divContent.innerHTML = html;
-        const inventoryName = document.getElementById(`inventory-name${idInventory}`).textContent;
-        document.getElementById('inventory-name').innerText = inventoryName;
+    // Cargar bienes usando la nueva función
+    cargarBienesInventario(idInventory);
 
-        iniciarBusqueda('searchGoodInventory');
-        localStorage.setItem('openInventory', idInventory);
+    // Actualizar el nombre del inventario
+    const inventoryName = document.getElementById(`inventory-name${idInventory}`).textContent;
+    document.getElementById('inventory-name').innerText = inventoryName;
 
-        if (scrollUpRequired)
-            window.scrollTo(0, 0);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        divContent.innerHTML = '<p>Error al cargar los bienes</p>';
-    });
+    // Inicializar búsqueda
+    iniciarBusqueda('searchGoodInventory');
+    
+    // Guardar estado en localStorage
+    localStorage.setItem('openInventory', idInventory);
 
+    // Scroll a la parte superior si es necesario
+    if (scrollUpRequired) {
+        window.scrollTo(0, 0);
+    }
 }
 
 // cerrar inventario

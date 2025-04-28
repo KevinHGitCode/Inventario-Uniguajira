@@ -26,7 +26,10 @@ class ctlInventory  {
     // para navegacion
     public function getGoodsOfInventory($id_inventory) {
         $dataGoodsInventory = $this->goodsInventory->getAllGoodsByInventory($id_inventory);
-        require 'app/views/inventory/goods-inventory.php';
+        // Devolver JSON en lugar de incluir la vista
+        header('Content-Type: application/json');
+        echo json_encode($dataGoodsInventory);
+        // require 'app/views/inventory/goods-inventory.php';
     }
 
 

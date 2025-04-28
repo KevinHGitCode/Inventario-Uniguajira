@@ -73,6 +73,7 @@
     <script src="assets/js/inventory/inventory.js"></script>
     <script src="assets/js/inventory/groups.js"></script>
     <script src="assets/js/inventory/goodsInventory.js"></script>
+    <script src="assets/js/inventory/goods-inventory-loader.js"></script>
     <script src="assets/js/inventory/formGoodInventory.js"></script>
     <script src="assets/js/onLoaded.js"></script>
 </body>

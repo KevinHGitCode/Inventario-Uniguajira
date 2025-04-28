@@ -32,6 +32,8 @@ $router->add('/api/login', 'ctlUser', 'login');
 $router->add('/api/users/create', 'ctlUser', 'create');
 $router->add('/api/users/edit', 'ctlUser', 'edit');
 $router->add('/api/users/delete/:id', 'ctlUser', 'deleteUser');
+// ruta para getSessionData
+$router->add('/api/session/get', 'ctlUser', 'getSessionData');
 
 
 // Rutas para la API de tareas (ok)

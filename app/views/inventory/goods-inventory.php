@@ -1,5 +1,5 @@
 <!-- < ?php require_once 'app/controllers/sessionCheck.php'; ?> -->
-
+jejejejjeje
 <div class="bienes-grid">
     <?php if (isset($dataGoodsInventory) && !empty($dataGoodsInventory)): ?>
 
@@ -16,12 +16,19 @@
             >
 
                 <img
-                    src="<?= htmlspecialchars($bien['imagen'] ?: 'assets/uploads/img/goods/default.jpg') ?>"
+                    src="<?= htmlspecialchars($good['imagen'] ?: 'assets/uploads/img/goods/default.jpg') ?>"
                     class="bien-image"
                     alt="<?= htmlspecialchars($good['bien']) ?>"
                 />
                 <div class="bien-info">
-                    <h3 class="name-item"><?= htmlspecialchars($good['bien']) ?></h3>
+                    <h3 class="name-item">
+                        <?= htmlspecialchars($good['bien']) ?>
+                        <img
+                            src="assets/icons/<?= $good['tipo'] === "Cantidad" ? 'bienCantidad.svg' : 'bienSerial.svg' ?>"
+                            alt="Tipo <?= $good['tipo'] ?>"
+                            class="bien-icon"
+                        />
+                    </h3>
                     <p>
                         <b>Cantidad:</b>
                         <?= $good['cantidad'] ?>
