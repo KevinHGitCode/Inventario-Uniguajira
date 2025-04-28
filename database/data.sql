@@ -333,6 +333,7 @@ VALUES
     ("Reportes 2024 - 1"),  -- Carpeta para reportes del primer semestre de 2024
     ("Reportes 2023 - 2"),  -- Carpeta para reportes del segundo semestre de 2023
     ("Reportes 2023 - 1"),  -- Carpeta para reportes del primer semestre de 2023
-    ("Reportes 2022 - 2");  -- Carpeta para reportes del segundo semestre de 2022
+    ("Reportes 2022 - 2"),  -- Carpeta para reportes del segundo semestre de 2022
+    ("Reportes 2022 - 1");  -- Carpeta para reportes del primer semestre de 2022
 
 COMMIT;
