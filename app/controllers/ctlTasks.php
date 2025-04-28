@@ -6,8 +6,6 @@ require_once 'app/helpers/validate-http.php';
 class ctlTasks {
     private $tasksModel;
 
-//-------------------------------------------------------------------------------------------------------//
-
     public function __construct() {
         $this->tasksModel = new Tasks();
         
@@ -17,11 +15,9 @@ class ctlTasks {
         }
     }
 
-//-------------------------------------------------------------------------------------------------------//
     public function create() {
         header('Content-Type: application/json');
 
-        // Validar método POST y campos requeridos
         if (!validateHttpRequest('POST', ['name'])) {
             return;
         }
@@ -35,99 +31,87 @@ class ctlTasks {
 
         // Responder según el resultado
         if ($result) {
-            echo json_encode(['success' => true, 'message' => 'Tarea creada exitosamente.']);
+            echo json_encode(['success' => true, 'message' => 'Tarea creada exitosamente.', 'id' => $result]);
         } else {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Error al crear la tarea en la base de datos.']);
         }
     }
 
-//-------------------------------------------------------------------------------------------------------//
-
     public function delete($id) {
         header('Content-Type: application/json');
         
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-                throw new Exception('Método no permitido', 405);
-            }
-    
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception('No autorizado', 401);
-            }
-    
-            $taskId = filter_var($id, FILTER_VALIDATE_INT);
-            if ($taskId === false) {
-                throw new Exception('ID de tarea inválido', 400);
-            }
-    
-            $result = $this->tasksModel->delete($taskId, $_SESSION['user_id']);
-    
-            if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Tarea eliminada exitosamente'
-                ]);
-            } else {
-                throw new Exception('No se pudo eliminar la tarea o no tienes permisos', 403);
-            }
-        } catch (Exception $e) {
-            http_response_code($e->getCode() ?: 500);
+        if (!validateHttpRequest('DELETE')) {
+            return;
+        }
+
+        if (empty($id)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID requerido.']);
+            return;
+        }
+
+        $taskId = filter_var($id, FILTER_VALIDATE_INT);
+        if ($taskId === false) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de tarea inválido']);
+            return;
+        }
+
+        $result = $this->tasksModel->delete($taskId, $_SESSION['user_id']);
+
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Tarea eliminada exitosamente'
+            ]);
+        } else {
+            http_response_code(403);
             echo json_encode([
                 'success' => false,
-                'error' => $e->getMessage()
+                'message' => 'No se pudo eliminar la tarea o no tienes permisos'
             ]);
-            exit();
         }
     }
 
-//-------------------------------------------------------------------------------------------------------//
-
-    /**
-     * Endpoint: PATCH /api/tasks/toggle
-     */
     public function toggle() {
         header('Content-Type: application/json');
         
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
-                throw new Exception('Método no permitido', 405);
-            }
+        if (!validateHttpRequest('PATCH')) {
+            return;
+        }
 
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception('No autorizado', 401);
-            }
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (empty($data['id'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de tarea es requerido']);
+            return;
+        }
 
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            if (empty($data['id'])) {
-                throw new Exception("ID de tarea es requerido", 400);
-            }
+        $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
+        if ($taskId === false) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de tarea inválido']);
+            return;
+        }
+        
+        // Alternar estado
+        $result = $this->tasksModel->changeState($taskId, $_SESSION['user_id']);
 
-            $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
-            
-            // Alternar estado
-            $result = $this->tasksModel->changeState($taskId, $_SESSION['user_id']);
-
-            if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Estado de tarea actualizado'
-                ]);
-            } else {
-                throw new Exception('Error al actualizar la tarea o no tienes permisos', 403);
-            }
-        } catch (Exception $e) {
-            http_response_code($e->getCode() ?: 500);
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Estado de tarea actualizado'
+            ]);
+        } else {
+            http_response_code(403);
             echo json_encode([
                 'success' => false,
-                'error' => $e->getMessage()
+                'message' => 'Error al actualizar la tarea o no tienes permisos'
             ]);
-            exit();
         }
     }
-
-//-------------------------------------------------------------------------------------------------------//
 
     public function home() {
         $tasksModel = new Tasks();
@@ -146,62 +130,49 @@ class ctlTasks {
         include __DIR__ . '/../views/home.php';
     }
 
-//-------------------------------------------------------------------------------------------------------//
-
-    /**
-     * Endpoint: PUT /api/tasks/update
-     */
     public function update() {
         header('Content-Type: application/json');
         
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'PUT') {
-                throw new Exception('Método no permitido', 405);
-            }
+        if (!validateHttpRequest('PUT')) {
+            return;
+        }
 
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception('No autorizado', 401);
-            }
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (empty($data['id'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de tarea es requerido']);
+            return;
+        }
+        
+        if (empty($data['name'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'El nombre de la tarea es requerido']);
+            return;
+        }
 
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            if (empty($data['id'])) {
-                throw new Exception("ID de tarea es requerido", 400);
-            }
-            
-            if (empty($data['name'])) {
-                throw new Exception("El nombre de la tarea es requerido", 400);
-            }
+        $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
+        $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
+        $description = filter_var($data['description'] ?? '', FILTER_SANITIZE_STRING);
 
-            $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
-            $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
-            $description = filter_var($data['description'] ?? '', FILTER_SANITIZE_STRING);
+        $result = $this->tasksModel->updateName(
+            $taskId,
+            $name,
+            $description,
+            $_SESSION['user_id']
+        );
 
-            $result = $this->tasksModel->updateName(
-                $taskId,
-                $name,
-                $description,
-                $_SESSION['user_id']
-            );
-
-            if ($result) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Tarea actualizada exitosamente'
-                ]);
-            } else {
-                throw new Exception('No se pudo actualizar la tarea o no tienes permisos', 403);
-            }
-        } catch (Exception $e) {
-            http_response_code($e->getCode() ?: 500);
+        if ($result) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Tarea actualizada exitosamente'
+            ]);
+        } else {
+            http_response_code(403);
             echo json_encode([
                 'success' => false,
-                'error' => $e->getMessage()
+                'message' => 'No se pudo actualizar la tarea o no tienes permisos'
             ]);
-            exit();
         }
     }
-    
 }
-
-//-------------------------------------------------------------------------------------------------------//

@@ -24,12 +24,11 @@ class Tasks extends Database {
      * @param string $description Descripción de la tarea.
      * @param int $usuario_id ID del usuario asociado a la tarea.
      * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
-     * @return bool Devuelve true si la tarea se creó correctamente, false en caso contrario.
-     * @throws Exception Si el usuario no tiene permisos para crear tareas.
+     * @return int|false ID de la tarea creada si fue exitoso, False si hubo un error.
      */
     public function create($name, $description, $usuario_id, $estado = 'por hacer') {
         if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
-            throw new Exception('No tienes permisos para crear tareas');
+            return false;
         }
         
         $stmt = $this->connection->prepare("
@@ -38,7 +37,12 @@ class Tasks extends Database {
             VALUES (?, ?, ?, ?, NOW())
         ");
         $stmt->bind_param("ssis", $name, $description, $usuario_id, $estado);
-        return $stmt->execute();
+        
+        if ($stmt->execute()) {
+            return $stmt->insert_id; // Retorna el ID de la nueva tarea
+        }
+        
+        return false;
     }
 
     /**
@@ -68,14 +72,12 @@ class Tasks extends Database {
      * @return array Devuelve un arreglo asociativo con las tareas (id, nombre, descripción, estado).
      */
     public function getAll() {
-
         // Verificar si el usuario es administrador
         if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
-            return []; // O podrías lanzar una excepción
+            return []; // Devuelve un array vacío si no es administrador
         }
 
         // Obtener todas las tareas
-        // Solo los administradores pueden ver todas las tareas
         $stmt = $this->connection->prepare("
             SELECT 
                 id, 
@@ -102,7 +104,8 @@ class Tasks extends Database {
     public function updateName($id, $name, $description, $usuario_id) {
         $stmt = $this->connection->prepare("UPDATE tareas SET nombre = ?, descripcion = ? WHERE id = ? AND usuario_id = ?");
         $stmt->bind_param("ssii", $name, $description, $id, $usuario_id);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
     }
 
     /**
@@ -120,7 +123,8 @@ class Tasks extends Database {
             AND (usuario_id = ? OR ? IN (SELECT id FROM usuarios WHERE rol = 'administrador'))
         ");
         $stmt->bind_param("iii", $id, $usuario_id, $usuario_id);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
     }
 
     /**
@@ -160,7 +164,5 @@ class Tasks extends Database {
 
         return $stmt->affected_rows > 0;
     }
-
 }
-
 ?>
