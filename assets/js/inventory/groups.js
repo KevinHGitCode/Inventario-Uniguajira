@@ -66,9 +66,6 @@ function abrirGrupo(idGroup, scrollUpRequired = true) {
     const divInventories = document.getElementById('inventories');
     const divContent = document.getElementById('inventories-content');
 
-    // Almacenar el ID del grupo actual para usar en modales
-    localStorage.setItem('currentGroupId', idGroup);
-    
     // Actualizar el campo oculto en el modal de crear inventario
     const grupoIdInput = document.getElementById('grupo_id_crear_inventario');
     if (grupoIdInput) {
