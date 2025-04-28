@@ -33,7 +33,7 @@ $runner->registerTest('crear_inventarios_temporales',
         
         // Crear un grupo temporal primero
         $stmt = $inventory->getConnection()->prepare("INSERT INTO grupos (nombre) VALUES (?)");
-        $groupName = "Grupo Temporal Test " . time();
+        $groupName = "Grupo Temporal Test " . rand();
         $stmt->bind_param("s", $groupName);
         $stmt->execute();
         $groupId = $inventory->getConnection()->insert_id;
@@ -47,8 +47,8 @@ $runner->registerTest('crear_inventarios_temporales',
         $testData['groupId'] = $groupId;
         
         // Crear dos inventarios temporales
-        $inventoryName1 = "Inventario Temporal 1 " . time();
-        $inventoryName2 = "Inventario Temporal 2 " . time();
+        $inventoryName1 = "Inventario Temporal 1 " . rand();
+        $inventoryName2 = "Inventario Temporal 2 " . rand();
         
         $invId1 = $inventory->create($inventoryName1, $groupId);
         $invId2 = $inventory->create($inventoryName2, $groupId);
@@ -73,11 +73,11 @@ $runner->registerTest('crear_bienes_temporales',
         echo "<p>Creando bienes temporales para pruebas...</p>";
         
         // Crear un bien de tipo cantidad
-        $goodName1 = "Bien Cantidad Temporal " . time();
+        $goodName1 = "Bien Cantidad Temporal " . rand();
         $goodId1 = $goods->create($goodName1, 1, 'placeholder.jpg');
         
         // Crear un bien de tipo serial
-        $goodName2 = "Bien Serial Temporal " . time();
+        $goodName2 = "Bien Serial Temporal " . rand();
         $goodId2 = $goods->create($goodName2, 2, 'placeholder.jpg');
         
         if (!$goodId1 || !$goodId2) {
@@ -132,7 +132,7 @@ $runner->registerTest('añadir_bien_serial',
             'description' => 'Descripción de prueba',
             'brand' => 'Marca Test',
             'model' => 'Modelo Test',
-            'serial' => 'SERIAL' . time(), // Serial único
+            'serial' => 'SERIAL' . rand(), // Serial único
             'state' => 'activo',
             'color' => 'Negro',
             'technical_conditions' => 'En perfectas condiciones',
