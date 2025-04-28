@@ -4,7 +4,12 @@ require_once '../../app/models/User.php';
 // Crear una instancia del runner pero NO manejar la solicitud web automáticamente
 $runner = new TestRunner();
 
-// Registrar todas las pruebas disponibles
+// Variable para almacenar IDs de registros temporales
+$testData = [
+    'userId' => null
+];
+
+// Prueba para obtener todos los usuarios
 $runner->registerTest('getAllUsers', function() {
     $user = new User();
     echo "<p>Testing getAllUsers()...</p>";
@@ -19,119 +24,157 @@ $runner->registerTest('getAllUsers', function() {
     }
 });
 
-$runner->registerTest('createUser', 
-    function($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil) {
+// Prueba para crear un usuario con datos únicos
+$runner->registerTest('createUser_success', function() use (&$testData) {
+    $user = new User();
+    $nombre = "Usuario Temporal " . time();
+    $nombre_usuario = "usertemp" . time();
+    $email = "temp" . time() . "@example.com";
+    $contraseña = "1234";
+    $rol = 1;
+    $foto_perfil = null;
+
+    echo "<p>Testing createUser('$nombre', '$nombre_usuario', '$email')...</p>";
+    $userId = $user->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil);
+
+    if ($userId !== false) {
+        echo "<p>Usuario creado exitosamente con ID: $userId.</p>";
+        $testData['userId'] = $userId; // Guardar el ID para pruebas posteriores
+        return true;
+    } else {
+        echo "<p>Error al crear el usuario.</p>";
+        return false;
+    }
+});
+
+// Prueba para crear un usuario con datos duplicados
+$runner->registerTest('createUser_duplicate', function() use (&$testData) {
+    if (!isset($testData['userId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
+        return false;
+    }
+
+    $user = new User();
+    $stmt = $user->getConnection()->prepare("SELECT nombre, nombre_usuario, email FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $testData['userId']);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    echo "<p>Testing createUser con datos duplicados...</p>";
+    $duplicateUserId = $user->createUser($result['nombre'], $result['nombre_usuario'], $result['email'], "1234", 1, null);
+
+    if ($duplicateUserId === false) {
+        echo "<p>Correcto: No se permitió crear un usuario con datos duplicados.</p>";
+        return true;
+    } else {
+        echo "<p>Error: Se permitió crear un usuario con datos duplicados.</p>";
+        $user->deleteUser($duplicateUserId); // Limpieza
+        return false;
+    }
+});
+
+// Prueba para actualizar un usuario con datos válidos
+$runner->registerTest('updateUser_success', function() use (&$testData) {
+    if (!isset($testData['userId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
+        return false;
+    }
+
+    $user = new User();
+    $nuevoNombre = "Usuario Actualizado " . time();
+    $nuevoEmail = "updated" . time() . "@example.com";
+    $nuevoNombreUsuario = "updateduser" . time();
+
+    echo "<p>Testing updateUser({$testData['userId']}, '$nuevoNombre', '$nuevoNombreUsuario', '$nuevoEmail')...</p>";
+    $result = $user->updateUser($testData['userId'], $nuevoNombre, $nuevoNombreUsuario, $nuevoEmail);
+
+    if ($result) {
+        echo "<p>Usuario actualizado correctamente.</p>";
+        return true;
+    } else {
+        echo "<p>Error al actualizar el usuario.</p>";
+        return false;
+    }
+});
+
+// Prueba para actualizar un usuario con datos inválidos
+$runner->registerTest('updateUser_invalid', function() use (&$testData) {
+    if (!isset($testData['userId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
+        return false;
+    }
+
+    $user = new User();
+    $nuevoEmail = "invalid-email"; // Email inválido
+
+    echo "<p>Testing updateUser({$testData['userId']}, 'Nombre', 'usuario', '$nuevoEmail')...</p>";
+    $result = $user->updateUser($testData['userId'], "Nombre", "usuario", $nuevoEmail);
+
+    if (!$result) {
+        echo "<p>Correcto: No se permitió actualizar con datos inválidos.</p>";
+        return true;
+    } else {
+        echo "<p>Error: Se permitió actualizar con datos inválidos.</p>";
+        return false;
+    }
+});
+
+// Prueba para eliminar un usuario existente
+$runner->registerTest('deleteUser_success', function() use (&$testData) {
+    if (!isset($testData['userId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
+        return false;
+    }
+
+    $user = new User();
+    echo "<p>Testing deleteUser({$testData['userId']})...</p>";
+    $result = $user->deleteUser($testData['userId']);
+
+    if ($result) {
+        echo "<p>Usuario eliminado correctamente.</p>";
+        $testData['userId'] = null; // Resetear el ID
+        return true;
+    } else {
+        echo "<p>Error al eliminar el usuario.</p>";
+        return false;
+    }
+});
+
+// Prueba para eliminar un usuario inexistente
+$runner->registerTest('deleteUser_nonexistent', function() {
+    $user = new User();
+    $idInexistente = 999999; // ID que probablemente no exista
+
+    echo "<p>Testing deleteUser($idInexistente) - usuario inexistente...</p>";
+    $result = $user->deleteUser($idInexistente);
+
+    if (!$result) {
+        echo "<p>Correcto: No se permitió eliminar un usuario inexistente.</p>";
+        return true;
+    } else {
+        echo "<p>Error: Se permitió eliminar un usuario inexistente.</p>";
+        return false;
+    }
+});
+
+// Prueba final de limpieza
+$runner->registerTest('limpieza_final', function() use (&$testData) {
+    if ($testData['userId'] !== null) {
         $user = new User();
-        echo "<p>Testing createUser() con nombre: '$nombre', nombre_usuario: '$nombre_usuario', email: '$email'</p>";
-        
-        $resultado = $user->createUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil);
-        if ($resultado) {
-            echo "<p>Se creó el usuario correctamente</p>";
-            return true;
+        echo "<p>Limpieza: Eliminando usuario temporal ID {$testData['userId']}...</p>";
+        $result = $user->deleteUser($testData['userId']);
+        if ($result) {
+            echo "<p>Usuario temporal eliminado correctamente.</p>";
+            $testData['userId'] = null;
         } else {
-            echo "<p>No se pudo crear el usuario</p>";
-            return false;
+            echo "<p>Nota: El usuario temporal no pudo ser eliminado. Puede requerir limpieza manual.</p>";
         }
+    } else {
+        echo "<p>No hay usuarios temporales para limpiar.</p>";
+    }
 
-    }, [ // Valores predeterminados para la prueba
-        "Usuario Test", // Nombre
-        "usertest", // Nombre de usuario
-        "test@example.com", // Email
-        "1234", // Contraseña
-        1, // Rol (1 = admin, 2 = user)
-        null // Foto de perfil (puede ser null o una ruta a una imagen)
-    ]
-);
-
-
-$runner->registerTest('updateUser', 
-    function($id, $nombre, $email, $contraseña) {
-        $user = new User();
-        echo "<p>Testing updateUser() para ID $id con nuevo nombre: '$nombre', email: '$email'</p>";
-        
-        $resultado = $user->updateUser($id, $nombre, $email, $contraseña);
-        if ($resultado) {
-            echo "<p>Se actualizó el usuario correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo actualizar el usuario</p>";
-            return false;
-        }
-    }, [ // Valores predeterminados
-        1, // id
-        "Nombre Actualizado", // nombre
-        "actualizado@example.com", // email
-        "nuevapass123" // contraseña
-    ]
-);
-
-$runner->registerTest('updatePassword', 
-    function($id, $nuevaContraseña) {
-        $user = new User();
-        echo "<p>Testing updatePassword() para ID $id</p>";
-        
-        $resultado = $user->updatePassword($id, $nuevaContraseña);
-        if ($resultado) {
-            echo "<p>Se actualizó la contraseña correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo actualizar la contraseña</p>";
-            return false;
-        }
-    }, [
-        1, // id
-        "nuevaPass456" // nueva contraseña
-    ]
-);
-
-$runner->registerTest('deleteUser', 
-    function($id) {
-        $user = new User();
-        echo "<p>Testing deleteUser() para ID $id</p>";
-        
-        $resultado = $user->deleteUser($id);
-        if ($resultado) {
-            echo "<p>Se eliminó el usuario correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo eliminar el usuario</p>";
-            return false;
-        }
-    }, [
-        1 // id
-    ]
-);
-
-$runner->registerTest('authentication', 
-    function($nombre_usuario, $contraseña) {
-        $user = new User();
-        echo "<p>Testing authentication() con usuario: '$nombre_usuario'</p>";
-        
-        $resultado = $user->authentication($nombre_usuario, $contraseña);
-        if ($resultado) {
-            echo "<p>Autenticación exitosa. Bienvenido, " . $resultado['nombre'] . "</p>";
-            echo "<p>Datos del usuario:</p>";
-            echo "<ul>";
-            echo "<li>ID: " . $resultado['id'] . "</li>";
-            echo "<li>Email: " . $resultado['email'] . "</li>";
-            echo "<li>Rol: " . $resultado['rol'] . "</li>";
-            echo "<li>Fecha de creación: " . $resultado['fecha_creacion'] . "</li>";
-            echo "<li>Último acceso: " . $resultado['fecha_ultimo_acceso'] . "</li>";
-            if (isset($resultado['foto_perfil'])) {
-                echo "<li>Foto de perfil: " . $resultado['foto_perfil'] . "</li>";
-            }
-            echo "</ul>";
-            return true;
-        } else {
-            echo "<p>Error: Usuario o contraseña incorrectos.</p>";
-            return false;
-        }
-    }, [
-        "admin", // nombre de usuario
-        "admin123" // contraseña
-    ]
-);
-
+    return true; // Esta prueba siempre pasa, es solo para limpieza
+});
 
 // Si se accede directamente a este archivo (no a través de .init-tests.php), redirigir al índice
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
