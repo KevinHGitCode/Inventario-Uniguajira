@@ -2,14 +2,16 @@
 require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/GoodsInventory.php';
 require_once 'app/helpers/validate-http.php';
+require_once 'app/helpers/CacheManager.php'; // Include our cache manager
 
 class ctlGoodInventory {
     private $goodsInventory;
+    private $cache;
 
     public function __construct() {
         $this->goodsInventory = new GoodsInventory();
+        $this->cache = new CacheManager();
     }
-
 
     /**
      * ====================================================================
@@ -31,19 +33,32 @@ class ctlGoodInventory {
         $bienId = $_POST['bien_id'];
         $bienTipo = $_POST['bien_tipo'];
 
+        $success = false;
+        $resultado = null;
+
         if ($bienTipo == 1) {  // tipo cantidad
-            $this->handleCantidadType($inventarioId, $bienId);
+            $resultado = $this->handleCantidadType($inventarioId, $bienId);
+            $success = ($resultado !== false);
         } else if ($bienTipo == 2) {  // tipo serial
-            $this->handleSerialType($inventarioId, $bienId);
+            $resultado = $this->handleSerialType($inventarioId, $bienId);
+            $success = ($resultado !== false);
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Tipo de bien no soportado."' . $bienTipo . '"']);
+            return;
+        }
+
+        if ($success) {
+            // Invalidate affected caches
+            $this->cache->remove("inventory_{$inventarioId}_goods");
+            
+            echo json_encode(['success' => true, 'message' => 'Bien agregado exitosamente.', 'id' => $resultado]);
         }
     }
 
     private function handleCantidadType($inventarioId, $bienId) {
         if (!validateHttpRequest('POST', ['cantidad'])) {
-            return;
+            return false;
         }
 
         $cantidad = $_POST['cantidad'];
@@ -51,22 +66,15 @@ class ctlGoodInventory {
         if ($cantidad < 0) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Cantidad inválida.']);
-            return;
+            return false;
         }
 
-        $resultado = $this->goodsInventory->addQuantity($inventarioId, $bienId, $cantidad);
-
-        if ($resultado) {
-            echo json_encode(['success' => true, 'message' => 'Bien de tipo cantidad agregado exitosamente.', 'id' => $resultado]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'No se pudo agregar el bien de tipo cantidad.']);
-        }
+        return $this->goodsInventory->addQuantity($inventarioId, $bienId, $cantidad);
     }
 
     private function handleSerialType($inventarioId, $bienId) {
         if (!validateHttpRequest('POST', ['serial'])) {
-            return;
+            return false;
         }
 
         $serial = $_POST['serial'];
@@ -82,14 +90,7 @@ class ctlGoodInventory {
             'entry_date' => $_POST['fecha_ingreso'] ?? date('Y-m-d')
         ];
 
-        $resultado = $this->goodsInventory->addSerial($inventarioId, $bienId, $details);
-
-        if ($resultado) {
-            echo json_encode(['success' => true, 'message' => 'Bien de tipo serial agregado exitosamente.', 'id' => $resultado]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'No se pudo agregar el bien de tipo serial.']);
-        }
+        return $this->goodsInventory->addSerial($inventarioId, $bienId, $details);
     }
 
     /**
@@ -108,9 +109,18 @@ class ctlGoodInventory {
             return;
         }
 
+        // Get the inventory ID before deleting the good
+        $goodInfo = $this->goodsInventory->getGoodInventoryById($id);
+        $inventarioId = $goodInfo['inventario_id'] ?? null;
+        
         $resultado = $this->goodsInventory->delete($id);
 
         if ($resultado) {
+            // Invalidate related cache
+            if ($inventarioId) {
+                $this->cache->remove("inventory_{$inventarioId}_goods");
+            }
+            
             echo json_encode(['success' => true, 'message' => 'Bien eliminado del inventario exitosamente.']);
         } else {
             http_response_code(400);
@@ -137,9 +147,18 @@ class ctlGoodInventory {
             return;
         }
 
+        // Get inventory ID before updating
+        $goodInfo = $this->goodsInventory->getGoodInventoryById($bienId);
+        $inventarioId = $goodInfo['inventario_id'] ?? null;
+        
         $resultado = $this->goodsInventory->updateQuantity($bienId, $cantidad);
 
         if ($resultado) {
+            // Invalidate related cache
+            if ($inventarioId) {
+                $this->cache->remove("inventory_{$inventarioId}_goods");
+            }
+            
             echo json_encode(['success' => true, 'message' => 'Cantidad actualizada exitosamente.']);
         } else {
             http_response_code(400);
@@ -160,9 +179,19 @@ class ctlGoodInventory {
         $bienId = $_POST['bienId'];
         $inventarioDestinoId = $_POST['inventarioDestinoId'];
 
+        // Get source inventory ID before moving
+        $goodInfo = $this->goodsInventory->getGoodInventoryById($bienId);
+        $sourceInventarioId = $goodInfo['inventario_id'] ?? null;
+        
         $resultado = $this->goodsInventory->moveGood($bienId, $inventarioDestinoId);
 
         if ($resultado) {
+            // Invalidate caches for both source and destination inventories
+            if ($sourceInventarioId) {
+                $this->cache->remove("inventory_{$sourceInventarioId}_goods");
+            }
+            $this->cache->remove("inventory_{$inventarioDestinoId}_goods");
+            
             echo json_encode(['success' => true, 'message' => 'Bien movido exitosamente al nuevo inventario.']);
         } else {
             http_response_code(400);
