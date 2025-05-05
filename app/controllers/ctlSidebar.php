@@ -82,7 +82,7 @@ class ctlSidebar {
         $dataReportFolders = $reports->getAllFolders(); // Get all groups from the model
 
         // Logic for reports view
-        require __DIR__ . '/../views/reports/reports.php';
+        require __DIR__ . '/../views/reports/folders.php';
     }
 
     /**

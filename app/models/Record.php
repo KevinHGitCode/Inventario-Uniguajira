@@ -34,7 +34,7 @@ class Record extends Database {
             historial.fecha_hora
             FROM historial
             INNER JOIN usuarios ON historial.usuario_id = usuarios.id
-            ORDER BY historial.fecha_hora DESC
+            ORDER BY historial.id DESC
             LIMIT 50;
         ");
         $stmt->execute();
