@@ -215,6 +215,31 @@ class Reports extends Database {
     }
 
     /**
+     * Eliminar un reporte.
+     * 
+     * @param int $id ID del reporte a eliminar.
+     * @return bool True si el reporte fue eliminado exitosamente, False si no existe o no se pudo eliminar.
+     */
+    public function deleteReport($id) {
+        // Verificar si el reporte existe
+        $checkStmt = $this->connection->prepare("SELECT id FROM reportes WHERE id = ?");
+        $checkStmt->bind_param("i", $id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+    
+        if ($result->num_rows === 0) {
+            return false; // El reporte no existe
+        }
+    
+        // Eliminar el reporte
+        $stmt = $this->connection->prepare("DELETE FROM reportes WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    
+        return $stmt->affected_rows > 0;
+    }
+
+    /**
      * Obtener detalles de un inventario específico.
      * 
      * @param int $inventoryId ID del inventario.
@@ -299,4 +324,4 @@ class Reports extends Database {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }
-?>  
+?>

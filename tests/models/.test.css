@@ -136,3 +136,9 @@ tr:nth-child(even) {
     background-color: #0056b3;
     text-decoration: none;
 }
+.checkmark {
+    color: green;
+    font-size: 1.2em;
+    margin-left: 5px;
+    vertical-align: middle;
+}

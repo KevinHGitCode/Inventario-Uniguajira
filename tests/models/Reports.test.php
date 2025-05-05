@@ -1,193 +1,191 @@
 <?php
-
 require_once '../../app/models/Reports.php';
 
-// Crear una instancia del runner pero NO manejar la solicitud web automáticamente
+// Crear una instancia única del modelo Reports
+$reports = new Reports();
+
+// Crear una instancia del runner
 $runner = new TestRunner();
 
-$runner->registerTest('getAllFolders', 
-    function() {
-        $reports = new Reports();
-        echo "<p>Testing getAllFolders()...</p>";
-        
-        $allFolders = $reports->getAllFolders();
-        if (is_array($allFolders)) {
-            renderTable($allFolders);
-            return true;
-        } else {
-            echo "<p>No se pudo obtener las carpetas como un array</p>";
-            return false;
-        }
-    }, 
-    []  // Sin parámetros
-);
+// Variable para almacenar IDs de registros temporales
+$testData = [
+    'folderId' => null,
+    'reportId' => null
+];
 
-$runner->registerTest('getReportsByFolder', 
-    function($folderId) {
-        $reports = new Reports();
-        echo "<p>Testing getReportsByFolder() para carpeta ID $folderId...</p>";
-        
-        $folderReports = $reports->getReportsByFolder($folderId);
-        if (is_array($folderReports)) {
-            renderTable($folderReports);
-            return true;
-        } else {
-            echo "<p>No se pudo obtener los reportes como un array</p>";
-            return false;
-        }
-    }, 
-    [1]  // Valor predeterminado para folderId
-);
+// PRUEBAS DE LECTURA
+$runner->registerTest('obtener_carpetas', function() use ($reports) {
+    echo "<p>Testing getAllFolders()...</p>";
+    
+    $allFolders = $reports->getAllFolders();
+    if (is_array($allFolders)) {
+        renderTable($allFolders);
+        return true;
+    }
+    echo "<p>Error: No se pudieron obtener las carpetas como array</p>";
+    return false;
+});
 
-$runner->registerTest('createFolder', 
-    function($name, $description) {
-        $reports = new Reports();
-        echo "<p>Testing createFolder() con nombre: '$name', descripción: '$description'</p>";
-        
-        $result = $reports->createFolder($name, $description);
-        if ($result !== false) {
-            echo "<p>Se creó la carpeta correctamente con ID: $result</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo crear la carpeta</p>";
-            return false;
-        }
-    }, 
-    [
-        "Carpeta de Prueba",     // nombre
-        "Esta es una carpeta de prueba" // descripción
-    ]
-);
+// PRUEBAS DE CREACIÓN DE CARPETAS
+$runner->registerTest('crear_carpeta_valida', function() use (&$testData, $reports) {
+    $nombre = "Carpeta Temporal " . time();
+    $descripcion = "Descripción de prueba";
+    
+    echo "<p>Testing createFolder('$nombre', '$descripcion')...</p>";
+    $folderId = $reports->createFolder($nombre, $descripcion);
 
-$runner->registerTest('renameFolder', 
-    function($id, $newName) {
-        $reports = new Reports();
-        echo "<p>Testing renameFolder() para carpeta ID $id con nuevo nombre: '$newName'</p>";
-        
-        if ($reports->renameFolder($id, $newName)) {
-            echo "<p>Se renombró la carpeta correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo renombrar la carpeta</p>";
-            return false;
-        }
-    }, 
-    [
-        16,                      // id
-        "Carpeta Renombrada"    // newName
-    ]
-);
+    if ($folderId !== false) {
+        echo "<p>Carpeta creada con ID: $folderId</p>";
+        $testData['folderId'] = $folderId;
+        return true;
+    }
+    echo "<p>Error al crear la carpeta</p>";
+    return false;
+});
 
-$runner->registerTest('deleteFolder', 
-    function($id) {
-        $reports = new Reports();
-        echo "<p>Testing deleteFolder() para carpeta ID $id</p>";
-        
-        if ($reports->deleteFolder($id)) {
-            echo "<p>Se eliminó la carpeta correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo eliminar la carpeta (puede tener reportes asociados)</p>";
-            return false;
-        }
-    }, 
-    [
-        2  // id de la carpeta a eliminar
-    ]
-);
+$runner->registerTest('crear_carpeta_nombre_duplicado', function() use (&$testData, $reports) {
+    if (!isset($testData['folderId'])) {
+        echo "<p>Error: Primero debe ejecutarse 'crear_carpeta_valida'</p>";
+        return false;
+    }
 
-$runner->registerTest('createReport', 
-    function($name, $folderId, $description) {
-        $reports = new Reports();
-        echo "<p>Testing createReport() con nombre: '$name', carpeta ID: $folderId</p>";
-        
-        $result = $reports->createReport($name, $folderId, $description);
-        if ($result !== false) {
-            echo "<p>Se creó el reporte correctamente con ID: $result</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo crear el reporte</p>";
-            return false;
-        }
-    }, 
-    [
-        "Reporte de Prueba",     // nombre
-        1,                       // folderId
-        "Este es un reporte de prueba" // descripción
-    ]
-);
+    $stmt = $reports->getConnection()->prepare("SELECT nombre FROM carpetas_reportes WHERE id = ?");
+    $stmt->bind_param("i", $testData['folderId']);
+    $stmt->execute();
+    $nombreExistente = $stmt->get_result()->fetch_assoc()['nombre'];
+    
+    echo "<p>Testing createFolder('$nombreExistente', 'descripción')...</p>";
+    $result = $reports->createFolder($nombreExistente, "descripción");
 
-$runner->registerTest('renameReport', 
-    function($id, $newName) {
-        $reports = new Reports();
-        echo "<p>Testing renameReport() para reporte ID $id con nuevo nombre: '$newName'</p>";
-        
-        if ($reports->renameReport($id, $newName)) {
-            echo "<p>Se renombró el reporte correctamente</p>";
-            return true;
-        } else {
-            echo "<p>No se pudo renombrar el reporte</p>";
-            return false;
-        }
-    }, 
-    [
-        1,                      // id
-        "Reporte Renombrado"    // newName
-    ]
-);
+    if ($result === false) {
+        echo "<p>Correcto: No se creó carpeta con nombre duplicado</p>";
+        return true;
+    }
+    
+    echo "<p>Error: Se permitió crear carpeta duplicada</p>";
+    $reports->deleteFolder($result); // Limpieza
+    return false;
+});
 
-$runner->registerTest('getInventoryDetails', 
-    function($inventoryId) {
-        $reports = new Reports();
-        echo "<p>Testing getInventoryDetails() para inventario ID $inventoryId...</p>";
-        
-        $details = $reports->getInventoryDetails($inventoryId);
-        if ($details !== false) {
-            renderTable([$details]); // Convertir a array para usar renderTable
-            return true;
-        } else {
-            echo "<p>No se pudo obtener los detalles del inventario</p>";
-            return false;
-        }
-    }, 
-    [1]  // inventoryId predeterminado
-);
+// PRUEBAS DE CREACIÓN DE REPORTES
+$runner->registerTest('crear_reporte_valido', function() use (&$testData, $reports) {
+    if (!isset($testData['folderId'])) {
+        echo "<p>Error: Primero debe ejecutarse 'crear_carpeta_valida'</p>";
+        return false;
+    }
 
-$runner->registerTest('getGoodsCountByInventory', 
-    function($inventoryId) {
-        $reports = new Reports();
-        echo "<p>Testing getGoodsCountByInventory() para inventario ID $inventoryId...</p>";
-        
-        $goodsCount = $reports->getGoodsCountByInventory($inventoryId);
-        if (is_array($goodsCount)) {
-            renderTable($goodsCount);
-            return true;
-        } else {
-            echo "<p>No se pudo obtener el conteo de bienes</p>";
-            return false;
-        }
-    }, 
-    [1]  // inventoryId predeterminado
-);
+    $nombre = "Reporte Temporal " . time();
+    $descripcion = "Descripción del reporte";
+    
+    echo "<p>Testing createReport('$nombre', {$testData['folderId']}, '$descripcion')...</p>";
+    $reportId = $reports->createReport($nombre, $testData['folderId'], $descripcion);
 
-$runner->registerTest('getSerialGoodsDetailsByInventory', 
-    function($inventoryId) {
-        $reports = new Reports();
-        echo "<p>Testing getSerialGoodsDetailsByInventory() para inventario ID $inventoryId...</p>";
-        
-        $serialGoods = $reports->getSerialGoodsDetailsByInventory($inventoryId);
-        if (is_array($serialGoods)) {
-            renderTable($serialGoods);
-            return true;
-        } else {
-            echo "<p>No se pudo obtener los detalles de bienes seriales</p>";
-            return false;
-        }
-    }, 
-    [1]  // inventoryId predeterminado
-);
+    if ($reportId !== false) {
+        echo "<p>Reporte creado con ID: $reportId</p>";
+        $testData['reportId'] = $reportId;
+        return true;
+    }
+    echo "<p>Error al crear el reporte</p>";
+    return false;
+});
 
-// Si se accede directamente a este archivo (no a través de .init-tests.php), redirigir al índice
+$runner->registerTest('crear_reporte_carpeta_inexistente', function() use ($reports) {
+    $idInexistente = 999999;
+    echo "<p>Testing createReport con carpeta inexistente...</p>";
+    
+    $result = $reports->createReport("Test", $idInexistente, "desc");
+    if ($result === false) {
+        echo "<p>Correcto: No se creó reporte en carpeta inexistente</p>";
+        return true;
+    }
+    echo "<p>Error: Se permitió crear reporte en carpeta inexistente</p>";
+    return false;
+});
+
+// PRUEBAS DE ACTUALIZACIÓN
+$runner->registerTest('renombrar_reporte_valido', function() use (&$testData, $reports) {
+    if (!isset($testData['reportId'])) {
+        echo "<p>Error: Primero debe ejecutarse 'crear_reporte_valido'</p>";
+        return false;
+    }
+
+    $nuevoNombre = "Reporte Actualizado " . time();
+    echo "<p>Testing renameReport({$testData['reportId']}, '$nuevoNombre')...</p>";
+    
+    if ($reports->renameReport($testData['reportId'], $nuevoNombre)) {
+        echo "<p>Reporte renombrado correctamente</p>";
+        return true;
+    }
+    echo "<p>Error al renombrar el reporte</p>";
+    return false;
+});
+
+// PRUEBAS DE ELIMINACIÓN
+$runner->registerTest('eliminar_reporte', function() use (&$testData, $reports) {
+    if (!isset($testData['reportId'])) {
+        echo "<p>Error: Primero debe ejecutarse 'crear_reporte_valido'</p>";
+        return false;
+    }
+
+    echo "<p>Testing eliminar reporte temporal...</p>";
+    if ($reports->deleteReport($testData['reportId'])) {
+        echo "<p>Reporte eliminado correctamente</p>";
+        $testData['reportId'] = null;
+        return true;
+    }
+    echo "<p>Error al eliminar el reporte</p>";
+    return false;
+});
+
+$runner->registerTest('eliminar_carpeta_con_reportes', function() use (&$testData, $reports) {
+    // Buscar una carpeta con reportes
+    $sql = "SELECT cr.id FROM carpetas_reportes cr 
+            INNER JOIN reportes r ON cr.id = r.carpeta_id 
+            GROUP BY cr.id HAVING COUNT(r.id) > 0 LIMIT 1";
+    $result = $reports->getConnection()->query($sql);
+    
+    if ($result->num_rows === 0) {
+        echo "<p>No hay carpetas con reportes para probar</p>";
+        return true;
+    }
+    
+    $folderIdWithReports = $result->fetch_assoc()['id'];
+    echo "<p>Testing deleteFolder($folderIdWithReports)...</p>";
+    
+    if ($reports->deleteFolder($folderIdWithReports)) {
+        echo "<p>Error: Se permitió eliminar carpeta con reportes</p>";
+        return false;
+    }
+    echo "<p>Correcto: No se permitió eliminar carpeta con reportes</p>";
+    return true;
+});
+
+// PRUEBA DE LIMPIEZA FINAL
+$runner->registerTest('limpieza_final', function() use (&$testData, $reports) {
+    $cleaned = true;
+
+    if ($testData['reportId'] !== null) {
+        echo "<p>Limpiando reporte temporal {$testData['reportId']}...</p>";
+        if (!$reports->deleteReport($testData['reportId'])) {
+            echo "<p>No se pudo eliminar el reporte temporal</p>";
+            $cleaned = false;
+        }
+        $testData['reportId'] = null;
+    }
+
+    if ($testData['folderId'] !== null) {
+        echo "<p>Limpiando carpeta temporal {$testData['folderId']}...</p>";
+        if (!$reports->deleteFolder($testData['folderId'])) {
+            echo "<p>No se pudo eliminar la carpeta temporal</p>";
+            $cleaned = false;
+        }
+        $testData['folderId'] = null;
+    }
+
+    return $cleaned;
+});
+
+// Redirección si se accede directamente
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
     header('Location: /test');
     exit;

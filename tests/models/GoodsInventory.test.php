@@ -3,10 +3,6 @@ require_once '../../app/models/GoodsInventory.php';
 require_once '../../app/models/Goods.php';
 require_once '../../app/models/Inventory.php';
 
-// Iniciar sesión y establecer el usuario actual
-session_start();
-$_SESSION['user_id'] = 1;
-
 // Crear instancias de los modelos necesarios
 $goodsInventory = new GoodsInventory();
 $goods = new Goods();
@@ -392,6 +388,43 @@ $runner->registerTest('mover_bien_serial',
             echo "<p>Error al mover el bien serial.</p>";
             return false;
         }
+    }
+);
+
+// Caso 3: Verificar inventarios después de mover bienes
+$runner->registerTest('verificar_inventarios_post_movimiento', 
+    function() use (&$testData, $goodsInventory) {
+        if (!isset($testData['inventoryId1']) || !isset($testData['inventoryId2'])) {
+            echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
+            return false;
+        }
+
+        echo "<p>Verificando inventario origen (ID: {$testData['inventoryId1']})...</p>";
+
+        // Verificar bienes normales en el inventario de origen
+        $goodsOrigen = $goodsInventory->getAllGoodsByInventory($testData['inventoryId1']);
+        echo "<p>Bienes en inventario origen:</p>";
+        renderTable($goodsOrigen);
+
+        // Verificar bienes seriales en el inventario de origen
+        $serialGoodsOrigen = $goodsInventory->getAllSerialGoodsByInventory($testData['inventoryId1']);
+        echo "<p>Bienes seriales en inventario origen:</p>";
+        renderTable($serialGoodsOrigen);
+
+        echo "<p>Verificando inventario destino (ID: {$testData['inventoryId2']})...</p>";
+
+        // Verificar bienes normales en el inventario de destino
+        $goodsDestino = $goodsInventory->getAllGoodsByInventory($testData['inventoryId2']);
+        echo "<p>Bienes en inventario destino:</p>";
+        renderTable($goodsDestino);
+
+        // Verificar bienes seriales en el inventario de destino
+        $serialGoodsDestino = $goodsInventory->getAllSerialGoodsByInventory($testData['inventoryId2']);
+        echo "<p>Bienes seriales en inventario destino:</p>";
+        renderTable($serialGoodsDestino);
+
+        // La prueba pasa si podemos obtener los resultados de ambos inventarios
+        return true;
     }
 );
 

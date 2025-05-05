@@ -26,17 +26,18 @@ class Tasks extends Database {
      * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
      * @return int|false ID de la tarea creada si fue exitoso, False si hubo un error.
      */
-    public function create($name, $description, $usuario_id, $estado = 'por hacer') {
-        if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
-            return false;
+    public function create($name, $description, $usuario_id) {
+        // Validar que el nombre no esté vacío
+        if (empty(trim($name))) {
+            return false; // Retorna false si el nombre está vacío
         }
-        
+
         $stmt = $this->connection->prepare("
             INSERT INTO tareas 
-            (nombre, descripcion, usuario_id, estado, fecha) 
-            VALUES (?, ?, ?, ?, NOW())
+            (nombre, descripcion, usuario_id, fecha) 
+            VALUES (?, ?, ?, NOW())
         ");
-        $stmt->bind_param("ssis", $name, $description, $usuario_id, $estado);
+        $stmt->bind_param("ssi", $name, $description, $usuario_id);
         
         if ($stmt->execute()) {
             return $stmt->insert_id; // Retorna el ID de la nueva tarea
@@ -67,32 +68,6 @@ class Tasks extends Database {
     }
 
     /**
-     * Obtener la lista de todas las tareas.
-     * 
-     * @return array Devuelve un arreglo asociativo con las tareas (id, nombre, descripción, estado).
-     */
-    public function getAll() {
-        // Verificar si el usuario es administrador
-        if (!isset($_SESSION['user_rol']) || $_SESSION['user_rol'] !== 'administrador') {
-            return []; // Devuelve un array vacío si no es administrador
-        }
-
-        // Obtener todas las tareas
-        $stmt = $this->connection->prepare("
-            SELECT 
-                id, 
-                nombre, 
-                descripcion, 
-                estado 
-            FROM tareas
-        ");
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
-    }
-
-    /**
      * Modificar una tarea con verificación de propiedad.
      * 
      * @param int $id ID de la tarea a modificar.
@@ -102,6 +77,10 @@ class Tasks extends Database {
      * @return bool Devuelve true si la tarea se actualizó correctamente, false en caso contrario.
      */
     public function updateName($id, $name, $description, $usuario_id) {
+        // Validar que el nombre no esté vacío
+        if (empty(trim($name))) {
+            return false; // Retorna false si el nombre está vacío
+        }
         $stmt = $this->connection->prepare("UPDATE tareas SET nombre = ?, descripcion = ? WHERE id = ? AND usuario_id = ?");
         $stmt->bind_param("ssii", $name, $description, $id, $usuario_id);
         $stmt->execute();
@@ -137,20 +116,6 @@ class Tasks extends Database {
      * @return bool Devuelve true si el estado se cambió correctamente, false en caso contrario.
      */
     public function changeState($id, $usuario_id) {
-        // Verificar primero si la tarea existe y pertenece al usuario
-        $stmt = $this->connection->prepare("
-            SELECT estado FROM tareas 
-            WHERE id = ? AND usuario_id = ?
-        ");
-        $stmt->bind_param("ii", $id, $usuario_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
-            return false;
-        }
-
-        // Actualizar el estado
         $stmt = $this->connection->prepare("
             UPDATE tareas 
             SET estado = CASE 

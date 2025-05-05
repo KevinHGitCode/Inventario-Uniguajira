@@ -76,6 +76,16 @@ class User extends Database {
      * @return int|false ID del usuario creado o false si falla.
      */
     public function createUser($nombre, $nombre_usuario, $email, $contraseña, $rol, $foto_perfil = null) {
+        // Verificar si el usuario o email ya existen
+        $checkStmt = $this->connection->prepare("SELECT id FROM usuarios WHERE nombre_usuario = ? OR email = ?");
+        $checkStmt->bind_param("ss", $nombre_usuario, $email);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return false;
+        }
+
         $query = "INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->connection->prepare($query);
         $hashedPassword = password_hash($contraseña, PASSWORD_BCRYPT);
@@ -117,6 +127,21 @@ class User extends Database {
      * @return bool True si la actualización fue exitosa, false en caso contrario.
      */
     public function updateUser($id, $nombre, $nombre_usuario, $email) {
+        // Validar formato de email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        // Verificar que no exista otro usuario con el mismo email o nombre_usuario
+        $checkStmt = $this->connection->prepare("SELECT id FROM usuarios WHERE (nombre_usuario = ? OR email = ?) AND id != ?");
+        $checkStmt->bind_param("ssi", $nombre_usuario, $email, $id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return false;
+        }
+
         $query = "UPDATE usuarios SET nombre = ?, nombre_usuario = ?, email = ? WHERE id = ?";
         $stmt = $this->connection->prepare($query);
         $stmt->bind_param("sssi", $nombre, $nombre_usuario, $email, $id);

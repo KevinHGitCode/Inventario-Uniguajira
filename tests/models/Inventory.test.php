@@ -43,29 +43,60 @@ $runner->registerTest('createInventory_success', function() use (&$testData) {
     }
 });
 
-// Prueba para crear un inventario con un nombre duplicado
-$runner->registerTest('createInventory_duplicate', function() use (&$testData) {
+// Prueba para crear un inventario con nombre duplicado en el mismo grupo
+$runner->registerTest('createInventory_duplicateInSameGroup', function() use (&$testData) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
     $inventory = new Inventory();
-    $stmt = $inventory->getConnection()->prepare("SELECT nombre FROM inventarios WHERE id = ?");
+    // Obtener el nombre y grupo_id del inventario creado
+    $stmt = $inventory->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
     $stmt->bind_param("i", $testData['inventoryId']);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
     $duplicateName = $result['nombre'];
+    $grupoId = $result['grupo_id'];
 
-    echo "<p>Testing create('$duplicateName', 1)...</p>";
-    $result = $inventory->create($duplicateName, 1);
+    echo "<p>Testing create('$duplicateName', $grupoId) - nombre duplicado en mismo grupo...</p>";
+    $result = $inventory->create($duplicateName, $grupoId);
 
     if ($result === false) {
-        echo "<p>Correcto: No se permitió crear un inventario con nombre duplicado.</p>";
+        echo "<p>Correcto: No se permitió crear un inventario con nombre duplicado en el mismo grupo.</p>";
         return true;
     } else {
-        echo "<p>Error: Se permitió crear un inventario con nombre duplicado.</p>";
+        echo "<p>Error: Se permitió crear un inventario con nombre duplicado en el mismo grupo.</p>";
         $inventory->delete($result); // Limpieza
+        return false;
+    }
+});
+
+// Prueba para crear un inventario con el mismo nombre en diferente grupo (debe permitirse)
+$runner->registerTest('createInventory_sameNameDifferentGroup', function() use (&$testData) {
+    if (!isset($testData['inventoryId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
+        return false;
+    }
+
+    $inventory = new Inventory();
+    // Obtener el nombre del inventario creado
+    $stmt = $inventory->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
+    $stmt->bind_param("i", $testData['inventoryId']);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $sameName = $result['nombre'];
+    $differentGroupId = $result['grupo_id'] + 1; // Usar un grupo diferente
+
+    echo "<p>Testing create('$sameName', $differentGroupId) - mismo nombre en diferente grupo...</p>";
+    $newId = $inventory->create($sameName, $differentGroupId);
+
+    if ($newId !== false) {
+        echo "<p>Correcto: Se permitió crear un inventario con mismo nombre en diferente grupo.</p>";
+        $inventory->delete($newId); // Limpieza
+        return true;
+    } else {
+        echo "<p>Error: No se permitió crear un inventario con mismo nombre en diferente grupo.</p>";
         return false;
     }
 });
@@ -93,23 +124,67 @@ $runner->registerTest('updateInventoryName_success', function() use (&$testData)
 });
 
 // Prueba para actualizar el nombre de un inventario con datos inválidos
-$runner->registerTest('updateInventoryName_invalid', function() use (&$testData) {
+$runner->registerTest('updateInventoryName_invalidData', function() use (&$testData) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
     $inventory = new Inventory();
-    $invalidName = ""; // Nombre vacío (inválido)
+    $invalidNames = ["", str_repeat("a", 101)]; // Nombre vacío y nombre muy largo
 
-    echo "<p>Testing updateName({$testData['inventoryId']}, '$invalidName')...</p>";
-    $result = $inventory->updateName($testData['inventoryId'], $invalidName);
+    foreach ($invalidNames as $invalidName) {
+        echo "<p>Testing updateName({$testData['inventoryId']}, '$invalidName')...</p>";
+        $result = $inventory->updateName($testData['inventoryId'], $invalidName);
+
+        if ($result) {
+            echo "<p>Error: Se permitió actualizar con nombre inválido '$invalidName'.</p>";
+            return false;
+        }
+    }
+
+    echo "<p>Correcto: No se permitió actualizar con nombres inválidos.</p>";
+    return true;
+});
+
+// Prueba para actualizar el nombre de un inventario a uno existente en el mismo grupo
+$runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use (&$testData) {
+    if (!isset($testData['inventoryId'])) {
+        echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
+        return false;
+    }
+
+    $inventory = new Inventory();
+    // Crear un segundo inventario temporal para la prueba
+    $tempName = "Inventario Temporal 2 " . time();
+    $stmt = $inventory->getConnection()->prepare("SELECT grupo_id FROM inventarios WHERE id = ?");
+    $stmt->bind_param("i", $testData['inventoryId']);
+    $stmt->execute();
+    $grupoId = $stmt->get_result()->fetch_assoc()['grupo_id'];
+    
+    $tempId = $inventory->create($tempName, $grupoId);
+    if (!$tempId) {
+        echo "<p>Error: No se pudo crear el inventario temporal para la prueba.</p>";
+        return false;
+    }
+
+    // Intentar actualizar el nombre al del primer inventario
+    $stmt = $inventory->getConnection()->prepare("SELECT nombre FROM inventarios WHERE id = ?");
+    $stmt->bind_param("i", $testData['inventoryId']);
+    $stmt->execute();
+    $existingName = $stmt->get_result()->fetch_assoc()['nombre'];
+
+    echo "<p>Testing updateName($tempId, '$existingName') - nombre duplicado en mismo grupo...</p>";
+    $result = $inventory->updateName($tempId, $existingName);
+
+    // Limpieza
+    $inventory->delete($tempId);
 
     if (!$result) {
-        echo "<p>Correcto: No se permitió actualizar el nombre del inventario con datos inválidos.</p>";
+        echo "<p>Correcto: No se permitió actualizar a un nombre duplicado en el mismo grupo.</p>";
         return true;
     } else {
-        echo "<p>Error: Se permitió actualizar el nombre del inventario con datos inválidos.</p>";
+        echo "<p>Error: Se permitió actualizar a un nombre duplicado en el mismo grupo.</p>";
         return false;
     }
 });
@@ -169,7 +244,9 @@ $runner->registerTest('deleteInventory_withItems', function() {
 });
 
 // Prueba final de limpieza
-$runner->registerTest('limpieza_final', function() use (&$testData, $inventory) {
+$runner->registerTest('limpieza_final', function() use (&$testData) {
+    $inventory = new Inventory(); // Instanciar Inventory dentro de la función
+    
     if ($testData['inventoryId'] !== null) {
         echo "<p>Limpieza: Eliminando inventario temporal ID {$testData['inventoryId']}...</p>";
         $result = $inventory->delete($testData['inventoryId']);

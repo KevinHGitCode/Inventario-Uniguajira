@@ -1,193 +1,160 @@
 <?php
 require_once '../../app/models/Tasks.php';
 
-// Crear una instancia del runner pero NO manejar la solicitud web automáticamente
+// Crear una instancia única del modelo Tasks
+$tasks = new Tasks();
+
+// Crear una instancia del runner
 $runner = new TestRunner();
 
-// Variable para almacenar IDs de registros temporales
+// Variable para almacenar IDs temporales
 $testData = [
     'taskId' => null
 ];
 
-// Prueba para obtener tareas por usuario
-$runner->registerTest('getByUser', function($idUser) {
-    $tasks = new Tasks();
-    echo "<p>Testing getByUser() para usuario ID $idUser...</p>";
+// PRUEBAS DE LECTURA
+$runner->registerTest('obtener_tareas_usuario', function($userId) use ($tasks) {
+    echo "<p>Testing getByUser para usuario ID $userId...</p>";
     
-    $allTasks = $tasks->getByUser($idUser);
-    if (is_array($allTasks)) {
-        renderTable($allTasks);
+    $userTasks = $tasks->getByUser($userId);
+    if (is_array($userTasks)) {
+        renderTable($userTasks);
         return true;
-    } else {
-        echo "<p>No se pudo obtener las tareas como un array</p>";
-        return false;
     }
-}, [1]); // Valor predeterminado
-
-// Prueba para crear una tarea con datos válidos
-$runner->registerTest('createTask_success', function() use (&$testData) {
-    $tasks = new Tasks();
-    $usuario_id = 1;
+    echo "<p>Error: No se pudieron obtener las tareas como array</p>";
+    return false;
+}, [1]);
+// PRUEBAS DE CREACIÓN
+$runner->registerTest('crear_tarea_valida', function() use (&$testData, $tasks) {
     $nombre = "Tarea Temporal " . time();
     $descripcion = "Descripción de prueba";
-    $estado = "por hacer";
+    $usuario_id = 1;
 
-    echo "<p>Testing create('$nombre', '$descripcion', $usuario_id, '$estado')...</p>";
-    $taskId = $tasks->create($nombre, $descripcion, $usuario_id, $estado);
+    echo "<p>Testing create con datos válidos...</p>";
+    $taskId = $tasks->create($nombre, $descripcion, $usuario_id);
 
     if ($taskId !== false) {
-        echo "<p>Tarea creada exitosamente con ID: $taskId.</p>";
-        $testData['taskId'] = $taskId; // Guardar el ID para pruebas posteriores
+        echo "<p>Tarea creada con ID: $taskId</p>";
+        $testData['taskId'] = $taskId;
         return true;
-    } else {
-        echo "<p>Error al crear la tarea.</p>";
-        return false;
     }
+    echo "<p>Error al crear la tarea</p>";
+    return false;
 });
 
-// Prueba para crear una tarea con datos inválidos
-$runner->registerTest('createTask_invalid', function() {
-    $tasks = new Tasks();
+$runner->registerTest('crear_tarea_nombre_vacio', function() use ($tasks) {
+    $nombre = "";
+    $descripcion = "Descripción de prueba";
     $usuario_id = 1;
-    $nombre = ""; // Nombre vacío (inválido)
-    $descripcion = "Descripción inválida";
-    $estado = "por hacer";
 
-    echo "<p>Testing create('$nombre', '$descripcion', $usuario_id, '$estado')...</p>";
-    $taskId = $tasks->create($nombre, $descripcion, $usuario_id, $estado);
-
-    if ($taskId === false) {
-        echo "<p>Correcto: No se permitió crear una tarea con datos inválidos.</p>";
+    echo "<p>Testing create con nombre vacío...</p>";
+    if ($tasks->create($nombre, $descripcion, $usuario_id) === false) {
+        echo "<p>Correcto: No se permitió crear con nombre vacío</p>";
         return true;
-    } else {
-        echo "<p>Error: Se permitió crear una tarea con datos inválidos.</p>";
-        return false;
     }
+    echo "<p>Error: Se permitió crear con nombre vacío</p>";
+    return false;
 });
 
-// Prueba para actualizar una tarea con datos válidos
-$runner->registerTest('updateTask_success', function() use (&$testData) {
+// PRUEBAS DE ACTUALIZACIÓN
+$runner->registerTest('actualizar_tarea_valida', function() use (&$testData, $tasks) {
     if (!isset($testData['taskId'])) {
-        echo "<p>Error: Primero debe ejecutarse la prueba 'createTask_success'.</p>";
+        echo "<p>Error: Requiere crear_tarea_valida primero</p>";
         return false;
     }
 
-    $tasks = new Tasks();
     $nuevoNombre = "Tarea Actualizada " . time();
     $nuevaDescripcion = "Descripción actualizada";
 
-    echo "<p>Testing updateName({$testData['taskId']}, '$nuevoNombre', '$nuevaDescripcion', 1)...</p>";
-    $result = $tasks->updateName($testData['taskId'], $nuevoNombre, $nuevaDescripcion, 1);
-
-    if ($result) {
-        echo "<p>Tarea actualizada correctamente.</p>";
+    echo "<p>Testing updateName con datos válidos...</p>";
+    if ($tasks->updateName($testData['taskId'], $nuevoNombre, $nuevaDescripcion, 1)) {
+        echo "<p>Tarea actualizada correctamente</p>";
         return true;
-    } else {
-        echo "<p>Error al actualizar la tarea.</p>";
-        return false;
     }
+    echo "<p>Error al actualizar la tarea</p>";
+    return false;
 });
 
-// Prueba para actualizar una tarea con datos inválidos
-$runner->registerTest('updateTask_invalid', function() use (&$testData) {
+$runner->registerTest('actualizar_tarea_nombre_vacio', function() use (&$testData, $tasks) {
     if (!isset($testData['taskId'])) {
-        echo "<p>Error: Primero debe ejecutarse la prueba 'createTask_success'.</p>";
+        echo "<p>Error: Requiere crear_tarea_valida primero</p>";
         return false;
     }
 
-    $tasks = new Tasks();
-    $nuevoNombre = ""; // Nombre vacío (inválido)
+    $nuevoNombre = "";
     $nuevaDescripcion = "Descripción inválida";
 
-    echo "<p>Testing updateName({$testData['taskId']}, '$nuevoNombre', '$nuevaDescripcion', 1)...</p>";
-    $result = $tasks->updateName($testData['taskId'], $nuevoNombre, $nuevaDescripcion, 1);
-
-    if (!$result) {
-        echo "<p>Correcto: No se permitió actualizar la tarea con datos inválidos.</p>";
+    echo "<p>Testing updateName con nombre vacío...</p>";
+    if (!$tasks->updateName($testData['taskId'], $nuevoNombre, $nuevaDescripcion, 1)) {
+        echo "<p>Correcto: No se permitió actualizar con nombre vacío</p>";
         return true;
-    } else {
-        echo "<p>Error: Se permitió actualizar la tarea con datos inválidos.</p>";
-        return false;
     }
+    echo "<p>Error: Se permitió actualizar con nombre vacío</p>";
+    return false;
 });
 
-// Prueba para cambiar el estado de una tarea
-$runner->registerTest('changeTaskState', function() use (&$testData) {
+// PRUEBAS DE ESTADO
+$runner->registerTest('cambiar_estado_tarea', function() use (&$testData, $tasks) {
     if (!isset($testData['taskId'])) {
-        echo "<p>Error: Primero debe ejecutarse la prueba 'createTask_success'.</p>";
+        echo "<p>Error: Requiere crear_tarea_valida primero</p>";
         return false;
     }
 
-    $tasks = new Tasks();
-    echo "<p>Testing changeState({$testData['taskId']}, 1)...</p>";
-    $result = $tasks->changeState($testData['taskId'], 1);
-
-    if ($result) {
-        echo "<p>Estado de la tarea cambiado correctamente.</p>";
+    echo "<p>Testing changeState...</p>";
+    if ($tasks->changeState($testData['taskId'], 1)) {
+        echo "<p>Estado cambiado correctamente</p>";
         return true;
-    } else {
-        echo "<p>Error al cambiar el estado de la tarea.</p>";
-        return false;
     }
+    echo "<p>Error al cambiar el estado</p>";
+    return false;
 });
 
-// Prueba para eliminar una tarea existente
-$runner->registerTest('deleteTask_success', function() use (&$testData) {
+// PRUEBAS DE ELIMINACIÓN
+$runner->registerTest('eliminar_tarea_existente', function() use (&$testData, $tasks) {
     if (!isset($testData['taskId'])) {
-        echo "<p>Error: Primero debe ejecutarse la prueba 'createTask_success'.</p>";
+        echo "<p>Error: Requiere crear_tarea_valida primero</p>";
         return false;
     }
 
-    $tasks = new Tasks();
-    echo "<p>Testing delete({$testData['taskId']}, 1)...</p>";
-    $result = $tasks->delete($testData['taskId'], 1);
-
-    if ($result) {
-        echo "<p>Tarea eliminada correctamente.</p>";
-        $testData['taskId'] = null; // Resetear el ID
+    echo "<p>Testing delete tarea existente...</p>";
+    if ($tasks->delete($testData['taskId'], 1)) {
+        echo "<p>Tarea eliminada correctamente</p>";
+        $testData['taskId'] = null;
         return true;
-    } else {
-        echo "<p>Error al eliminar la tarea.</p>";
-        return false;
     }
+    echo "<p>Error al eliminar la tarea</p>";
+    return false;
 });
 
-// Prueba para eliminar una tarea inexistente
-$runner->registerTest('deleteTask_nonexistent', function() {
-    $tasks = new Tasks();
-    $idInexistente = 999999; // ID que probablemente no exista
+$runner->registerTest('eliminar_tarea_inexistente', function() use ($tasks) {
+    $idInexistente = 999999;
 
-    echo "<p>Testing delete($idInexistente, 1)...</p>";
-    $result = $tasks->delete($idInexistente, 1);
-
-    if (!$result) {
-        echo "<p>Correcto: No se permitió eliminar una tarea inexistente.</p>";
+    echo "<p>Testing delete tarea inexistente...</p>";
+    if (!$tasks->delete($idInexistente, 1)) {
+        echo "<p>Correcto: No se permitió eliminar tarea inexistente</p>";
         return true;
-    } else {
-        echo "<p>Error: Se permitió eliminar una tarea inexistente.</p>";
-        return false;
     }
+    echo "<p>Error: Se permitió eliminar tarea inexistente</p>";
+    return false;
 });
 
-// Prueba final de limpieza
+// PRUEBA FINAL DE LIMPIEZA
 $runner->registerTest('limpieza_final', function() use (&$testData, $tasks) {
     if ($testData['taskId'] !== null) {
         echo "<p>Limpieza: Eliminando tarea temporal ID {$testData['taskId']}...</p>";
-        $result = $tasks->delete($testData['taskId'], 1);
-        if ($result) {
-            echo "<p>Tarea temporal eliminada correctamente.</p>";
+        if ($tasks->delete($testData['taskId'], 1)) {
+            echo "<p>Tarea temporal eliminada correctamente</p>";
             $testData['taskId'] = null;
         } else {
-            echo "<p>Nota: La tarea temporal no pudo ser eliminada. Puede requerir limpieza manual.</p>";
+            echo "<p>Nota: La tarea temporal no pudo ser eliminada. Puede requerir limpieza manual</p>";
         }
     } else {
-        echo "<p>No hay tareas temporales para limpiar.</p>";
+        echo "<p>No hay tareas temporales para limpiar</p>";
     }
 
-    return true; // Esta prueba siempre pasa, es solo para limpieza
+    return true;
 });
 
-// Si se accede directamente a este archivo (no a través de .init-tests.php), redirigir al índice
 if (basename($_SERVER['SCRIPT_FILENAME']) === basename(__FILE__)) {
     header('Location: /test');
     exit;

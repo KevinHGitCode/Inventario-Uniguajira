@@ -1,10 +1,6 @@
 <?php
 require_once '../../app/models/Goods.php';
 
-// Iniciar sesión y establecer el usuario actual
-session_start();
-$_SESSION['user_id'] = 1;
-
 // Crear una instancia del modelo Goods
 $goods = new Goods();
 

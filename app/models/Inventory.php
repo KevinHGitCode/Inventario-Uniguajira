@@ -73,12 +73,25 @@ class Inventory extends Database {
      * @return bool True si la operación fue exitosa, false en caso contrario.
      */
     public function create($name, $grupoId) {
+        // Validar el nombre
+        if (empty($name) || strlen($name) > 100) {
+            return false;
+        }
+
+        // Verificar si ya existe el nombre en el mismo grupo
+        $checkStmt = $this->connection->prepare("SELECT id FROM inventarios WHERE nombre = ? AND grupo_id = ?");
+        $checkStmt->bind_param("si", $name, $grupoId);
+        $checkStmt->execute();
+        if ($checkStmt->get_result()->num_rows > 0) {
+            return false;
+        }
+
         $stmt = $this->connection->prepare("INSERT INTO inventarios (nombre, grupo_id, fecha_modificacion, estado_conservacion) VALUES (?, ?, NOW(), 1)");
         $stmt->bind_param("si", $name, $grupoId);
         if ($stmt->execute()) {
-            return $stmt->insert_id; // Return the ID of the created record
+            return $stmt->insert_id;
         }
-        return false; // Return false if creation failed
+        return false;
     }
 
     /**
@@ -89,10 +102,33 @@ class Inventory extends Database {
      * @return bool True si la operación fue exitosa, false en caso contrario.
      */
     public function updateName($id, $name) {
+        // Validar el nombre
+        if (empty($name) || strlen($name) > 255) {
+            return false;
+        }
+
+        // Verificar que el inventario existe y obtener su grupo_id
+        $checkStmt = $this->connection->prepare("SELECT grupo_id FROM inventarios WHERE id = ?");
+        $checkStmt->bind_param("i", $id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        if ($result->num_rows === 0) {
+            return false;
+        }
+        $grupoId = $result->fetch_assoc()['grupo_id'];
+
+        // Verificar si ya existe el nombre en el mismo grupo (excluyendo el inventario actual)
+        $duplicateStmt = $this->connection->prepare("SELECT id FROM inventarios WHERE nombre = ? AND grupo_id = ? AND id != ?");
+        $duplicateStmt->bind_param("sii", $name, $grupoId, $id);
+        $duplicateStmt->execute();
+        if ($duplicateStmt->get_result()->num_rows > 0) {
+            return false;
+        }
+
         $stmt = $this->connection->prepare("UPDATE inventarios SET nombre = ?, fecha_modificacion = NOW() WHERE id = ?");
         $stmt->bind_param("si", $name, $id);
         $stmt->execute();
-        return $stmt->affected_rows > 0; // Return true if updated, false otherwise
+        return $stmt->affected_rows > 0;
     }
 
     /**

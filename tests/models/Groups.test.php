@@ -1,10 +1,6 @@
 <?php
 require_once '../../app/models/Groups.php';
 
-// Iniciar sesión y establecer el usuario actual
-session_start();
-$_SESSION['user_id'] = 1;
-
 // Crear una instancia única del modelo Groups
 $group = new Groups();
 $group->setCurrentUser();

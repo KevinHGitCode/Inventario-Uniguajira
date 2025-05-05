@@ -3,3 +3,5 @@
 inv
 purgecss
 stylelint
+cache/*
+!cache/
