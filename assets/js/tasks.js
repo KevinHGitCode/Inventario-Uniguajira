@@ -1,31 +1,3 @@
-// Métodos que quedaron en la versión simplificada
-
-// showTaskModal (replaced) - Abre el modal para crear tareas
-// hideTaskModal (replaced) - Cierra el modal para crear tareas
-// showEditTaskModal -> btnEditTask - Abre el modal para editar tareas
-// hideEditTaskModal (replaced) - Cierra el modal para editar tareas
-
-// createTask - Crea una nueva tarea
-// updateTask - Actualiza una tarea existente
-// toggleTask - Cambia el estado de una tarea (completada/pendiente)
-// deleteTask - Elimina una tarea
-// showNotification - Muestra notificaciones al usuario
-// moveTaskToProperSection - Mueve tarjetas de tarea entre secciones
-// sortTasksByDate - Ordena las tareas por fecha
-
-function btnEditTask(id, name, description, date) {
-    document.getElementById('editTaskId').value = id;
-    document.getElementById('editTaskName').value = decodeURIComponent(name);
-    document.getElementById('editTaskDesc').value = decodeURIComponent(description);
-    document.getElementById('editTaskDate').value = new Date(date).toLocaleDateString('es-ES');
-    
-    // document.getElementById('editTaskName').focus();
-    mostrarModal('#editTaskModal');
-};
-
-// Operaciones CRUD
-
-
 function initFormsTask() {
     // Para crear tareas
     inicializarFormularioAjax('#taskForm', {
@@ -59,9 +31,27 @@ function initFormsTask() {
             showNotification('Tarea actualizada exitosamente', 'success');
         }
     });
+    
+    // Inicializar ordenamiento de tareas
+    const containers = document.querySelectorAll('.container-list-task');
+    containers.forEach(container => {
+        sortTasksByDate(container);
+        container.style.display = 'grid';
+        container.style.gridTemplateColumns = '1fr 1fr';
+        container.style.gap = '12px';
+    });
 }
 
-const toggleTask = (taskId, button) => {
+function btnEditTask(id, name, description, date) {
+    document.getElementById('editTaskId').value = id;
+    document.getElementById('editTaskName').value = decodeURIComponent(name);
+    document.getElementById('editTaskDesc').value = decodeURIComponent(description);
+    document.getElementById('editTaskDate').value = new Date(date).toLocaleDateString('es-ES');
+    
+    mostrarModal('#editTaskModal');
+}
+
+function toggleTask(taskId, button) {
     fetch('/api/tasks/toggle', {
         method: 'PATCH',
         headers: {
@@ -86,33 +76,28 @@ const toggleTask = (taskId, button) => {
         console.error('Error:', error);
         showNotification(error.message, 'error');
     });
-};
+}
 
-const deleteTask = (taskId) => {
-
+function deleteTask(taskId) {
     eliminarRegistro({
         url: `/api/tasks/delete/${taskId}`,
         onSuccess: (response) => {
-            if (response.success) {
+            if (response.success) 
                 loadContent('/goods', false);
-            }
             showToast(response);
-
         }
     });
-};
+}
 
-// Utilitarios
-const showNotification = (message, type) => {
+function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
     document.body.appendChild(notification);
     
     setTimeout(() => notification.remove(), 3000);
-};
+}
 
-// Funciones para manipulación del DOM
 function moveTaskToProperSection(taskCard) {
     const isCompleted = taskCard.classList.contains('completed');
     
@@ -173,14 +158,3 @@ function sortTasksByDate(container) {
     
     taskCards.forEach(card => container.appendChild(card));
 }
-
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
-    const containers = document.querySelectorAll('.container-list-task');
-    containers.forEach(container => {
-        sortTasksByDate(container);
-        container.style.display = 'grid';
-        container.style.gridTemplateColumns = '1fr 1fr';
-        container.style.gap = '12px';
-    });
-});

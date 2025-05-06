@@ -8,11 +8,6 @@ class ctlTasks {
 
     public function __construct() {
         $this->tasksModel = new Tasks();
-        
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit();
-        }
     }
 
     public function create() {

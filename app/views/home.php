@@ -65,19 +65,3 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
-<!-- 
-<button class="button edit-task" onclick="btnEditTask(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
-    <i class="fas fa-edit"></i>
-</button>
-<button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
-    <i class="fas fa-trash"></i>
-</button>
-
-<button class="button edit-task" onclick="btnEditTask(<?= $task['id'] ?>, '<?= htmlspecialchars(addslashes($task['nombre']), ENT_QUOTES, 'UTF-8') ?>', '<?= htmlspecialchars(addslashes($task['descripcion'] ?? ''), ENT_QUOTES, 'UTF-8') ?>', '<?= $task['fecha'] ?>')">
-    <i class="fas fa-edit"></i>
-</button>
-<button class="button delete-task" onclick="deleteTask(<?= $task['id'] ?>, this)">
-    <i class="fas fa-trash"></i>
-</button>
--->
