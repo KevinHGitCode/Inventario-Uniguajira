@@ -5,12 +5,7 @@
 -- 4. Insertar los tipos de bienes
 -- 5. Insertar los bienes en cada salón inventario
 
--- Primer administrador
-INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil)
-VALUES 
-    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador', NULL); -- Contraseña: admin
-
-SET @usuario_actual = 1;
+-- // IMPORTAN: Primero se debe ejecutar triggers.sql
 
 -- Este archivo es una trasaccion
 -- El commit esta al final

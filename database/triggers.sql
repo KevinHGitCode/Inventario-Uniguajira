@@ -8,6 +8,14 @@
 -- $userId = $_SESSION['user_id']; 
 -- $conn->query("SET @usuario_actual = $userId");
 
+-- Primer administrador
+INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil)
+VALUES 
+    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador', NULL); -- Contraseña: admin
+
+SET @usuario_actual = 1;
+
+
 DELIMITER //
 
 -- ========================
