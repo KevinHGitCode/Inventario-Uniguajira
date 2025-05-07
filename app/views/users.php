@@ -41,7 +41,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>N°</th>
                 <th>Nombre</th>
                 <th>Nombre Usuario</th>
                 <th>Email</th>
