@@ -1,7 +1,7 @@
 function initFoldersFunctions() {
 
     // Inicializar formulario para crear grupo
-    // ruta del form: /api/groups/create
+    // ruta del form: /api/folders/create
     inicializarFormularioAjax('#formCrearCarpeta', {
         closeModalOnSuccess: true,
         resetOnSuccess: true,
@@ -12,7 +12,7 @@ function initFoldersFunctions() {
     });
 
     // Inicializar formulario para renombrar grupo
-    // ruta del form: /api/groups/rename
+    // ruta del form: /api/folders/rename
     inicializarFormularioAjax('#formRenombrarCarpeta', {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
@@ -57,7 +57,6 @@ function abrirCarpeta(idFolder, scrollUpRequired = true) {
     const divReports = document.getElementById('report-content');
     const divContent = document.getElementById('report-content-item');
 
-    console.log('hola'); // mensaje de depuración
     // Actualizar el campo oculto en el modal de crear inventario
     const folderIdInput = document.getElementById('folder_id_crear_reporte');
     if (folderIdInput) {
@@ -73,32 +72,27 @@ function abrirCarpeta(idFolder, scrollUpRequired = true) {
     fetch(`/api/reports/getAll/${idFolder}`)
     .then(res => res.text())
     .then(html => {
-        //const folderName = document.getElementById(`folder-name${idFolder}`).textContent;
-        //document.getElementById('folder-name').innerText = folderName;
-        console.log('hola 2'); // mensaje de depuración
+        // const folderName = document.getElementById(`folder-name${idFolder}`).textContent;
+        // document.getElementById('folder-name').innerText = folderName;
         divContent.innerHTML = html;
 
         iniciarBusqueda('searchReport');
-        console.log('hola 3'); // mensaje de depuración
             
         if (scrollUpRequired)
             window.scrollTo(0, 0);  
     })
     .catch(error => {
         console.error('Error:', error);
-        divContent.innerHTML = '<p>Error al cargar los inventarios</p>';
+        divContent.innerHTML = '<p>Error al cargar los reportes</p>';
     });
 }
 
 // Función para cerrar grupo (mejorada)
 function cerrarCarpeta() {
+    document.getElementById('report-content').classList.add('hidden');
     document.getElementById('folders').classList.remove('hidden');
-    document.getElementById('reports').classList.add('hidden');
-
-    const input = document.getElementById('searchFolder');
-    input.value = ''; // Borra el valor
-    input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
-    input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
-
-    localStorage.removeItem('openGroup');
+    // const input = document.getElementById('searchFolder');
+    // input.value = ''; // Borra el valor
+    // input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
+    // input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
 }

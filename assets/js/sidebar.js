@@ -96,7 +96,10 @@ function loadContent(path, scrollUpRequired = true) {
 
             case '/reports':
                 iniciarBusqueda('searchFolder');
-                
+                if (typeof initFoldersFunctions === 'function') {
+                    initializeSelection();
+                }
+
                 break;
         }
         
