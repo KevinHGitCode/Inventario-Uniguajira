@@ -71,6 +71,7 @@
                             </button>
                         </div>
                     </div>
+                    <br>
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="report-empty-state">

@@ -16,7 +16,7 @@
             <div class="form-actions">
                 <button 
                     type="submit" 
-                    id="create-btn-grupo" 
+                    id="create-btn-folder" 
                     class="btn submit-btn">
                     Guardar
                 </button>
