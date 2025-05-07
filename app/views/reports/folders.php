@@ -16,7 +16,7 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button id="btnCrearCarpeta" class="report-create-btn" onclick="mostrarModal('#modalCrearCarpeta')">Crear</button>
+                <button id="btnCrearCarpeta" class="report-create-btn" onclick="mostrarModal('#modalCrearCarpeta')">Crear</button>
             <?php endif; ?>
         </div>
 
@@ -83,7 +83,7 @@
 
     <div id="report-content" class="hidden">
         <div class="report-back-and-title">
-            <span id="folder-name" class="location">Reporte</span>
+            <span id="folder-name" class="location">Reportes</span>
             <button class="report-btn-back" onclick="cerrarCarpeta()">
                 <i class="fas fa-arrow-left"></i>
                 <span>Volver</span>

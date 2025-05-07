@@ -1,7 +1,7 @@
 function initFoldersFunctions() {
 
     // Inicializar formulario para crear grupo
-    // ruta del form: /api/groups/create
+    // ruta del form: /api/folders/create
     inicializarFormularioAjax('#formCrearCarpeta', {
         closeModalOnSuccess: true,
         resetOnSuccess: true,
@@ -12,7 +12,7 @@ function initFoldersFunctions() {
     });
 
     // Inicializar formulario para renombrar grupo
-    // ruta del form: /api/groups/rename
+    // ruta del form: /api/folders/rename
     inicializarFormularioAjax('#formRenombrarCarpeta', {
         closeModalOnSuccess: true,
         onSuccess: (response) => {

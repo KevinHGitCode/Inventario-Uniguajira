@@ -33,6 +33,7 @@ class Reports extends Database {
             FROM carpetas_reportes c
             LEFT JOIN reportes r ON c.id = r.carpeta_id
             GROUP BY c.id, c.nombre, c.descripcion, c.fecha_creacion
+            ORDER BY c.fecha_creacion DESC
         ");
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -64,10 +65,9 @@ class Reports extends Database {
      * Crear una nueva carpeta.
      * 
      * @param string $name Nombre de la carpeta.
-     * @param string $description Descripción de la carpeta (opcional).
      * @return int|false ID de la carpeta creada si fue exitoso, False si el nombre ya existe o hubo un error.
      */
-    public function createFolder($name, $description = '') {
+    public function createFolder($name) {
         // Verificar si el nombre ya existe
         $checkStmt = $this->connection->prepare("SELECT id FROM carpetas_reportes WHERE nombre = ?");
         $checkStmt->bind_param("s", $name);
@@ -79,8 +79,8 @@ class Reports extends Database {
         }
 
         // Insertar la nueva carpeta
-        $stmt = $this->connection->prepare("INSERT INTO carpetas_reportes (nombre, descripcion, fecha_creacion) VALUES (?, ?, NOW())");
-        $stmt->bind_param("ss", $name, $description);
+        $stmt = $this->connection->prepare("INSERT INTO carpetas_reportes (nombre, fecha_creacion) VALUES (?, NOW())");
+        $stmt->bind_param("s", $name);
         if ($stmt->execute()) {
             return $stmt->insert_id; // Retornar el ID de la carpeta recién creada
         }
