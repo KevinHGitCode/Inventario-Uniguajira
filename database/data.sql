@@ -8,9 +8,9 @@
 -- Primer administrador
 INSERT INTO usuarios (nombre, nombre_usuario, email, contraseña, rol, foto_perfil)
 VALUES 
-    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador', NULL) -- Contraseña: admin
+    ('Administrador', 'admin', 'admin@email.com', '$2y$10$DY06BnTlLyr8z0b/IDjTXuN2pRNL9rCt0zYn0ZBDAsgjZsBmF3Hqq', 'administrador', NULL); -- Contraseña: admin
 
-SET @usuario_actual = 1
+SET @usuario_actual = 1;
 
 -- Este archivo es una trasaccion
 -- El commit esta al final
