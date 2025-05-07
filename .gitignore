@@ -5,4 +5,21 @@ purgecss
 stylelint
 cache/*
 !cache/
+
+# Ignorar dependencias de Composer
+/vendor/
+composer.phar
+/composer.lock
+
+# Ignorar archivos de configuración específicos de Composer
+.composer/
+auth.json
+
+# Ignorar archivos temporales o de caché que composer podría generar
+*.cache
+*.log
+
+# Ignorar archivos de configuración local que podrían contener información sensible
+.env
+.env.backup
 *.cache
