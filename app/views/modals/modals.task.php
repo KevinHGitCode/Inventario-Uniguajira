@@ -13,8 +13,8 @@
                 <textarea id="taskDesc" name="description"></textarea>
             </div>
             <div>
-                <label for="taskDate">Fecha de creación:</label>
-                <input type="text" id="taskDate" name="date" value="<?= date('d/m/Y') ?>" readonly>
+                <label for="taskDate">Fecha:</label>
+                <input type="date" id="taskDate" name="date" value="<?= date('Y-m-d') ?>">
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn submit-btn">Guardar</button>
@@ -42,8 +42,8 @@
                 <textarea id="editTaskDesc"></textarea>
             </div>
             <div>
-                <label for="editTaskDate">Fecha de creación:</label>
-                <input type="text" id="editTaskDate" readonly>
+                <label for="editTaskDate">Fecha:</label>
+                <input type="date" id="editTaskDate">
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn submit-btn">Actualizar</button>

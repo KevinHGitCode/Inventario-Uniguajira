@@ -23,22 +23,15 @@ function initFormsTask() {
             return {
                 id: document.getElementById('editTaskId').value,
                 name: document.getElementById('editTaskName').value,
-                description: document.getElementById('editTaskDesc').value
+                description: document.getElementById('editTaskDesc').value,
+                date: document.getElementById('editTaskDate').value
             };
         },
+        closeModalOnSuccess: true,
         onSuccess: (data) => {
             loadContent('/home');
             showNotification('Tarea actualizada exitosamente', 'success');
         }
-    });
-    
-    // Inicializar ordenamiento de tareas
-    const containers = document.querySelectorAll('.container-list-task');
-    containers.forEach(container => {
-        sortTasksByDate(container);
-        container.style.display = 'grid';
-        container.style.gridTemplateColumns = '1fr 1fr';
-        container.style.gap = '12px';
     });
 }
 
@@ -46,7 +39,10 @@ function btnEditTask(id, name, description, date) {
     document.getElementById('editTaskId').value = id;
     document.getElementById('editTaskName').value = decodeURIComponent(name);
     document.getElementById('editTaskDesc').value = decodeURIComponent(description);
-    document.getElementById('editTaskDate').value = new Date(date).toLocaleDateString('es-ES');
+    // Convert date to YYYY-MM-DD format for input type="date"
+    const formattedDate = new Date(date).toISOString().split('T')[0];
+    console.log(formattedDate)
+    document.getElementById('editTaskDate').value = formattedDate;
     
     mostrarModal('#editTaskModal');
 }
@@ -83,7 +79,7 @@ function deleteTask(taskId) {
         url: `/api/tasks/delete/${taskId}`,
         onSuccess: (response) => {
             if (response.success) 
-                loadContent('/goods', false);
+                loadContent('/home', false);
             showToast(response);
         }
     });
@@ -98,63 +94,57 @@ function showNotification(message, type) {
     setTimeout(() => notification.remove(), 3000);
 }
 
+function createEmptyMessage(type = 'pending') {
+    const container = document.createElement('div');
+    container.className = 'no-tasks-message';
+    
+    const icon = document.createElement('i');
+    icon.className = type === 'pending' ? 
+        'fas fa-clipboard-list fa-3x' : 
+        'fas fa-folder-open fa-3x';
+    icon.style.opacity = '0.6';
+    icon.style.color = '#888';
+    
+    const text = document.createElement('p');
+    text.textContent = type === 'pending' ? 
+        'No tienes tareas pendientes.' : 
+        'No tienes tareas completadas.';
+    
+    container.appendChild(icon);
+    container.appendChild(text);
+    return container;
+}
+
 function moveTaskToProperSection(taskCard) {
     const isCompleted = taskCard.classList.contains('completed');
-    
-    const pendingContainer = document.querySelector('.container-list-task:not(.completed-tasks)');
-    let completedContainer = document.querySelector('.completed-tasks');
-    
-    if (!completedContainer && isCompleted) {
-        const completedTitle = document.querySelector('.completed-tasks-title');
-        if (!completedTitle) return;
-        
-        completedContainer = document.createElement('div');
-        completedContainer.className = 'container-list-task completed-tasks';
-        completedContainer.style.display = 'grid';
-        completedContainer.style.gridTemplateColumns = '1fr 1fr';
-        completedContainer.style.gap = '12px';
-        completedTitle.insertAdjacentElement('afterend', completedContainer);
-    }
-    
+    const pendingContainer = document.querySelector('.tasks-flex:not(.completed-tasks)');
+    const completedContainer = document.querySelector('.completed-tasks');
+
+    // Remove existing empty state messages if they exist
+    ['pending', 'completed'].forEach(type => {
+        const container = type === 'pending' ? pendingContainer : completedContainer;
+        const message = container.querySelector('.no-tasks-message');
+        if (message) message.remove();
+    });
+
+    // Move the task to the appropriate container
     const targetContainer = isCompleted ? completedContainer : pendingContainer;
-    if (targetContainer) {
-        targetContainer.appendChild(taskCard);
-        sortTasksByDate(targetContainer);
+    const sourceContainer = isCompleted ? pendingContainer : completedContainer;
+    targetContainer.appendChild(taskCard);
+
+    // Check and update empty states
+    if (sourceContainer.children.length === 0) {
+        sourceContainer.appendChild(
+            createEmptyMessage(isCompleted ? 'pending' : 'completed')
+        );
     }
 }
 
-function sortTasksByDate(container) {
-    const taskCards = Array.from(container.querySelectorAll('.task-card'));
-    
-    taskCards.sort((a, b) => {
-        const dateA = a.querySelector('.task-date').textContent;
-        const dateB = b.querySelector('.task-date').textContent;
-        
-        const priorityOrder = {"Hoy": 3, "Ayer": 2};
-        const priorityA = priorityOrder[dateA.trim()] || 0;
-        const priorityB = priorityOrder[dateB.trim()] || 0;
-        
-        if (priorityA !== priorityB) {
-            return priorityB - priorityA;
-        }
-        
-        try {
-            const parseCustomDate = (dateText) => {
-                if (dateText.includes('Abr')) return new Date(2025, 3, parseInt(dateText));
-                if (dateText.includes('May')) return new Date(2025, 4, parseInt(dateText));
-                if (dateText.includes('/')) {
-                    const parts = dateText.split('/');
-                    return new Date(parts[2], parts[1]-1, parts[0]);
-                }
-                return new Date();
-            };
-            
-            return parseCustomDate(dateB) - parseCustomDate(dateA);
-        } catch (e) {
-            console.error("Error al ordenar fechas:", e);
-            return 0;
-        }
-    });
-    
-    taskCards.forEach(card => container.appendChild(card));
+function toggleCompletedTasks() {
+    const completedTasksSection = document.querySelector('.completed-tasks');
+    const arrow = document.getElementById('completedTasksArrow');
+    if (completedTasksSection && arrow) {
+        completedTasksSection.classList.toggle('collapsed');
+        arrow.classList.toggle('rotated');
+    }
 }

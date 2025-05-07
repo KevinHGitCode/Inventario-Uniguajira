@@ -16,3 +16,12 @@ function formatDate($dateString) {
         return $date->format('j') . ' ' . $meses[$date->format('n') - 1];
     }
 }
+
+function getDateStatus($date) {
+    $taskDate = new DateTime($date);
+    $today = new DateTime(date('Y-m-d'));
+    
+    if ($taskDate < $today) return 'past';
+    if ($taskDate == $today) return 'today';
+    return 'future';
+}

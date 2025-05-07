@@ -20,9 +20,10 @@ class ctlTasks {
         // Obtener datos desde POST
         $name = trim($_POST['name']);
         $description = trim($_POST['description'] ?? '');
+        $fecha = $_POST['date'] ?? date('Y-m-d'); // Nueva fecha desde el formulario
 
         // Crear tarea en base de datos
-        $result = $this->tasksModel->create($name, $description, $_SESSION['user_id']);
+        $result = $this->tasksModel->create($name, $description, $_SESSION['user_id'], $fecha);
 
         // Responder según el resultado
         if ($result) {
@@ -46,13 +47,7 @@ class ctlTasks {
             return;
         }
 
-        $taskId = filter_var($id, FILTER_VALIDATE_INT);
-        if ($taskId === false) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'ID de tarea inválido']);
-            return;
-        }
-
+        $taskId = (int)$id;
         $result = $this->tasksModel->delete($taskId, $_SESSION['user_id']);
 
         if ($result) {
@@ -84,8 +79,8 @@ class ctlTasks {
             return;
         }
 
-        $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
-        if ($taskId === false) {
+        $taskId = (int)$data['id'];
+        if ($taskId <= 0) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'ID de tarea inválido']);
             return;
@@ -146,15 +141,17 @@ class ctlTasks {
             return;
         }
 
-        $taskId = filter_var($data['id'], FILTER_VALIDATE_INT);
-        $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
-        $description = filter_var($data['description'] ?? '', FILTER_SANITIZE_STRING);
+        $taskId = (int)$data['id'];
+        $name = trim($data['name']);
+        $description = trim($data['description'] ?? '');
+        $fecha = $data['date'] ?? null;
 
         $result = $this->tasksModel->updateName(
             $taskId,
             $name,
             $description,
-            $_SESSION['user_id']
+            $_SESSION['user_id'],
+            $fecha
         );
 
         if ($result) {

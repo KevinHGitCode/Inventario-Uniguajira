@@ -25,21 +25,21 @@ class Tasks {
      * @param string $name Nombre de la tarea.
      * @param string $description Descripción de la tarea.
      * @param int $usuario_id ID del usuario asociado a la tarea.
-     * @param string $estado Estado inicial de la tarea ('por hacer' o 'completado').
+     * @param string|null $fecha Fecha personalizada para la tarea (opcional).
      * @return int|false ID de la tarea creada si fue exitoso, False si hubo un error.
      */
-    public function create($name, $description, $usuario_id) {
-        // Validar que el nombre no esté vacío
-        if (empty(trim($name))) {
-            return false; // Retorna false si el nombre está vacío
+    public function create($name, $description, $usuario_id, $fecha = null) {
+        if (!$name) { // Validar que el nombre no esté vacío
+            return false;
         }
 
         $stmt = $this->connection->prepare("
             INSERT INTO tareas 
             (nombre, descripcion, usuario_id, fecha) 
-            VALUES (?, ?, ?, NOW())
+            VALUES (?, ?, ?, ?)
         ");
-        $stmt->bind_param("ssi", $name, $description, $usuario_id);
+        $fecha = $fecha ?? date('Y-m-d');
+        $stmt->bind_param("ssss", $name, $description, $usuario_id, $fecha);
         
         if ($stmt->execute()) {
             return $stmt->insert_id; // Retorna el ID de la nueva tarea
@@ -76,15 +76,28 @@ class Tasks {
      * @param string $name Nuevo nombre de la tarea.
      * @param string $description Nueva descripción de la tarea.
      * @param int $usuario_id ID del usuario propietario de la tarea.
+     * @param string|null $fecha Nueva fecha para la tarea (opcional).
      * @return bool Devuelve true si la tarea se actualizó correctamente, false en caso contrario.
      */
-    public function updateName($id, $name, $description, $usuario_id) {
-        // Validar que el nombre no esté vacío
-        if (empty(trim($name))) {
-            return false; // Retorna false si el nombre está vacío
+    public function updateName($id, $name, $description, $usuario_id, $fecha = null) {
+        if (!$name) { // Validar que el nombre no esté vacío
+            return false;
         }
-        $stmt = $this->connection->prepare("UPDATE tareas SET nombre = ?, descripcion = ? WHERE id = ? AND usuario_id = ?");
-        $stmt->bind_param("ssii", $name, $description, $id, $usuario_id);
+        
+        $query = "UPDATE tareas SET nombre = ?, descripcion = ?";
+        if ($fecha !== null) {
+            $query .= ", fecha = ?";
+        }
+        $query .= " WHERE id = ? AND usuario_id = ?";
+        
+        $stmt = $this->connection->prepare($query);
+        
+        if ($fecha !== null) {
+            $stmt->bind_param("sssii", $name, $description, $fecha, $id, $usuario_id);
+        } else {
+            $stmt->bind_param("ssii", $name, $description, $id, $usuario_id);
+        }
+        
         $stmt->execute();
         return $stmt->affected_rows > 0;
     }
