@@ -16,19 +16,19 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <button id="btnCrearCarpetaReporte" class="report-create-btn">Crear</button>
+            <button id="btnCrearCarpeta" class="report-create-btn" onclick="mostrarModal('#modalCrearCarpeta')">Crear</button>
             <?php endif; ?>
         </div>
 
-        <!-- Barra de control para grupos -->
+        <!-- Barra de control para carpetas -->
         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
         <div id="control-bar-folder" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
-                <button class="control-btn" title="Renombrar" onclick="">
+                <button class="control-btn" title="Renombrar" onclick="btnRenombrarCarpeta()">
                     <i class="fas fa-pen"></i>
                 </button>
-                <button class="control-btn" title="Eliminar" onclick="">
+                <button class="control-btn" title="Eliminar" onclick="btnEliminarCarpeta()">
                     <i class="fas fa-trash"></i>
                 </button>
                 <!-- <button class="control-btn" title="Más acciones">
@@ -121,27 +121,6 @@
     </div>
 </div>
 
-<!-- Modal para crear carpeta de reportes -->
-<div id="modalCrearCarpetaReporte" class="report-modal">
-    <div class="report-modal-content">
-        <div class="report-modal-header">
-            <h2>Crear Carpeta de Reportes</h2>
-            <span class="report-modal-close" onclick="cerrarModal('#modalCrearCarpetaReporte')">&times;</span>
-        </div>
-        <div class="report-modal-body">
-            <form id="formCrearCarpetaReporte" onsubmit="crearCarpetaReporte(event)">
-                <div class="report-form-group">
-                    <label for="folderName">Nombre:</label>
-                    <input type="text" id="folderName" name="folderName" placeholder="Ej: 2025-1" required>
-                </div>
-                <div class="report-form-actions">
-                    <button type="button" class="report-btn-cancel" onclick="cerrarModal('#modalCrearCarpetaReporte')">Cancelar</button>
-                    <button type="submit" class="report-btn-save">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <!-- Modal para opciones de reporte -->
 <div id="modalOpcionesReporte" class="report-modal">

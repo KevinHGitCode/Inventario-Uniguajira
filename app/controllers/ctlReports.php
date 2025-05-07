@@ -2,9 +2,12 @@
 
 require_once __DIR__ . '/sessionCheck.php';
 require_once __DIR__ . '/../models/Reports.php';
+require_once 'app/helpers/validate-http.php';
+require_once 'app/helpers/CacheManager.php'; // Include our new cache manager
 
 class ctlReports
 {
+    private $cache;
     private $reportModel;
 
     public function __construct()
@@ -95,27 +98,36 @@ class ctlReports
      * @param string $newName Nuevo nombre de la carpeta.
      * @return array Respuesta con el resultado del renombrado.
      */
-    public function renameFolder($folderId, $newName)
-    {
-        try {
-            $success = $this->reportModel->renameFolder($folderId, $newName);
-
-            if ($success) {
-                return [
-                    'status' => 'success',
-                    'message' => 'Folder renamed successfully.'
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Folder could not be renamed or name is unchanged.'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error renaming folder: ' . $e->getMessage()
-            ];
+    public function renameFolder(){
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+            return;
+        }
+    
+        $id = $_POST['folder_id'] ?? null;
+        $newName = $_POST['nombre'] ?? '';
+    
+        if (empty($id) || empty($newName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID y nuevo nombre son requeridos.']);
+            return;
+        }
+    
+        $resultado = $this->reportModel->renameFolder($id, $newName);
+    
+        if ($resultado) {
+            // // Invalidate related caches
+            // $this->cache->remove("all_groups");
+            // $this->cache->invalidateEntity('group_' . $id);
+            
+            echo json_encode(['success' => true, 'message' => 'Carpeta actualizada exitosamente.']);
+            return;
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar la carpeta. Puede que la carpeta no exista o el nombre sea igual al anterior.']);
         }
     }
 
@@ -125,27 +137,32 @@ class ctlReports
      * @param int $folderId ID de la carpeta.
      * @return array Respuesta con el resultado de la eliminación.
      */
-    public function deleteFolder($folderId)
-    {
-        try {
-            $success = $this->reportModel->deleteFolder($folderId);
-
-            if ($success) {
-                return [
-                    'status' => 'success',
-                    'message' => 'Folder deleted successfully.'
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Folder could not be deleted. It may contain reports.'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error deleting folder: ' . $e->getMessage()
-            ];
+    public function deleteFolder($folderId){
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+            return;
+        }
+    
+        if (empty($folderId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID requerido.']);
+            return;
+        }
+    
+        $resultado = $this->reportModel->deleteFolder($folderId);
+    
+        if ($resultado) {
+            // Invalidate related caches
+            // $this->cache->remove("all_groups");
+            // $this->cache->invalidateEntity('group_' . $id);
+            
+            echo json_encode(['success' => true, 'message' => 'Carpeta eliminada exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar la carpeta. Puede que no exista o tenga reportes asociados.']);
         }
     }
 

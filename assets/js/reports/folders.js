@@ -23,37 +23,28 @@ function initFoldersFunctions() {
 }
 
 function mostrarModalCrearInventario() {
-    // Obtener el ID del grupo actual del localStorage
-    const currentGroupId = localStorage.getItem('openGroup');
-    
-    // Establecer el valor en el campo oculto
-    if (currentGroupId) {
-        document.getElementById('grupo_id_crear_inventario').value = currentGroupId;
-    }
-    
-    // Mostrar el modal
-    mostrarModal('#modalCrearInventario');
+    mostrarModal('#modalCrearCarpeta');
 }
 
-function btnRenombrarGrupo() {
+function btnRenombrarCarpeta() {
     console.log(selectedItem); // mensaje de depuración
     const id = selectedItem.id;
     const nombreActual = selectedItem.name;
-    document.getElementById("grupoRenombrarId").value = id;
-    document.getElementById("grupoRenombrarNombre").value = nombreActual;
+    document.getElementById("carpetaRenombrarId").value = id;
+    document.getElementById("carpetaRenombrarNombre").value = nombreActual;
 
-    mostrarModal('#modalRenombrarGrupo');
+    mostrarModal('#modalRenombrarCarpeta');
 }
 
 // eliminarGrupo()
-function btnEliminarGrupo() {
-    const idGrupo = selectedItem.id;
+function btnEliminarCarpeta() {
+    const idFolder = selectedItem.id;
 
     eliminarRegistro({
-        url: `/api/groups/delete/${idGrupo}`,
+        url: `/api/folders/delete/${idFolder}`,
         onSuccess: (response) => {
             if (response.success) {
-                loadContent('/inventory', false);
+                loadContent('/reports', false);
             }
             showToast(response);
         }
