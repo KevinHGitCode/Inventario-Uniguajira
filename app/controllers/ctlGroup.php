@@ -2,6 +2,7 @@
 require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/Groups.php';
 require_once 'app/helpers/CacheManager.php'; // Include our cache manager
+require_once 'app/helpers/validate-http.php';
 
 class ctlGroup {
     private $group;
@@ -14,7 +15,6 @@ class ctlGroup {
     
     // $router->add('/api/groups', 'ctlGroup', 'getAll');
     public function getAll() {
-        // Use cache for all groups list
         $cacheKey = "all_groups";
         
         $allGrupos = $this->cache->remember($cacheKey, function() {
@@ -25,27 +25,50 @@ class ctlGroup {
         echo json_encode($allGrupos);
     }
 
+    /**
+     * Obtener un grupo específico por su ID
+     */
+    public function getById($id) {
+        if (empty($id)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'El ID del grupo es requerido.']);
+            return;
+        }
+        
+        $cacheKey = "group_{$id}";
+        
+        $groupData = $this->cache->remember($cacheKey, function() use ($id) {
+            return $this->group->getById($id);
+        }, 600); // Cache for 10 minutes
+        
+        if (!$groupData) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Grupo no encontrado.']);
+            return;
+        }
+        
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'data' => $groupData]);
+    }
+
     public function create() {
         header('Content-Type: application/json');
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+        if (!validateHttpRequest('POST', ['nombre'])) {
             return;
         }
     
-        $nombre = $_POST['nombre'] ?? '';
-        if (empty($nombre)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'El nombre del grupo es requerido.']);
-            return;
-        }
-    
-        $id = $this->group->createGroup($nombre);
+        $nombre = $_POST['nombre'];
+        $id = $this->group->create($nombre);
         
         if ($id !== false) {
             // Invalidate the all groups cache
             $this->cache->remove("all_groups");
+            
+            // También invalidar cualquier caché específica que podría existir para este grupo
+            // aunque acaba de ser creado, es una buena práctica para mantener la coherencia
+            $this->cache->remove("group_{$id}_inventories");
+            $this->cache->invalidateEntity("group_{$id}");
             
             echo json_encode(['success' => true, 'message' => 'Grupo creado exitosamente.', 'id' => $id]);
         } else {
@@ -57,61 +80,69 @@ class ctlGroup {
     public function rename() {
         header('Content-Type: application/json');
         
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+        if (!validateHttpRequest('POST', ['id', 'nombre'])) {
             return;
         }
     
-        $id = $_POST['id'] ?? null;
-        $newName = $_POST['nombre'] ?? '';
+        $id = $_POST['id'];
+        $newName = $_POST['nombre'];
     
-        if (empty($id) || empty($newName)) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'ID y nuevo nombre son requeridos.']);
-            return;
-        }
+        $resultado = $this->group->rename($id, $newName);
     
-        $resultado = $this->group->renameGroup($id, $newName);
-    
-        if ($resultado) {
+        if (!$resultado) {
+            $group = $this->group->getById($id);
+            if (!$group) {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el grupo. El grupo con ID especificado no existe.']);
+            } elseif ($this->group->existsByName($newName)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el grupo. El nombre ya existe.']);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el grupo por un error desconocido.']);
+            }
+        } else {
             // Invalidate related caches
             $this->cache->remove("all_groups");
-            $this->cache->invalidateEntity('group_' . $id);
+            $this->cache->remove("group_{$id}_inventories");
+            $this->cache->invalidateEntity("group_{$id}");
             
             echo json_encode(['success' => true, 'message' => 'Grupo actualizado exitosamente.']);
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el grupo. Puede que el grupo no exista o el nombre sea igual al anterior.']);
         }
     }
 
     public function delete($id) {
         header('Content-Type: application/json');
         
-        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+        if (!validateHttpRequest('DELETE')) {
             return;
         }
-    
+
         if (empty($id)) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'ID requerido.']);
+            echo json_encode(['success' => false, 'message' => 'El ID del grupo es requerido.']);
             return;
         }
-    
-        $resultado = $this->group->deleteGroup($id);
-    
-        if ($resultado) {
-            // Invalidate related caches
+
+        $inventories = $this->group->getInventoriesByGroup($id);
+        if (!empty($inventories)) {
+            http_response_code(409);
+            echo json_encode(['success' => false, 'message' => 'El grupo tiene inventarios asociados.']);
+            return;
+        }
+
+        $respuesta = $this->group->delete($id);
+        if (!$respuesta) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Ocurrió un error al intentar eliminar el grupo.']);
+        } else {
+            // Invalidar todas las cachés relacionadas
             $this->cache->remove("all_groups");
-            $this->cache->invalidateEntity('group_' . $id);
+            $this->cache->remove("group_{$id}_inventories");
+            $this->cache->invalidateEntity("group_{$id}");
             
             echo json_encode(['success' => true, 'message' => 'Grupo eliminado exitosamente.']);
-        } else {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el grupo. Puede que no exista o tenga inventarios asociados.']);
         }
     }
+    
 }

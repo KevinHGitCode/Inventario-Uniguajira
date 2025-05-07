@@ -28,6 +28,9 @@ let allowDeselection = true;
 
 // Función para seleccionar un elemento
 function toggleSelectItem(element) {
+    // Si se hace clic en un botón dentro del elemento, no hacer nada
+    if (event.target.tagName === 'BUTTON') return;
+
     const itemId = element.dataset.id;
     const itemName = element.dataset.name;
     const type = element.dataset.type;

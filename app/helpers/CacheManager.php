@@ -125,20 +125,56 @@ class CacheManager {
      */
     public function clear($prefix = null) {
         $files = glob($this->cachePath . '/*.cache');
+        $success = true;
         
         foreach ($files as $file) {
             if ($prefix !== null) {
-                $filename = basename($file, '.cache');
-                // Only remove files matching prefix
-                if (strpos($filename, md5($prefix)) === 0) {
-                    unlink($file);
+                // Get the original identifier from filename
+                $cacheFile = basename($file, '.cache');
+                
+                // Read the file to check if we can recover the original key
+                $content = file_get_contents($file);
+                if ($content !== false) {
+                    // For debugging only
+                    // file_put_contents($this->cachePath . '/debug.log', "Checking file: $file for prefix: $prefix\n", FILE_APPEND);
+                    
+                    // Delete files whose original key contains the prefix
+                    if (strpos($file, md5($prefix)) === 0 || $this->fileContainsPrefix($file, $prefix)) {
+                        if (!unlink($file)) {
+                            $success = false;
+                        }
+                    }
                 }
             } else {
-                unlink($file);
+                if (!unlink($file)) {
+                    $success = false;
+                }
             }
         }
         
-        return true;
+        return $success;
+    }
+    
+    /**
+     * Helper method to check if a cache file contains a key with the given prefix
+     * 
+     * @param string $file Path to the cache file
+     * @param string $prefix Prefix to search for
+     * @return bool True if the file contains a key with the prefix
+     */
+    private function fileContainsPrefix($file, $prefix) {
+        // This is a more thorough approach, but might be resource-intensive
+        // for large cache files. Simple implementation for demonstration.
+        $content = file_get_contents($file);
+        
+        if ($content === false) {
+            return false;
+        }
+        
+        // We can't reliably check the original key without storing it in the cache data
+        // This is a limitation of the current implementation
+        
+        return false;
     }
     
     /**
@@ -163,10 +199,36 @@ class CacheManager {
     /**
      * Invalidate all caches related to a specific entity
      * 
-     * @param string $entity Entity name (e.g., 'group', 'inventory')
+     * @param string $entity Entity name or prefix (e.g., 'group_12')
      * @return void
      */
     public function invalidateEntity($entity) {
-        $this->clear($entity . '_');
+        // Remove specific key patterns that match our naming convention
+        if (strpos($entity, 'group_') === 0) {
+            $groupId = substr($entity, 6); // Extract the ID part
+            $this->remove("group_{$groupId}_inventories");
+        } else {
+            // For backward compatibility, still try the original method
+            $this->clear($entity);
+            
+            // Also search for any keys containing the entity as a substring
+            $files = glob($this->cachePath . '/*.cache');
+            foreach ($files as $file) {
+                $content = file_get_contents($file);
+                if ($content !== false) {
+                    $cacheData = @unserialize($content);
+                    if ($cacheData) {
+                        $cacheFile = basename($file, '.cache');
+                        // Try to match cache keys that might contain our entity ID
+                        if (strpos($cacheFile, md5($entity)) !== false || 
+                            strpos($cacheFile, md5("{$entity}_")) !== false ||
+                            strpos($cacheFile, md5("group_{$entity}")) !== false ||
+                            strpos($cacheFile, md5("group_{$entity}_inventories")) !== false) {
+                            unlink($file);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

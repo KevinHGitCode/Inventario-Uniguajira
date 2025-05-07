@@ -96,6 +96,7 @@ class Inventory {
         return false;
     }
 
+    /** 
      * 
      * @param int $id ID del inventario.
      * @param string $name Nuevo nombre del inventario.
@@ -165,6 +166,21 @@ class Inventory {
 
 
     /**
+     * Verificar si un inventario tiene bienes asociados.
+     * 
+     * @param int $id ID del inventario.
+     * @return bool True si tiene bienes asociados, false en caso contrario.
+     */
+    public function hasAssociatedAssets($id) {
+        $checkStmt = $this->connection->prepare("SELECT COUNT(*) FROM bienes_inventarios WHERE inventario_id = ?");
+        $checkStmt->bind_param("i", $id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        $count = $result->fetch_row()[0];
+        return $count > 0;
+    }
+
+    /**
      * Eliminar un inventario.
      * 
      * Nota: Solo se puede eliminar si no tiene bienes asociados.
@@ -174,12 +190,7 @@ class Inventory {
      */
     public function delete($id) {
         // Verificar si hay bienes asociados
-        $checkStmt = $this->connection->prepare("SELECT COUNT(*) FROM bienes_inventarios WHERE inventario_id = ?");
-        $checkStmt->bind_param("i", $id);
-        $checkStmt->execute();
-        $result = $checkStmt->get_result();
-        $count = $result->fetch_row()[0];
-        if ($count > 0) {
+        if ($this->hasAssociatedAssets($id)) {
             return false; // No se puede eliminar si tiene bienes asociados
         }
 

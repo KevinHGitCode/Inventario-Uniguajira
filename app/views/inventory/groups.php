@@ -44,7 +44,7 @@
         <?php endif; ?>
 
         <div class="card-grid">
-            <?php if (isset($dataGroups)): ?>
+            <?php if (isset($dataGroups) && count($dataGroups) > 0): ?>
                 <?php foreach ($dataGroups as $group): ?>
                     <div class="card card-item" 
                         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
@@ -56,9 +56,7 @@
                     >
                         <!-- inicio contenido -->
                         <div class="card-left">
-                            <svg class="icon-folder">
-                                <use href="/assets/sprites.svg#layer-group" />
-                            </svg>
+                            <i class="fas fa-layer-group icon-folder"></i>
                         </div>
                         
                         <div class="card-center">

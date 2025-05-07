@@ -33,19 +33,26 @@ async function cargarBienesInventario(idInventory) {
         if (bienes && bienes.length > 0) {
             console.time('Renderizar bienes'); // Marca de tiempo para renderizado
             
+            // Obtener el rol del usuario de manera segura
+            const userRol = getUserRol();
+            console.log('Rol de usuario detectado:', userRol);
+            
+            // Determinar si el usuario puede seleccionar items (administradores o roles autorizados)
+            const puedeSeleccionar = ['administrador'].includes(userRol);
+            
             // Procesar todos los bienes de una vez
             bienes.forEach((bien) => {
                 const bienElement = document.createElement('div');
                 bienElement.className = 'bien-card card-item';
                 
-                // Verificar si el usuario es administrador para agregar atributos de datos
-                const userRol = getUserRol();
+                // Siempre agregar los atributos data-* para mantener consistencia
+                bienElement.dataset.id = bien.id || '';
+                bienElement.dataset.name = bien.bien || '';
+                bienElement.dataset.cantidad = bien.cantidad || '0';
+                bienElement.dataset.type = 'good';
                 
-                if (userRol === 'administrador') {
-                    bienElement.dataset.id = bien.id || '';
-                    bienElement.dataset.name = bien.bien;
-                    bienElement.dataset.cantidad = bien.cantidad;
-                    bienElement.dataset.type = 'good';
+                // Solo agregar evento onclick si el usuario tiene permisos
+                if (puedeSeleccionar) {
                     bienElement.onclick = function() { toggleSelectItem(this); };
                 }
                 
@@ -54,20 +61,20 @@ async function cargarBienesInventario(idInventory) {
                     <img
                         src="${bien.imagen || 'assets/uploads/img/goods/default.jpg'}"
                         class="bien-image"
-                        alt="${bien.bien}"
+                        alt="${bien.bien || 'Bien sin nombre'}"
                     />
                     <div class="bien-info">
                         <h3 class="name-item">
-                            ${bien.bien}
+                            ${bien.bien || 'Bien sin nombre'}
                             <img
                                 src="assets/icons/${bien.tipo === 'Cantidad' ? 'bienCantidad.svg' : 'bienSerial.svg'}"
-                                alt="Tipo ${bien.tipo}"
+                                alt="Tipo ${bien.tipo || 'desconocido'}"
                                 class="bien-icon"
                             />
                         </h3>
                         <p>
                             <b>Cantidad:</b>
-                            ${bien.cantidad}
+                            ${bien.cantidad || '0'}
                         </p>
                     </div>
                 `;
@@ -80,25 +87,42 @@ async function cargarBienesInventario(idInventory) {
             
         } else {
             // Mostrar estado vacío si no hay bienes
-            const emptyState = document.createElement('div');
-            emptyState.className = 'empty-state';
-            emptyState.innerHTML = `
-                <i class="fas fa-box-open fa-3x"></i>
-                <p>No hay bienes disponibles en este inventario.</p>
-            `;
-            bienesGrid.appendChild(emptyState);
+            mostrarEstadoVacio(bienesGrid);
         }
         
         console.timeEnd('Cargar bienes'); // Fin del tiempo total
         
     } catch (error) {
         console.error('Error al cargar bienes:', error);
-        divContent.innerHTML = '<p>Error al cargar los bienes</p>';
+        // Limpiar el contenedor y mostrar mensaje de error
+        divContent.innerHTML = '';
+        const bienesGrid = document.createElement('div');
+        bienesGrid.className = 'bienes-grid';
+        divContent.appendChild(bienesGrid);
+        
+        // Mostrar mensaje de error estilizado
+        const errorState = document.createElement('div');
+        errorState.className = 'empty-state error-state';
+        errorState.innerHTML = `
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <p>Error al cargar los bienes. Por favor, intente nuevamente.</p>
+        `;
+        bienesGrid.appendChild(errorState);
     }
 }
 
-// Función auxiliar para obtener el rol del usuario
+// Función para mostrar estado vacío
+function mostrarEstadoVacio(contenedor) {
+    const emptyState = document.createElement('div');
+    emptyState.className = 'empty-state';
+    emptyState.innerHTML = `
+        <i class="fas fa-box-open fa-3x"></i>
+        <p>No hay bienes disponibles en este inventario.</p>
+    `;
+    contenedor.appendChild(emptyState);
+}
+
 function getUserRol() {
-    // Obtener el rol desde la sesión global window.sesion
-    return window.sesion?.user_rol || 'invitado';
+    // Obtener el rol desde la sesión global
+    return window.sesion?.session_data?.user_rol || 'invitado';
 }

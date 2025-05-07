@@ -24,7 +24,7 @@ class Groups {
      * 
      * @return array Lista de grupos con los campos 'id', 'nombre' y 'total_inventarios'.
      */
-    public function getAll() {
+    public function getAllGroups() {
         $stmt = $this->connection->prepare("
             SELECT 
                 g.id AS id, 
@@ -78,7 +78,7 @@ class Groups {
      * @param string $nuevoNombre Nuevo nombre del grupo.
      * @return bool True si la operación fue exitosa, false en caso contrario.
      */
-    public function update($id, $nuevoNombre) {
+    public function rename($id, $nuevoNombre) {
         if ($this->existsByName($nuevoNombre)) {
             return false; // No se puede actualizar si el nombre ya existe
         }

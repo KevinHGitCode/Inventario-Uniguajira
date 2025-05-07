@@ -22,9 +22,10 @@ function initFoldersFunctions() {
     });
 }
 
-function mostrarModalCrearInventario() {
-    mostrarModal('#modalCrearCarpeta');
-}
+// TODO: comentado porque hacia interferencia con inventario
+// function mostrarModalCrearInventario() {
+//     mostrarModal('#modalCrearCarpeta');
+// }
 
 function btnRenombrarCarpeta() {
     console.log(selectedItem); // mensaje de depuración

@@ -47,19 +47,20 @@ class ctlUser {
 
         // Iniciar sesión y establecer datos de usuario
         session_start();
-        // Establecer la zona horaria antes
         $_SESSION['timezone_offset'] = $_POST['timezone_offset'] ?? -5; // UTC-5 para Colombia
         $_SESSION['timezone_name'] = $_POST['timezone_name'] ?? 'America/Bogota';
-        // $this->userModel->setTimezone();
-        Database::getInstance();
+
+        // Llamar a los métodos del Singleton
+        $db = Database::getInstance();
+        $db->setTimezone();
+        $db->setCurrentUser();
+
         $_SESSION['user_id'] = $dataUser['id'];
         $_SESSION['user_name'] = $dataUser['nombre'];
         $_SESSION['user_username'] = $dataUser['nombre_usuario'];
         $_SESSION['user_email'] = $dataUser['email'];
         $_SESSION['user_rol'] = $dataUser['rol'];
         $_SESSION['user_img'] = $dataUser['foto_perfil'];
-        
-        $this->userModel->setCurrentUser();
 
         // Actualizar último acceso
         $this->userModel->updateUltimoAcceso($dataUser['id']);
@@ -116,7 +117,8 @@ class ctlUser {
         }
 
         session_start();
-        $this->userModel->setCurrentUser();
+        $db = Database::getInstance();
+        $db->setCurrentUser();
 
         $id = (int) $_SESSION['user_id'] ?? 0;
         $nombre = trim($_POST['nombre']);
@@ -181,7 +183,8 @@ class ctlUser {
         }
 
         session_start();
-        $this->userModel->setCurrentUser();
+        $db = Database::getInstance();
+        $db->setCurrentUser();
     
         $id = (int) $_POST['id'];
         $nombre = trim($_POST['nombre']);
@@ -236,7 +239,8 @@ class ctlUser {
         }
 
         session_start();
-        $this->userModel->setCurrentUser();
+        $db = Database::getInstance();
+        $db->setCurrentUser();
 
         // Obtener parámetros desde $_POST
         $nombre = $_POST['nombre'];
@@ -267,7 +271,8 @@ class ctlUser {
         }
 
         session_start();
-        $this->userModel->setCurrentUser();
+        $db = Database::getInstance();
+        $db->setCurrentUser();
 
         $id = (int) $_SESSION['user_id'] ?? 0;
         $password = trim($_POST['contraseña']);
@@ -325,7 +330,8 @@ class ctlUser {
         }
  
         session_start();
-        $this->userModel->setCurrentUser();
+        $db = Database::getInstance();
+        $db->setCurrentUser();
         
         // Llamar al modelo para eliminar el usuario
         $resultado = $this->userModel->deleteUser($id);

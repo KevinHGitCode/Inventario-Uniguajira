@@ -1,7 +1,7 @@
 <!-- < ?php require_once 'app/controllers/sessionCheck.php'; ?> -->
 
 <div class="card-grid">
-    <?php if (isset($dataInventories)): ?>
+    <?php if (isset($dataInventories) && count($dataInventories) > 0): ?>
         <?php foreach ($dataInventories as $inventory): ?>
             <div class="card card-item" 
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>

@@ -53,7 +53,12 @@ class ctlInventory {
         $resultado = $inventory->create($nombre, $grupoId);
 
         if ($resultado) {
-            $this->cache->invalidateEntity('group_' . $grupoId);
+            // Invalidar directamente la clave de caché específica
+            $this->cache->remove("group_{$grupoId}_inventories");
+            
+            // Como respaldo, también intentamos invalidar usando el método original
+            $this->cache->invalidateEntity("group_{$grupoId}");
+            
             echo json_encode(['success' => true, 'message' => 'Inventario creado exitosamente.']);
         } else {
             http_response_code(409);
@@ -73,11 +78,17 @@ class ctlInventory {
         $resultado = $inventory->updateName($id, $newName);
 
         if ($resultado) {
+            // Invalidar caché de bienes de este inventario
             $this->cache->remove("inventory_{$id}_goods");
+            
+            // Obtener el grupo asociado y actualizar esa caché también
             $inventoryData = $inventory->getInventoryById($id);
             if ($inventoryData && isset($inventoryData['grupo_id'])) {
-                $this->cache->invalidateEntity('group_' . $inventoryData['grupo_id']);
+                $grupoId = $inventoryData['grupo_id'];
+                $this->cache->remove("group_{$grupoId}_inventories");
+                $this->cache->invalidateEntity("group_{$grupoId}");
             }
+            
             echo json_encode(['success' => true, 'message' => 'Inventario renombrado exitosamente.']);
         } else {
             http_response_code(400);
@@ -99,11 +110,17 @@ class ctlInventory {
         $resultado = $inventory->updateConservation($id, $estado);
 
         if ($resultado) {
+            // Invalidar caché de bienes de este inventario
             $this->cache->remove("inventory_{$id}_goods");
+            
+            // Obtener el grupo asociado y actualizar esa caché también
             $inventoryData = $inventory->getInventoryById($id);
             if ($inventoryData && isset($inventoryData['grupo_id'])) {
-                $this->cache->invalidateEntity('group_' . $inventoryData['grupo_id']);
+                $grupoId = $inventoryData['grupo_id'];
+                $this->cache->remove("group_{$grupoId}_inventories");
+                $this->cache->invalidateEntity("group_{$grupoId}");
             }
+            
             echo json_encode(['success' => true, 'message' => 'Estado del inventario actualizado exitosamente.']);
         } else {
             http_response_code(400);
@@ -125,18 +142,29 @@ class ctlInventory {
 
         $inventoryData = $inventory->getInventoryById($id);
         $grupoId = $inventoryData['grupo_id'] ?? null;
-        
+
+        // Verificar si el inventario tiene bienes asociados
+        if ($inventory->hasAssociatedAssets($id)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'El inventario tiene bienes asociados.']);
+            return;
+        }
+
         $resultado = $inventory->delete($id);
 
         if ($resultado) {
+            // Invalidar todas las cachés relacionadas
             $this->cache->remove("inventory_{$id}_goods");
+            
             if ($grupoId) {
-                $this->cache->invalidateEntity('group_' . $grupoId);
+                $this->cache->remove("group_{$grupoId}_inventories");
+                $this->cache->invalidateEntity("group_{$grupoId}");
             }
-            echo json_encode(['success' => true, 'message' => 'Inventario eliminado exitosamente.']);
+            
+            echo json_encode(['success' => true, 'message' => 'Inventario eliminado.']);
         } else {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el inventario. Puede que tenga bienes asociados o no exista.']);
+            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el inventario.']);
         }
     }
 }
