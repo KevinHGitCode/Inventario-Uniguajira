@@ -7,14 +7,16 @@ require_once __DIR__ . '/../config/db.php';
  * Esta clase maneja las operaciones CRUD relacionadas con las tareas en la base de datos.
  * Extiende la clase Database para utilizar la conexión a la base de datos.
  */
-class Tasks extends Database {
+class Tasks {
+    protected $connection;
 
     /**
-     * Constructor de la clase Tasks.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Constructor de la clase Goods.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
 
     /**

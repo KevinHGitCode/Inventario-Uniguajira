@@ -5,14 +5,21 @@ require_once __DIR__ . '/../config/db.php';
  * Clase User
  * Maneja las operaciones relacionadas con los usuarios en la base de datos.
  */
-class User extends Database {
+class User  {
 
     /**
      * Constructor de la clase User.
      * Inicializa la conexión a la base de datos.
      */
+    protected $connection;
+
+    /**
+     * Constructor de la clase Goods.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
+     */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
 
     /**
