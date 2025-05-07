@@ -35,7 +35,7 @@ class Record extends Database {
             FROM historial
             INNER JOIN usuarios ON historial.usuario_id = usuarios.id
             ORDER BY historial.id DESC
-            LIMIT 50;
+            LIMIT 250;
         ");
         $stmt->execute();
         $result = $stmt->get_result();
