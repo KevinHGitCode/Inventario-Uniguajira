@@ -4,15 +4,15 @@
     <h1>Carpetas</h1>
 
     <div id="folders">
-        <div class="report-top-bar">
-            <div class="report-search-container">
+        <div class="top-bar">
+            <div class="search-container">
                 <input
                     id="searchFolder"
-                    class="report-search-bar"
+                    class="search-bar searchInput"
                     type="text"
-                    placeholder="Buscar Inventario"
+                    placeholder="Buscar Carpeta"
                 />
-                <i class="fas fa-search report-search-icon"></i>
+                <i class="search-icon fas fa-search"></i>
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
@@ -71,7 +71,6 @@
                             </button>
                         </div>
                     </div>
-                    <br>
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="report-empty-state">
@@ -91,15 +90,15 @@
             </button>
         </div>
 
-        <div class="report-top-bar">
-            <div class="report-search-container">
+        <div class="top-bar">
+            <div class="search-container">
                 <input
                     id="searchReport"
-                    class="report-search-bar"
+                    class="search-bar searchInput"
                     type="text"
-                    placeholder="Buscar Inventario"
+                    placeholder="Buscar Reporte"
                 />
-                <i class="fas fa-search report-search-icon"></i>
+                <i class="search-icon fas fa-search"></i>
             </div>
         </div>
 
