@@ -23,4 +23,8 @@ auth.json
 .env
 .env.backup
 *.cache
+
+
+node_modules
 package.json
+package-lock.json
