@@ -66,28 +66,29 @@ class ctlReports
      * @param string $description Descripción de la carpeta.
      * @return array Respuesta con el ID de la carpeta creada o un mensaje de error.
      */
-    public function createFolder($name, $description = '')
-    {
-        try {
-            $folderId = $this->reportModel->createFolder($name, $description);
+    public function createFolder(){
+        header('Content-Type: application/json');
+        
+        if (!validateHttpRequest('POST', ['nombreCarpeta'])) {
+            return;
+        }
 
-            if ($folderId) {
-                return [
-                    'status' => 'success',
-                    'message' => 'Folder created successfully.',
-                    'folderId' => $folderId
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Folder name already exists or an error occurred.'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error creating folder: ' . $e->getMessage()
-            ];
+        $nombre = trim($_POST['nombreCarpeta']);
+
+        $resultado = $this->reportModel->createFolder($nombre);
+
+        if ($resultado) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Carpeta creada exitosamente.',
+                'bienCarpeta' => $resultado
+            ]);
+        } else {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error al crear la carpeta. El nombre podría estar duplicado.'
+            ]);
         }
     }
 

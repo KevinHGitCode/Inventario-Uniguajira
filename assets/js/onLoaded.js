@@ -25,5 +25,9 @@ window.onload = () => {
         initGoodsInventoryFunctions();
     }
 
+    if (typeof initFoldersFunctions === 'function') {
+        initFoldersFunctions();
+    }
+
 
 }

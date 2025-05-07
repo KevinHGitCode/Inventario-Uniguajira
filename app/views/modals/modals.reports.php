@@ -1,24 +1,31 @@
-<!-- Modal para crear carpeta de reportes -->
-<div id="modalCrearCarpeta" class="report-modal">
-    <div class="report-modal-content">
-        <div class="report-modal-header">
-            <h2>Crear Carpeta de Reportes</h2>
-            <span class="report-modal-close" onclick="cerrarModal('#modalCrearCarpeta')">&times;</span>
-        </div>
-        <div class="report-modal-body">
-            <form id="formCrearCarpeta" onsubmit="crearCarpetaReporte(event)">
-                <div class="report-form-group">
-                    <label for="folderName">Nombre:</label>
-                    <input type="text" id="folderName" name="folderName" placeholder="Ej: Reportes 2025-1" required>
-                </div>
-                <div class="report-form-actions">
-                    <button type="button" class="report-btn-cancel" onclick="cerrarModal('#modalCrearCarpeta')">Cancelar</button>
-                    <button type="submit" class="report-btn-save">Crear</button>
-                </div>
-            </form>
-        </div>
+<!-- Modal Crear Grupo -->
+<div id="modalCrearCarpeta" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearCarpeta')">&times;</span>
+        <h2>Nueva Carpeta</h2>
+        <form
+            id="formCrearCarpeta"
+            action="/api/folders/create"
+            method="POST"
+            autocomplete="off"
+        >
+            <div>
+                <label for="nombreCarpeta">Nombre del grupo:</label>
+                <input type="text" name="nombreCarpeta" id="nombreCarpeta" required />
+            </div>
+            <div class="form-actions">
+                <button 
+                    type="submit" 
+                    id="create-btn-folder" 
+                    class="btn submit-btn">
+                    Guardar
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
+
 
 <!-- Modal Renombrar carpeta -->
 <div id="modalRenombrarCarpeta" class="modal">
