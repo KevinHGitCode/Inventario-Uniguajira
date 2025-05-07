@@ -27,63 +27,17 @@ Sigue estos pasos para instalar el proyecto en tu entorno local:
    cd Inventario-Uniguajira
    ```
 
-## Configuración e Instalación de Composer
+   **Alternativa para abrir directamente en VS Code**:
 
-Composer es el gestor de dependencias para PHP que utilizamos en este proyecto. Sigue estos pasos para configurarlo:
-
-### Instalación de Composer
-
-1. **Instala Composer globalmente**:
-
-   - **Windows**: Descarga el instalador desde [getcomposer.org](https://getcomposer.org/download/) y sigue las instrucciones de instalación.
-   
-   - **MacOS/Linux**:
-     ```bash
-     curl -sS https://getcomposer.org/installer | php
-     sudo mv composer.phar /usr/local/bin/composer
-     sudo chmod +x /usr/local/bin/composer
-     ```
-
-2. **Verifica la instalación**:
    ```bash
-   composer --version
+   git clone https://github.com/KevinHGitCode/Inventario-Uniguajira.git
+   code Inventario-Uniguajira
    ```
 
-### Configuración del proyecto con Composer
+## Configuración con Composer
 
-1. **Instala las dependencias** (ya definidas en composer.json):
+1. **Instala las dependencias** (asegúrate de tener Composer instalado en tu máquina):
+
    ```bash
    composer install
    ```
-
-2. **Para agregar nuevas dependencias**:
-   ```bash
-   composer require [nombre-del-paquete]
-   ```
-
-3. **Para actualizar las dependencias**:
-   ```bash
-   composer update
-   ```
-
-4. **Regenerar el autoloader de Composer** (útil después de agregar clases nuevas):
-   ```bash
-   composer dump-autoload
-   ```
-
-### Uso de Composer en el proyecto
-
-1. **Inclusión del autoloader en tus scripts PHP**:
-   ```php
-   require __DIR__ . '/vendor/autoload.php';
-   ```
-
-2. **Uso de paquetes externos**:
-   - Después de instalar un paquete con Composer, puedes usarlo directamente:
-   ```php
-   use NombreNamespace\Clase;
-   
-   $objeto = new Clase();
-   ```
-
-> **Nota importante**: Asegúrate de que el archivo `composer.json` esté actualizado y que todas las dependencias necesarias estén especificadas correctamente. No subas la carpeta `vendor/` al repositorio, ya que puede ser muy grande y está excluida en el archivo `.gitignore`.
