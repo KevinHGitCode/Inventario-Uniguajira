@@ -17,24 +17,89 @@ CREATE TRIGGER after_insert_usuario
 AFTER INSERT ON usuarios
 FOR EACH ROW
 BEGIN
+    DECLARE usuario_creador VARCHAR(100);
+    DECLARE mensaje VARCHAR(255);
+    
+    -- Obtener el nombre de usuario del creador
+    SELECT nombre_usuario INTO usuario_creador 
+    FROM usuarios 
+    WHERE id = @usuario_actual;
+    
+    -- Si el usuario se creó a sí mismo (registro)
+    IF @usuario_actual = NEW.id THEN
+        SET mensaje = CONCAT('El usuario ', NEW.nombre_usuario, ' se ha registrado en el sistema');
+    ELSE
+        SET mensaje = CONCAT('El usuario ', usuario_creador, ' ha creado la cuenta de ', NEW.nombre_usuario);
+    END IF;
+    
+    -- Insertar en el historial
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'INSERT', 'usuarios', NEW.id, CONCAT('Se ha creado el usuario ', NEW.nombre_usuario));
+    VALUES (@usuario_actual, 'INSERT', 'usuarios', NEW.id, mensaje);
 END//
 
 CREATE TRIGGER after_update_usuario
 AFTER UPDATE ON usuarios
 FOR EACH ROW
 BEGIN
+    DECLARE usuario_editor VARCHAR(100);
+    DECLARE usuario_editado VARCHAR(100);
+    DECLARE mensaje VARCHAR(255);
+    
+    -- Obtener el nombre de usuario del editor (quien realiza la acción)
+    SELECT nombre_usuario INTO usuario_editor 
+    FROM usuarios 
+    WHERE id = @usuario_actual;
+    
+    -- Obtener el nombre de usuario del editado
+    SET usuario_editado = NEW.nombre_usuario;
+    
+    -- Caso 1: Solo se actualizó la fecha de último acceso (inicio de sesión)
+    IF OLD.fecha_ultimo_acceso <> NEW.fecha_ultimo_acceso 
+       AND OLD.nombre = NEW.nombre 
+       AND OLD.nombre_usuario = NEW.nombre_usuario 
+       AND OLD.email = NEW.email 
+       AND OLD.contraseña = NEW.contraseña 
+       AND OLD.rol = NEW.rol 
+       AND OLD.foto_perfil <=> NEW.foto_perfil THEN
+        
+        SET mensaje = CONCAT('El usuario ', usuario_editado, ' ha iniciado sesión');
+    
+    -- Caso 2: El usuario actualizó su propio perfil
+    ELSEIF @usuario_actual = NEW.id THEN
+        SET mensaje = CONCAT('El usuario ', usuario_editor, ' ha actualizado su perfil');
+    
+    -- Caso 3: Un usuario modificó los datos de otro usuario
+    ELSE
+        SET mensaje = CONCAT('El usuario ', usuario_editor, ' ha modificado los datos de ', usuario_editado);
+    END IF;
+    
+    -- Insertar en el historial
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'UPDATE', 'usuarios', NEW.id, CONCAT('Se ha editado el usuario ', NEW.nombre_usuario));
+    VALUES (@usuario_actual, 'UPDATE', 'usuarios', NEW.id, mensaje);
 END//
 
 CREATE TRIGGER after_delete_usuario
 AFTER DELETE ON usuarios
 FOR EACH ROW
 BEGIN
+    DECLARE usuario_eliminador VARCHAR(100);
+    DECLARE mensaje VARCHAR(255);
+    
+    -- Obtener el nombre de usuario del eliminador
+    SELECT nombre_usuario INTO usuario_eliminador 
+    FROM usuarios 
+    WHERE id = @usuario_actual;
+    
+    -- Si el usuario se eliminó a sí mismo (poco común pero posible)
+    IF @usuario_actual = OLD.id THEN
+        SET mensaje = CONCAT('El usuario ', OLD.nombre_usuario, ' ha eliminado su cuenta');
+    ELSE
+        SET mensaje = CONCAT('El usuario ', usuario_eliminador, ' ha eliminado la cuenta de ', OLD.nombre_usuario);
+    END IF;
+    
+    -- Insertar en el historial
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'DELETE', 'usuarios', OLD.id, CONCAT('Se ha eliminado el usuario ', OLD.nombre_usuario));
+    VALUES (@usuario_actual, 'DELETE', 'usuarios', OLD.id, mensaje);
 END//
 
 -- ========================
