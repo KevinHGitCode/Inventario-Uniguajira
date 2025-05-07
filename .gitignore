@@ -1,34 +1,28 @@
+# Configuración de editores y herramientas
 .vscode
 .qodo
-inv
-purgecss
 stylelint
-cache/*
-!cache/
 
 # Ignorar dependencias de Composer
 /vendor/
 composer.phar
 /composer.lock
-
-# Ignorar archivos de configuración específicos de Composer
 .composer/
 auth.json
 
-# Ignorar archivos temporales o de caché que composer podría generar
+# Archivos temporales o de caché
 *.cache
 *.log
 
-# Ignorar archivos de configuración local que podrían contener información sensible
+# Archivos de configuración local
 .env
 .env.backup
-*.cache
 
-
+# Ignorar dependencias de Node.js
 node_modules
 package.json
 package-lock.json
 
-cypress
-
+# Ignorar herramientas de testing
+cypress/
 cypress.config.js
