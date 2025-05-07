@@ -7,14 +7,17 @@ require_once __DIR__ . '/../config/db.php';
  * Esta clase gestiona las operaciones relacionadas con el historial en la base de datos.
  * Extiende la clase Database para utilizar la conexión a la base de datos.
  */
-class Record extends Database {
+class Record {
+
+    protected $connection;
 
     /**
      * Constructor de la clase Record.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
 
     /**

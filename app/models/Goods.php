@@ -5,17 +5,20 @@ require_once __DIR__ . '/../config/db.php';
  * Clase Goods
  * 
  * Esta clase gestiona las operaciones relacionadas con los bienes en la base de datos.
- * Extiende la clase Database para utilizar la conexión a la base de datos.
+ * Utiliza el patrón Singleton de Database para la conexión a la base de datos.
  */
-class Goods extends Database {
+class Goods {
+    protected $connection;
 
     /**
      * Constructor de la clase Goods.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
+    
 
     /**
      * Obtener la lista de todos los bienes desde la vista del sistema.

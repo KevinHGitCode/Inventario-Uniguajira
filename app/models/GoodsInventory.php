@@ -1,16 +1,23 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
 
-class GoodsInventory extends Database {
+/**
+ * Clase GoodsInventory
+ * 
+ * Esta clase gestiona las operaciones relacionadas con los bienes en inventarios.
+ * Utiliza el patrón Singleton de Database para la conexión a la base de datos.
+ */
+class GoodsInventory {
+    protected $connection;
 
     /**
      * Constructor de la clase GoodsInventory.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
-
 
     /**
      * Obtener información de un bien en inventario por su ID.
@@ -188,31 +195,6 @@ class GoodsInventory extends Database {
             return $stmt->insert_id;
         }
         return false;
-    }
-
-    /**
-     * Obtener el ID de bien_inventario para un bien y un inventario.
-     * Obtener la relacion
-     * 
-     * @param int $goodId ID del bien.
-     * @param int $inventoryId ID del inventario.
-     * @return int|false ID del bien_inventario o false si no existe.
-     */
-    private function getBienInventarioId($goodId, $inventoryId) {
-        $stmt = $this->connection->prepare("
-            SELECT id FROM bienes_inventarios 
-            WHERE bien_id = ? AND inventario_id = ?
-        ");
-        $stmt->bind_param("ii", $goodId, $inventoryId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
-            return false;
-        }
-        
-        $row = $result->fetch_assoc();
-        return $row['id'];
     }
 
     /**
@@ -461,6 +443,30 @@ class GoodsInventory extends Database {
         // Confirmar transacción
         $this->connection->commit();
         return true;
+    }
+
+    /**
+     * Obtener el ID de bien_inventario para un bien y un inventario.
+     * 
+     * @param int $goodId ID del bien.
+     * @param int $inventoryId ID del inventario.
+     * @return int|false ID del bien_inventario o false si no existe.
+     */
+    private function getBienInventarioId($goodId, $inventoryId) {
+        $stmt = $this->connection->prepare("
+            SELECT id FROM bienes_inventarios 
+            WHERE bien_id = ? AND inventario_id = ?
+        ");
+        $stmt->bind_param("ii", $goodId, $inventoryId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 0) {
+            return false;
+        }
+        
+        $row = $result->fetch_assoc();
+        return $row['id'];
     }
 }
 ?>

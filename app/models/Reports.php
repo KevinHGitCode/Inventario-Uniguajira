@@ -7,14 +7,16 @@ require_once __DIR__ . '/../config/db.php';
  * Esta clase maneja las operaciones relacionadas con los reportes y carpetas de reportes en la base de datos.
  * Extiende la clase Database para utilizar la conexión a la base de datos.
  */
-class Reports extends Database {
+class Reports {
+    protected $connection;
 
     /**
-     * Constructor de la clase Reports.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Constructor de la clase Goods.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
 
     /**

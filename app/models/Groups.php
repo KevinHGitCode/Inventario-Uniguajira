@@ -4,29 +4,31 @@ require_once __DIR__ . '/../config/db.php';
 /**
  * Clase Groups
  * 
- * Esta clase maneja las operaciones relacionadas con los grupos en la base de datos.
- * Extiende la clase Database para utilizar la conexión a la base de datos.
+ * Esta clase gestiona las operaciones relacionadas con los grupos en la base de datos.
+ * Utiliza el patrón Singleton de Database para la conexión a la base de datos.
  */
-class Groups extends Database {
+class Groups {
+    protected $connection;
 
     /**
      * Constructor de la clase Groups.
-     * Llama al constructor de la clase padre para inicializar la conexión a la base de datos.
+     * Obtiene la conexión a la base de datos desde la instancia Singleton de Database.
      */
     public function __construct() {
-        parent::__construct();
+        $database = Database::getInstance();
+        $this->connection = $database->getConnection();
     }
 
     /**
      * Obtener todos los grupos con la cantidad de inventarios que tiene cada uno.
      * 
-     * @return array Arreglo asociativo con todos los grupos y su número de inventarios.
+     * @return array Lista de grupos con los campos 'id', 'nombre' y 'total_inventarios'.
      */
-    public function getAllGroups() {
+    public function getAll() {
         $stmt = $this->connection->prepare("
             SELECT 
-                g.id as id, 
-                g.nombre as nombre,
+                g.id AS id, 
+                g.nombre AS nombre,
                 COUNT(i.id) AS total_inventarios
             FROM grupos g
             LEFT JOIN inventarios i ON g.id = i.grupo_id
@@ -37,19 +39,103 @@ class Groups extends Database {
     }
 
     /**
+     * Obtener información de un grupo por su ID.
+     * 
+     * @param int $id ID del grupo.
+     * @return array|null Datos del grupo o null si no se encuentra.
+     */
+    public function getById($id) {
+        $stmt = $this->connection->prepare("SELECT id, nombre FROM grupos WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    /**
+     * Crear un nuevo grupo.
+     * 
+     * @param string $nombre Nombre del grupo.
+     * @return int|false ID del grupo creado si fue exitoso, false en caso contrario.
+     */
+    public function create($nombre) {
+        if ($this->existsByName($nombre)) {
+            return false; // El nombre ya existe
+        }
+
+        $stmt = $this->connection->prepare("INSERT INTO grupos (nombre) VALUES (?)");
+        $stmt->bind_param("s", $nombre);
+        if ($stmt->execute()) {
+            return $stmt->insert_id; // Retornar el ID del grupo recién creado
+        }
+
+        return false;
+    }
+
+    /**
+     * Actualizar el nombre de un grupo.
+     * 
+     * @param int $id ID del grupo.
+     * @param string $nuevoNombre Nuevo nombre del grupo.
+     * @return bool True si la operación fue exitosa, false en caso contrario.
+     */
+    public function update($id, $nuevoNombre) {
+        if ($this->existsByName($nuevoNombre)) {
+            return false; // No se puede actualizar si el nombre ya existe
+        }
+
+        $stmt = $this->connection->prepare("UPDATE grupos SET nombre = ? WHERE id = ?");
+        $stmt->bind_param("si", $nuevoNombre, $id);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
+
+    /**
+     * Eliminar un grupo si no tiene inventarios asociados.
+     * 
+     * @param int $id ID del grupo.
+     * @return bool True si el grupo fue eliminado exitosamente, false si tiene inventarios asociados o no se eliminó.
+     */
+    public function delete($id) {
+        $stmt = $this->connection->prepare("SELECT id FROM inventarios WHERE grupo_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        if ($stmt->get_result()->num_rows > 0) {
+            return false; // No se puede eliminar si tiene inventarios asociados
+        }
+
+        $stmt = $this->connection->prepare("DELETE FROM grupos WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
+
+    /**
+     * Verificar si existe un grupo con un nombre específico.
+     * 
+     * @param string $nombre Nombre del grupo.
+     * @return bool True si el grupo existe, false en caso contrario.
+     */
+    public function existsByName($nombre) {
+        $stmt = $this->connection->prepare("SELECT id FROM grupos WHERE nombre = ?");
+        $stmt->bind_param("s", $nombre);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+
+    /**
      * Obtener inventarios de un grupo específico.
      * 
      * @param int $groupId ID del grupo.
-     * @return array Arreglo asociativo con los inventarios del grupo.
+     * @return array Lista de inventarios del grupo.
      */
     public function getInventoriesByGroup($groupId) {
         $stmt = $this->connection->prepare("
             SELECT 
-                i.id as id, 
-                i.nombre as nombre, 
-                i.responsable as responsable, 
-                i.fecha_modificacion as fecha_modificacion, 
-                i.estado_conservacion as estado_conservacion,
+                i.id AS id, 
+                i.nombre AS nombre, 
+                i.responsable AS responsable, 
+                i.fecha_modificacion AS fecha_modificacion, 
+                i.estado_conservacion AS estado_conservacion,
                 COUNT(DISTINCT b.id) AS cantidad_tipos_bienes,
                 COALESCE(SUM(bc.cantidad), 0) + COUNT(be.id) AS cantidad_total_bienes
             FROM inventarios i
@@ -64,102 +150,5 @@ class Groups extends Database {
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
-
-    /**
-     * Crear un nuevo grupo.
-     * 
-     * @param string $name Nombre del grupo.
-     * @return int|false ID del grupo creado si fue exitoso, False si el nombre ya existe o hubo un error.
-     */
-    public function createGroup($name) {
-        // Verificar si el nombre ya existe
-        $checkStmt = $this->connection->prepare("SELECT id FROM grupos WHERE nombre = ?");
-        $checkStmt->bind_param("s", $name);
-        $checkStmt->execute();
-        $result = $checkStmt->get_result();
-
-        if ($result->num_rows > 0) {
-            return false; // El nombre ya existe
-        }
-
-        // Insertar el nuevo grupo
-        $stmt = $this->connection->prepare("INSERT INTO grupos (nombre) VALUES (?)");
-        $stmt->bind_param("s", $name);
-        if ($stmt->execute()) {
-            return $stmt->insert_id; // Retornar el ID del grupo recién creado
-        }
-
-        return false;
-    }
-    
-
-    /**
-     * Editar un grupo (solo cambiar el nombre).
-     * 
-     * @param int $id ID del grupo.
-     * @param string $newName Nuevo nombre del grupo.
-     * @return bool True si el grupo fue actualizado exitosamente, False en caso contrario.
-     */
-    public function renameGroup($id, $newName) {
-        // Primero, verificamos si el grupo existe
-        $checkStmt = $this->connection->prepare("SELECT nombre FROM grupos WHERE id = ?");
-        $checkStmt->bind_param("i", $id);
-        $checkStmt->execute();
-        $result = $checkStmt->get_result();
-    
-        if ($result->num_rows === 0) {
-            return false; // El grupo no existe
-        }
-    
-        $row = $result->fetch_assoc();
-        if ($row['nombre'] === $newName) {
-            return false; // El nombre es el mismo, no hay cambios
-        }
-    
-        // Ahora sí, realizamos la actualización
-        $stmt = $this->connection->prepare("UPDATE grupos SET nombre = ? WHERE id = ?");
-        $stmt->bind_param("si", $newName, $id);
-        $stmt->execute();
-    
-        return $stmt->affected_rows > 0;
-    }
-    
-
-    /**
-     * Eliminar un grupo si no tiene inventarios asociados.
-     * 
-     * @param int $id ID del grupo.
-     * @return bool True si el grupo fue eliminado exitosamente, False si no se pudo eliminar.
-     */
-    public function deleteGroup($id) {
-
-        // Verificar si el grupo existe antes de eliminar
-        $checkGroupStmt = $this->connection->prepare("SELECT id FROM grupos WHERE id = ?");
-        $checkGroupStmt->bind_param("i", $id);
-        $checkGroupStmt->execute();
-        $groupResult = $checkGroupStmt->get_result();
-    
-        if ($groupResult->num_rows === 0) {
-            return false; // El grupo no existe
-        }
-
-        // Verificar si el grupo tiene inventarios asociados
-        $checkStmt = $this->connection->prepare("SELECT id FROM inventarios WHERE grupo_id = ?");
-        $checkStmt->bind_param("i", $id);
-        $checkStmt->execute();
-        $result = $checkStmt->get_result();
-    
-        if ($result->num_rows > 0) {
-            return false; // No se puede eliminar porque tiene inventarios asociados
-        }
-    
-        // Intentar eliminar el grupo
-        $stmt = $this->connection->prepare("DELETE FROM grupos WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-    
-        return $stmt->affected_rows > 0; // Solo retorna true si eliminó algo
-    }
-    
 }
 ?>
