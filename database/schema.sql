@@ -160,7 +160,6 @@ CHECK (fecha_salida IS NULL OR fecha_salida >= fecha_ingreso);
 CREATE TABLE carpetas_reportes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
