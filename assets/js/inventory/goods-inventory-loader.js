@@ -46,7 +46,7 @@ async function cargarBienesInventario(idInventory) {
                 bienElement.className = 'bien-card card-item';
                 
                 // Siempre agregar los atributos data-* para mantener consistencia
-                bienElement.dataset.id = bien.id || '';
+                bienElement.dataset.id = bien.bien_id || '';
                 bienElement.dataset.name = bien.bien || '';
                 bienElement.dataset.cantidad = bien.cantidad || '0';
                 bienElement.dataset.type = 'good';
@@ -77,6 +77,20 @@ async function cargarBienesInventario(idInventory) {
                             ${bien.cantidad || '0'}
                         </p>
                     </div>
+                    ${
+                        bien.tipo === 'Serial'
+                        ? `<div class="actions">
+                                <a
+                                    class="btn-detalle"
+                                    style="margin-right: 10px;"
+                                    title="Ver detalle"
+                                    onclick="verDetalleBienSerialInventario('${bien.id}', '${idInventory}')"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                            </div>`
+                        : ''
+                    }
                 `;
                 
                 // Agregar al contenedor de bienes

@@ -14,9 +14,7 @@
                     type="text"
                     placeholder="Buscar o agregar grupos..."
                 />
-                <svg class="search-icon">
-                    <use href="/assets/sprites.svg#search" />
-                </svg>
+                <i class="search-icon fas fa-search"></i>
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>

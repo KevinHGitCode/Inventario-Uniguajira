@@ -3,16 +3,13 @@ require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/GoodsInventory.php';
 require_once 'app/models/Inventory.php'; // Añadido para obtener información del inventario
 require_once 'app/helpers/validate-http.php';
-require_once 'app/helpers/CacheManager.php'; // Include our cache manager
 
 class ctlGoodInventory {
     private $goodsInventory;
-    private $cache;
     private $inventory; // Añadido para consultar información del inventario
 
     public function __construct() {
         $this->goodsInventory = new GoodsInventory();
-        $this->cache = new CacheManager();
         $this->inventory = new Inventory(); // Inicializado
     }
 
@@ -52,17 +49,6 @@ class ctlGoodInventory {
         }
 
         if ($success) {
-            // Invalidate affected caches - direct removal of specific cache key
-            $this->cache->remove("inventory_{$inventarioId}_goods");
-            
-            // Obtener el grupo asociado y también actualizar su caché
-            $inventoryData = $this->inventory->getInventoryById($inventarioId);
-            if ($inventoryData && isset($inventoryData['grupo_id'])) {
-                $grupoId = $inventoryData['grupo_id'];
-                $this->cache->remove("group_{$grupoId}_inventories");
-                $this->cache->invalidateEntity("group_{$grupoId}");
-            }
-            
             echo json_encode(['success' => true, 'message' => 'Bien agregado exitosamente.', 'id' => $resultado]);
         }
     }
@@ -120,33 +106,9 @@ class ctlGoodInventory {
             return;
         }
 
-        // Get the inventory ID before deleting the good
-        $goodInfo = $this->goodsInventory->getGoodInventoryById($id);
-        $inventarioId = $goodInfo['inventario_id'] ?? null;
-        
-        // Obtener el grupo asociado antes de eliminar
-        $grupoId = null;
-        if ($inventarioId) {
-            $inventoryData = $this->inventory->getInventoryById($inventarioId);
-            if ($inventoryData && isset($inventoryData['grupo_id'])) {
-                $grupoId = $inventoryData['grupo_id'];
-            }
-        }
-        
         $resultado = $this->goodsInventory->delete($id);
 
         if ($resultado) {
-            // Invalidate related cache
-            if ($inventarioId) {
-                $this->cache->remove("inventory_{$inventarioId}_goods");
-                
-                // Actualizar también la caché del grupo si tenemos la información
-                if ($grupoId) {
-                    $this->cache->remove("group_{$grupoId}_inventories");
-                    $this->cache->invalidateEntity("group_{$grupoId}");
-                }
-            }
-            
             echo json_encode(['success' => true, 'message' => 'Bien eliminado del inventario exitosamente.']);
         } else {
             http_response_code(400);
@@ -173,33 +135,9 @@ class ctlGoodInventory {
             return;
         }
 
-        // Get inventory ID before updating
-        $goodInfo = $this->goodsInventory->getGoodInventoryById($bienId);
-        $inventarioId = $goodInfo['inventario_id'] ?? null;
-        
-        // Obtener el grupo asociado
-        $grupoId = null;
-        if ($inventarioId) {
-            $inventoryData = $this->inventory->getInventoryById($inventarioId);
-            if ($inventoryData && isset($inventoryData['grupo_id'])) {
-                $grupoId = $inventoryData['grupo_id'];
-            }
-        }
-        
         $resultado = $this->goodsInventory->updateQuantity($bienId, $cantidad);
 
         if ($resultado) {
-            // Invalidate related cache
-            if ($inventarioId) {
-                $this->cache->remove("inventory_{$inventarioId}_goods");
-                
-                // Actualizar también la caché del grupo
-                if ($grupoId) {
-                    $this->cache->remove("group_{$grupoId}_inventories");
-                    $this->cache->invalidateEntity("group_{$grupoId}");
-                }
-            }
-            
             echo json_encode(['success' => true, 'message' => 'Cantidad actualizada exitosamente.']);
         } else {
             http_response_code(400);
@@ -220,49 +158,9 @@ class ctlGoodInventory {
         $bienId = $_POST['bienId'];
         $inventarioDestinoId = $_POST['inventarioDestinoId'];
 
-        // Get source inventory ID before moving
-        $goodInfo = $this->goodsInventory->getGoodInventoryById($bienId);
-        $sourceInventarioId = $goodInfo['inventario_id'] ?? null;
-        
-        // Obtener los grupos asociados (origen y destino)
-        $sourceGrupoId = null;
-        $destGrupoId = null;
-        
-        if ($sourceInventarioId) {
-            $sourceInventoryData = $this->inventory->getInventoryById($sourceInventarioId);
-            if ($sourceInventoryData && isset($sourceInventoryData['grupo_id'])) {
-                $sourceGrupoId = $sourceInventoryData['grupo_id'];
-            }
-        }
-        
-        $destInventoryData = $this->inventory->getInventoryById($inventarioDestinoId);
-        if ($destInventoryData && isset($destInventoryData['grupo_id'])) {
-            $destGrupoId = $destInventoryData['grupo_id'];
-        }
-        
         $resultado = $this->goodsInventory->moveGood($bienId, $inventarioDestinoId);
 
         if ($resultado) {
-            // Invalidate caches for both source and destination inventories
-            if ($sourceInventarioId) {
-                $this->cache->remove("inventory_{$sourceInventarioId}_goods");
-                
-                // También invalidar la caché del grupo origen
-                if ($sourceGrupoId) {
-                    $this->cache->remove("group_{$sourceGrupoId}_inventories");
-                    $this->cache->invalidateEntity("group_{$sourceGrupoId}");
-                }
-            }
-            
-            // Invalidar caché del inventario destino
-            $this->cache->remove("inventory_{$inventarioDestinoId}_goods");
-            
-            // También invalidar la caché del grupo destino
-            if ($destGrupoId) {
-                $this->cache->remove("group_{$destGrupoId}_inventories");
-                $this->cache->invalidateEntity("group_{$destGrupoId}");
-            }
-            
             echo json_encode(['success' => true, 'message' => 'Bien movido exitosamente al nuevo inventario.']);
         } else {
             http_response_code(400);

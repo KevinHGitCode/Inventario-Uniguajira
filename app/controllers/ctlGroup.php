@@ -1,25 +1,18 @@
 <?php
 require_once __DIR__ . '/sessionCheck.php';
 require_once 'app/models/Groups.php';
-require_once 'app/helpers/CacheManager.php'; // Include our cache manager
 require_once 'app/helpers/validate-http.php';
 
 class ctlGroup {
     private $group;
-    private $cache;
 
     public function __construct() {
         $this->group = new Groups();
-        $this->cache = new CacheManager();
     }
     
     // $router->add('/api/groups', 'ctlGroup', 'getAll');
     public function getAll() {
-        $cacheKey = "all_groups";
-        
-        $allGrupos = $this->cache->remember($cacheKey, function() {
-            return $this->group->getAllGroups();
-        }, 600); // Cache for 10 minutes
+        $allGrupos = $this->group->getAllGroups();
         
         header('Content-Type: application/json');
         echo json_encode($allGrupos);
@@ -35,11 +28,7 @@ class ctlGroup {
             return;
         }
         
-        $cacheKey = "group_{$id}";
-        
-        $groupData = $this->cache->remember($cacheKey, function() use ($id) {
-            return $this->group->getById($id);
-        }, 600); // Cache for 10 minutes
+        $groupData = $this->group->getById($id);
         
         if (!$groupData) {
             http_response_code(404);
@@ -62,14 +51,6 @@ class ctlGroup {
         $id = $this->group->create($nombre);
         
         if ($id !== false) {
-            // Invalidate the all groups cache
-            $this->cache->remove("all_groups");
-            
-            // También invalidar cualquier caché específica que podría existir para este grupo
-            // aunque acaba de ser creado, es una buena práctica para mantener la coherencia
-            $this->cache->remove("group_{$id}_inventories");
-            $this->cache->invalidateEntity("group_{$id}");
-            
             echo json_encode(['success' => true, 'message' => 'Grupo creado exitosamente.', 'id' => $id]);
         } else {
             http_response_code(409);
@@ -102,11 +83,6 @@ class ctlGroup {
                 echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el grupo por un error desconocido.']);
             }
         } else {
-            // Invalidate related caches
-            $this->cache->remove("all_groups");
-            $this->cache->remove("group_{$id}_inventories");
-            $this->cache->invalidateEntity("group_{$id}");
-            
             echo json_encode(['success' => true, 'message' => 'Grupo actualizado exitosamente.']);
         }
     }
@@ -136,13 +112,7 @@ class ctlGroup {
             http_response_code(500);
             echo json_encode(['success' => false, 'message' => 'Ocurrió un error al intentar eliminar el grupo.']);
         } else {
-            // Invalidar todas las cachés relacionadas
-            $this->cache->remove("all_groups");
-            $this->cache->remove("group_{$id}_inventories");
-            $this->cache->invalidateEntity("group_{$id}");
-            
             echo json_encode(['success' => true, 'message' => 'Grupo eliminado exitosamente.']);
         }
     }
-    
 }
