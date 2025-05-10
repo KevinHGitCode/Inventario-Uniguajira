@@ -47,6 +47,13 @@ class ctlUser {
 
         // Iniciar sesión y establecer datos de usuario
         session_start();
+        $_SESSION['user_id'] = $dataUser['id'];
+        $_SESSION['user_name'] = $dataUser['nombre'];
+        $_SESSION['user_username'] = $dataUser['nombre_usuario'];
+        $_SESSION['user_email'] = $dataUser['email'];
+        $_SESSION['user_rol'] = $dataUser['rol'];
+        $_SESSION['user_img'] = $dataUser['foto_perfil'];
+
         $_SESSION['timezone_offset'] = $_POST['timezone_offset'] ?? -5; // UTC-5 para Colombia
         $_SESSION['timezone_name'] = $_POST['timezone_name'] ?? 'America/Bogota';
 
@@ -54,13 +61,6 @@ class ctlUser {
         $db = Database::getInstance();
         $db->setTimezone();
         $db->setCurrentUser();
-
-        $_SESSION['user_id'] = $dataUser['id'];
-        $_SESSION['user_name'] = $dataUser['nombre'];
-        $_SESSION['user_username'] = $dataUser['nombre_usuario'];
-        $_SESSION['user_email'] = $dataUser['email'];
-        $_SESSION['user_rol'] = $dataUser['rol'];
-        $_SESSION['user_img'] = $dataUser['foto_perfil'];
 
         // Actualizar último acceso
         $this->userModel->updateUltimoAcceso($dataUser['id']);

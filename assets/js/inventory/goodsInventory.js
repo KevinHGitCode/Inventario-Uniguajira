@@ -7,7 +7,8 @@ function initGoodsInventoryFunctions() {
         onSuccess: (response) => {
             showToast(response);
             const inventarioId = localStorage.getItem('openInventory');
-            abrirInventario(inventarioId, false);
+            // abrirInventario(inventarioId, false);
+            loadContent('/inventory', false);
         }
     });
     
@@ -27,4 +28,10 @@ function abrirModalCrearBien() {
     document.getElementById('dynamicFields').style.display = 'none';
 
     mostrarModal('#modalCrearBienInventario');
+}
+
+
+function verDetalleBienSerialInventario(bien_id, inventario_id) {
+    console.log(bien_id);
+    console.log(inventario_id);
 }
