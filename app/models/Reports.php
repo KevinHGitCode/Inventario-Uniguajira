@@ -29,12 +29,11 @@ class Reports {
             SELECT 
                 c.id as id, 
                 c.nombre as nombre,
-                c.descripcion as descripcion,
                 c.fecha_creacion as fecha_creacion,
                 COUNT(r.id) AS total_reportes
             FROM carpetas_reportes c
             LEFT JOIN reportes r ON c.id = r.carpeta_id
-            GROUP BY c.id, c.nombre, c.descripcion, c.fecha_creacion
+            GROUP BY c.id, c.nombre, c.fecha_creacion
             ORDER BY c.fecha_creacion DESC
         ");
         $stmt->execute();
