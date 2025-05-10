@@ -76,6 +76,9 @@ function generateInventoryReportHtml() {
         </head>
         <body>
             <div class="header">
+                <div class="logo">
+                    <img src="http://' . $_SERVER['HTTP_HOST'] . '/Inventario-Uniguajira/assets/images/logoUniguajira.png" width="300">
+                </div>
                 <h1>Reporte de Bienes Uniguajira Maicao</h1>
                 <p>Fecha de generación: ' . $date . '</p>
             </div>

@@ -39,7 +39,6 @@ class ReportsPDF {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    //TODO: Agregar estado de conservación a la consulta
     /**
      * Obtener todos los bienes de un inventario específico junto con su estado de conservación.
      * 
@@ -112,27 +111,148 @@ class ReportsPDF {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    // /**
+    //  * Obtener todos los bienes de un inventario específico.
+    //  * 
+    //  * @param int $inventoryId ID del inventario.
+    //  * @return array Arreglo asociativo con los bienes del inventario.
+    //  */
+    // public function getAllGoodsByInventory($inventoryId) {
+    //     $stmt = $this->connection->prepare("
+    //         SELECT 
+    //             b.id,
+    //             b.nombre as bien,
+    //             b.tipo,
+    //             bi.cantidad,
+    //         FROM bienes_inventarios bi
+    //         JOIN bienes b ON bi.bien_id = b.id
+    //         WHERE bi.inventario_id = ?
+    //         ORDER BY b.nombre
+    //     ");
+    //     $stmt->bind_param("i", $inventoryId);
+    //     $stmt->execute();
+    //     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    // }
+
     /**
-     * Obtener todos los bienes de un inventario específico.
+     * Obtiene información de un grupo específico
      * 
-     * @param int $inventoryId ID del inventario.
-     * @return array Arreglo asociativo con los bienes del inventario.
+     * @param int $groupId ID del grupo
+     * @return array Información del grupo
      */
-    public function getAllGoodsByInventory($inventoryId) {
+    public function getInfoGroup($groupId) {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id,
+                nombre
+            FROM 
+                grupos 
+            WHERE 
+                id = ?
+        ");
+        
+        $stmt->bind_param("i", $groupId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return [
+                'id' => $groupId,
+                'nombre' => 'Grupo no encontrado',
+                'estado_conservacion' => 'N/A'
+            ];
+        }
+    }
+    
+    /**
+     * Obtiene los inventarios relacionados con un grupo específico
+     * 
+     * @param int $groupId ID del grupo
+     * @return array Lista de inventarios
+     */
+    public function getInventoriesByGroup($groupId) {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id,
+                nombre,
+                estado_conservacion,
+                fecha_modificacion,
+                grupo_id
+            FROM 
+                inventarios 
+            WHERE 
+                grupo_id = ?
+            ORDER BY 
+                id
+        ");
+        
+        $stmt->bind_param("i", $groupId);
+        $stmt->execute();
+        
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Obtiene todos los grupos
+     * 
+     * @return array Lista de todos los grupos
+     */
+    public function getAllGroups() {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                id,
+                nombre 
+            FROM 
+                grupos
+            ORDER BY 
+                nombre
+        ");
+        
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
+     * Obtiene detalles específicos de un bien por su ID
+     * 
+     * @param int $goodId ID del bien
+     * @return array|null Detalles del bien o null si no existe
+     */
+    public function getGoodDetails($goodId) {
         $stmt = $this->connection->prepare("
             SELECT 
                 b.id,
-                b.nombre as bien,
+                b.nombre,
                 b.tipo,
-                bi.cantidad,
-            FROM bienes_inventarios bi
-            JOIN bienes b ON bi.bien_id = b.id
-            WHERE bi.inventario_id = ?
-            ORDER BY b.nombre
+                b.imagen,
+                be.descripcion,
+                be.marca,
+                be.modelo,
+                be.serial,
+                be.estado,
+                be.color,
+                be.condiciones_tecnicas,
+                be.fecha_ingreso,
+                be.fecha_salida
+            FROM 
+                bienes b
+            LEFT JOIN 
+                bienes_equipos be ON b.id = be.bien_inventario_id
+            WHERE 
+                b.id = ?
         ");
-        $stmt->bind_param("i", $inventoryId);
+        
+        $stmt->bind_param("i", $goodId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        } else {
+            return null;
+        }
     }
 }
 ?>
