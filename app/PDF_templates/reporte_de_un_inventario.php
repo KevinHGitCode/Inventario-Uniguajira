@@ -10,27 +10,17 @@ require __DIR__ . '/../models/ReportsPDF.php';
 // Usar el namespace correcto
 use app\PdfGenerator;
 
-// ... resto de tu código ...
-// Aquí deberías incluir tu conexión a la base de datos o cualquier otra dependencia necesaria
-// require_once __DIR__ . '/../config/database.php';
-
 /**
  * Función para obtener datos del inventario (esto debería adaptarse a tu sistema actual)
  * Esta es solo una función de ejemplo que deberías reemplazar con tu lógica real
  */
 function getInventoryItems() {
-    // En un caso real, esta función consultaría tu base de datos
-    // Ejemplo: $items = $db->query("SELECT * FROM inventario ORDER BY fecha_registro DESC LIMIT 100");
-    
     $goodsInventory = new ReportsPDF(); // Instantiate GoodsInventory here
     $dataGoodsInventory = $goodsInventory->getInventoryWithGoods(37);
     return $dataGoodsInventory;
 }
 
 function getInfo() {
-    // En un caso real, esta función consultaría tu base de datos
-    // Ejemplo: $items = $db->query("SELECT * FROM inventario ORDER BY fecha_registro DESC LIMIT 100");
-    
     $infoInventory = new ReportsPDF(); // Instantiate GoodsInventory here
     $info = $infoInventory->getInfoInventory(37);
     return $info;
