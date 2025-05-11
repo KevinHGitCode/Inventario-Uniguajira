@@ -1,7 +1,21 @@
 <?php require_once 'app/controllers/sessionCheck.php'; ?>
 
+
 <div class="record-container">
     <h1>Historial</h1>
+
+    <div class="top-bar">
+        <div class="search-container">
+            <input
+                type="text"
+                id="searchRecordInput"
+                placeholder="Buscar historial"
+                class="search-bar"
+            />
+            <i class="search-icon fas fa-search"></i>
+        </div>
+
+
     <table class="record-table">
         <thead>
             <tr>
@@ -29,3 +43,9 @@
         </tbody>
     </table>
 </div>
+
+<!-- Asegúrate de incluir FontAwesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Incluir el script de historial -->
+<script src="ruta/a/historial.js"></script>
