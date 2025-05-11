@@ -83,6 +83,13 @@ function loadContent(path, scrollUpRequired = true) {
                 break;
                 
             case '/inventory':
+                // Inicializar formulario para cambiar estado del inventario
+                inicializarFormularioAjax('#estadoInventarioForm', {
+                    onSuccess: (response) => {
+                        showToast(response);
+                    }
+                });
+
                 iniciarBusqueda('searchGroup');
 
                 // comprobamos que existe al menos una funcion de gruops.js
@@ -143,7 +150,7 @@ links.forEach(link => {
 // o hacer click en el elemento con id home si no hay nada guardado
 function cargarUltimaSeleccion() {
     const lastSelected = localStorage.getItem('lastSelected');
-    const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'record', 'reports', "reports"]; // Lista de rutas válidas
+    const validPaths = ['home', 'goods', 'profile', 'inventory', 'users', 'record', 'reports']; // Lista de rutas válidas
 
     if (lastSelected && validPaths.includes(lastSelected)) {
         console.log(`Cargando el elemento guardado: ${lastSelected}`);

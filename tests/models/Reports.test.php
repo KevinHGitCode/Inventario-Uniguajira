@@ -4,6 +4,9 @@ require_once '../../app/models/Reports.php';
 // Crear una instancia única del modelo Reports
 $reports = new Reports();
 
+$database = Database::getInstance();
+$database->setCurrentUser();
+
 // Crear una instancia del runner
 $runner = new TestRunner();
 
@@ -43,13 +46,13 @@ $runner->registerTest('crear_carpeta_valida', function() use (&$testData, $repor
     return false;
 });
 
-$runner->registerTest('crear_carpeta_nombre_duplicado', function() use (&$testData, $reports) {
+$runner->registerTest('crear_carpeta_nombre_duplicado', function() use (&$testData, $reports, $database) {
     if (!isset($testData['folderId'])) {
         echo "<p>Error: Primero debe ejecutarse 'crear_carpeta_valida'</p>";
         return false;
     }
 
-    $stmt = $reports->getConnection()->prepare("SELECT nombre FROM carpetas_reportes WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT nombre FROM carpetas_reportes WHERE id = ?");
     $stmt->bind_param("i", $testData['folderId']);
     $stmt->execute();
     $nombreExistente = $stmt->get_result()->fetch_assoc()['nombre'];
@@ -137,12 +140,12 @@ $runner->registerTest('eliminar_reporte', function() use (&$testData, $reports) 
     return false;
 });
 
-$runner->registerTest('eliminar_carpeta_con_reportes', function() use (&$testData, $reports) {
+$runner->registerTest('eliminar_carpeta_con_reportes', function() use (&$testData, $reports, $database) {
     // Buscar una carpeta con reportes
     $sql = "SELECT cr.id FROM carpetas_reportes cr 
             INNER JOIN reportes r ON cr.id = r.carpeta_id 
             GROUP BY cr.id HAVING COUNT(r.id) > 0 LIMIT 1";
-    $result = $reports->getConnection()->query($sql);
+    $result = $database->getConnection()->query($sql);
     
     if ($result->num_rows === 0) {
         echo "<p>No hay carpetas con reportes para probar</p>";

@@ -7,7 +7,7 @@ require_once 'app/helpers/validate-http.php';
 
 class ctlInventory {
     public function __construct() {
-        // No cache manager initialization needed
+        
     }
 
     // para navegacion
@@ -25,6 +25,17 @@ class ctlInventory {
         
         header('Content-Type: application/json');
         echo json_encode($dataGoodsInventory);
+    }
+
+    public function getSerialGoodsOfInventory($id_inventory, $id_goodSerial) {
+        $goodsInventory = new GoodsInventory(); // Instantiate GoodsInventory here
+        $dataSerialGoodsInventory = $goodsInventory->getSerialGoodDetails($id_inventory, $id_goodSerial);
+
+        // echo $dataSerialGoodsInventory;
+        // header('Content-Type: application/json');
+        // echo json_encode($dataSerialGoodsInventory);
+
+        require 'app/views/inventory/serials-goods-inventory.php';
     }
 
     public function create() {
@@ -117,6 +128,48 @@ class ctlInventory {
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el inventario.']);
+        }
+    }
+
+    public function updateEstado() {
+        $inventory = new Inventory();
+        header('Content-Type: application/json');
+
+        if (!validateHttpRequest('POST', ['id_inventario', 'estado'])) {
+            return;
+        }
+
+        $id = $_POST['id_inventario'];
+        $estado = $_POST['estado'];
+
+        $resultado = $inventory->updateConservation($id, $estado);
+
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Estado del inventario actualizado exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el estado del inventario.']);
+        }
+    }
+
+    public function updateResponsable() {
+        $inventory = new Inventory();
+        header('Content-Type: application/json');
+
+        if (!validateHttpRequest('POST', ['id', 'responsable'])) {
+            return;
+        }
+
+        $id = $_POST['id'];
+        $responsable = $_POST['responsable'];
+
+        $resultado = $inventory->updateResponsable($id, $responsable);
+
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Responsable del inventario actualizado exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el responsable del inventario.']);
         }
     }
 }

@@ -1,6 +1,11 @@
 <?php
 require_once '../../app/models/User.php';
 
+$user = new User();
+
+$database = Database::getInstance();
+$database->setCurrentUser();
+
 // Crear una instancia del runner pero NO manejar la solicitud web automáticamente
 $runner = new TestRunner();
 
@@ -10,8 +15,8 @@ $testData = [
 ];
 
 // Prueba para obtener todos los usuarios
-$runner->registerTest('getAllUsers', function() {
-    $user = new User();
+$runner->registerTest('getAllUsers', function() use ($user) {
+
     echo "<p>Testing getAllUsers()...</p>";
     
     $todosLosUsuarios = $user->getAllUsers();
@@ -25,8 +30,8 @@ $runner->registerTest('getAllUsers', function() {
 });
 
 // Prueba para crear un usuario con datos únicos
-$runner->registerTest('createUser_success', function() use (&$testData) {
-    $user = new User();
+$runner->registerTest('createUser_success', function() use (&$testData, $user) {
+
     $nombre = "Usuario Temporal " . time();
     $nombre_usuario = "usertemp" . time();
     $email = "temp" . time() . "@example.com";
@@ -48,14 +53,13 @@ $runner->registerTest('createUser_success', function() use (&$testData) {
 });
 
 // Prueba para crear un usuario con datos duplicados
-$runner->registerTest('createUser_duplicate', function() use (&$testData) {
+$runner->registerTest('createUser_duplicate', function() use (&$testData, $user, $database) {
     if (!isset($testData['userId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
         return false;
     }
 
-    $user = new User();
-    $stmt = $user->getConnection()->prepare("SELECT nombre, nombre_usuario, email FROM usuarios WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT nombre, nombre_usuario, email FROM usuarios WHERE id = ?");
     $stmt->bind_param("i", $testData['userId']);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
@@ -74,13 +78,12 @@ $runner->registerTest('createUser_duplicate', function() use (&$testData) {
 });
 
 // Prueba para actualizar un usuario con datos válidos
-$runner->registerTest('updateUser_success', function() use (&$testData) {
+$runner->registerTest('updateUser_success', function() use (&$testData, $user) {
     if (!isset($testData['userId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
         return false;
     }
 
-    $user = new User();
     $nuevoNombre = "Usuario Actualizado " . time();
     $nuevoEmail = "updated" . time() . "@example.com";
     $nuevoNombreUsuario = "updateduser" . time();
@@ -98,13 +101,12 @@ $runner->registerTest('updateUser_success', function() use (&$testData) {
 });
 
 // Prueba para actualizar un usuario con datos inválidos
-$runner->registerTest('updateUser_invalid', function() use (&$testData) {
+$runner->registerTest('updateUser_invalid', function() use (&$testData, $user) {
     if (!isset($testData['userId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
         return false;
     }
 
-    $user = new User();
     $nuevoEmail = "invalid-email"; // Email inválido
 
     echo "<p>Testing updateUser({$testData['userId']}, 'Nombre', 'usuario', '$nuevoEmail')...</p>";
@@ -120,13 +122,12 @@ $runner->registerTest('updateUser_invalid', function() use (&$testData) {
 });
 
 // Prueba para eliminar un usuario existente
-$runner->registerTest('deleteUser_success', function() use (&$testData) {
+$runner->registerTest('deleteUser_success', function() use (&$testData, $user) {
     if (!isset($testData['userId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createUser_success'.</p>";
         return false;
     }
 
-    $user = new User();
     echo "<p>Testing deleteUser({$testData['userId']})...</p>";
     $result = $user->deleteUser($testData['userId']);
 
@@ -141,8 +142,8 @@ $runner->registerTest('deleteUser_success', function() use (&$testData) {
 });
 
 // Prueba para eliminar un usuario inexistente
-$runner->registerTest('deleteUser_nonexistent', function() {
-    $user = new User();
+$runner->registerTest('deleteUser_nonexistent', function() use ($user) {
+
     $idInexistente = 999999; // ID que probablemente no exista
 
     echo "<p>Testing deleteUser($idInexistente) - usuario inexistente...</p>";
@@ -158,9 +159,9 @@ $runner->registerTest('deleteUser_nonexistent', function() {
 });
 
 // Prueba final de limpieza
-$runner->registerTest('limpieza_final', function() use (&$testData) {
+$runner->registerTest('limpieza_final', function() use (&$testData, $user) {
     if ($testData['userId'] !== null) {
-        $user = new User();
+
         echo "<p>Limpieza: Eliminando usuario temporal ID {$testData['userId']}...</p>";
         $result = $user->deleteUser($testData['userId']);
         if ($result) {

@@ -1,5 +1,3 @@
-<!-- < ?php require_once 'app/controllers/sessionCheck.php'; ?> -->
-
 <div class="card-grid">
     <?php if (isset($dataInventories) && count($dataInventories) > 0): ?>
         <?php foreach ($dataInventories as $inventory): ?>
@@ -7,6 +5,8 @@
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
                     data-id="<?= htmlspecialchars($inventory['id']) ?>" 
                     data-name="<?= htmlspecialchars($inventory['nombre']) ?>"
+                    data-responsable="<?= htmlspecialchars($inventory['responsable']) ?>"
+                    data-estado="<?= htmlspecialchars($inventory['estado_conservacion']) ?>"
                     data-type="inventory"
                     onclick="toggleSelectItem(this)"
                 <?php endif; ?>

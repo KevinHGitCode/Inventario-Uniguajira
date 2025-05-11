@@ -200,6 +200,24 @@ class Inventory {
     
         return $stmt->affected_rows > 0; // Return true if deleted, false otherwise
     }
+
+    /**
+     * Actualizar el responsable de un inventario.
+     * 
+     * @param int $id ID del inventario.
+     * @param string $responsable Nuevo responsable del inventario.
+     * @return bool True si la operación fue exitosa, false en caso contrario.
+     */
+    public function updateResponsable($id, $responsable) {
+        if (empty($responsable) || strlen($responsable) > 255) {
+            return false; // Validar que el responsable no esté vacío y no exceda el límite de caracteres
+        }
+
+        $stmt = $this->connection->prepare("UPDATE inventarios SET responsable = ?, fecha_modificacion = NOW() WHERE id = ?");
+        $stmt->bind_param("si", $responsable, $id);
+        $stmt->execute();
+        return $stmt->affected_rows > 0; // Retorna true si se actualizó, false en caso contrario
+    }
 }
 
 ?>

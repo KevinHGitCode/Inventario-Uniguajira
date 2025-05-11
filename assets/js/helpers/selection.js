@@ -34,6 +34,7 @@ function toggleSelectItem(element) {
     const itemId = element.dataset.id;
     const itemName = element.dataset.name;
     const type = element.dataset.type;
+    console.log(element.dataset)
     
     // Si el elemento ya está seleccionado, lo deseleccionamos
     if (element.classList.contains('selected')) {

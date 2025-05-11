@@ -84,7 +84,7 @@ async function cargarBienesInventario(idInventory) {
                                     class="btn-detalle"
                                     style="margin-right: 10px;"
                                     title="Ver detalle"
-                                    onclick="verDetalleBienSerialInventario('${bien.id}', '${idInventory}')"
+                                    onclick="verDetalleBienSerialInventario('${idInventory}', '${bien.bien_id}')"
                                 >
                                     <i class="fas fa-info-circle"></i>
                                 </a>
@@ -103,6 +103,8 @@ async function cargarBienesInventario(idInventory) {
             // Mostrar estado vacío si no hay bienes
             mostrarEstadoVacio(bienesGrid);
         }
+
+        actualizarInfoInventario(idInventory);
         
         console.timeEnd('Cargar bienes'); // Fin del tiempo total
         

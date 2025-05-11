@@ -1,6 +1,11 @@
 <?php
 require_once '../../app/models/Inventory.php';
 
+$inventory = new Inventory();
+
+$database = Database::getInstance();
+$database->setCurrentUser();
+
 // Crear una instancia del runner pero NO manejar la solicitud web automáticamente
 $runner = new TestRunner();
 
@@ -10,8 +15,8 @@ $testData = [
 ];
 
 // Prueba para obtener todos los inventarios
-$runner->registerTest('getAll', function() {
-    $inventory = new Inventory();
+$runner->registerTest('getAll', function()  use ($inventory)  {
+    
     echo "<p>Testing getAll()...</p>";
     
     $allInventories = $inventory->getAll();
@@ -25,8 +30,7 @@ $runner->registerTest('getAll', function() {
 });
 
 // Prueba para crear un inventario con datos válidos
-$runner->registerTest('createInventory_success', function() use (&$testData) {
-    $inventory = new Inventory();
+$runner->registerTest('createInventory_success', function() use (&$testData, $inventory) {
     $name = "Inventario Temporal " . time();
     $grupoId = 1;
 
@@ -44,15 +48,14 @@ $runner->registerTest('createInventory_success', function() use (&$testData) {
 });
 
 // Prueba para crear un inventario con nombre duplicado en el mismo grupo
-$runner->registerTest('createInventory_duplicateInSameGroup', function() use (&$testData) {
+$runner->registerTest('createInventory_duplicateInSameGroup', function() use (&$testData, $inventory, $database) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
-    $inventory = new Inventory();
     // Obtener el nombre y grupo_id del inventario creado
-    $stmt = $inventory->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
     $stmt->bind_param("i", $testData['inventoryId']);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
@@ -73,15 +76,14 @@ $runner->registerTest('createInventory_duplicateInSameGroup', function() use (&$
 });
 
 // Prueba para crear un inventario con el mismo nombre en diferente grupo (debe permitirse)
-$runner->registerTest('createInventory_sameNameDifferentGroup', function() use (&$testData) {
+$runner->registerTest('createInventory_sameNameDifferentGroup', function() use (&$testData, $inventory, $database) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
-    $inventory = new Inventory();
     // Obtener el nombre del inventario creado
-    $stmt = $inventory->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT nombre, grupo_id FROM inventarios WHERE id = ?");
     $stmt->bind_param("i", $testData['inventoryId']);
     $stmt->execute();
     $result = $stmt->get_result()->fetch_assoc();
@@ -102,13 +104,12 @@ $runner->registerTest('createInventory_sameNameDifferentGroup', function() use (
 });
 
 // Prueba para actualizar el nombre de un inventario con datos válidos
-$runner->registerTest('updateInventoryName_success', function() use (&$testData) {
+$runner->registerTest('updateInventoryName_success', function() use (&$testData, $inventory) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
-    $inventory = new Inventory();
     $newName = "Inventario Actualizado " . time();
 
     echo "<p>Testing updateName({$testData['inventoryId']}, '$newName')...</p>";
@@ -124,13 +125,12 @@ $runner->registerTest('updateInventoryName_success', function() use (&$testData)
 });
 
 // Prueba para actualizar el nombre de un inventario con datos inválidos
-$runner->registerTest('updateInventoryName_invalidData', function() use (&$testData) {
+$runner->registerTest('updateInventoryName_invalidData', function() use (&$testData, $inventory) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
-    $inventory = new Inventory();
     $invalidNames = ["", str_repeat("a", 101)]; // Nombre vacío y nombre muy largo
 
     foreach ($invalidNames as $invalidName) {
@@ -148,7 +148,7 @@ $runner->registerTest('updateInventoryName_invalidData', function() use (&$testD
 });
 
 // Prueba para actualizar el nombre de un inventario a uno existente en el mismo grupo
-$runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use (&$testData) {
+$runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use (&$testData, $inventory, $database) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
@@ -157,7 +157,7 @@ $runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use
     $inventory = new Inventory();
     // Crear un segundo inventario temporal para la prueba
     $tempName = "Inventario Temporal 2 " . time();
-    $stmt = $inventory->getConnection()->prepare("SELECT grupo_id FROM inventarios WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT grupo_id FROM inventarios WHERE id = ?");
     $stmt->bind_param("i", $testData['inventoryId']);
     $stmt->execute();
     $grupoId = $stmt->get_result()->fetch_assoc()['grupo_id'];
@@ -169,7 +169,7 @@ $runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use
     }
 
     // Intentar actualizar el nombre al del primer inventario
-    $stmt = $inventory->getConnection()->prepare("SELECT nombre FROM inventarios WHERE id = ?");
+    $stmt = $database->getConnection()->prepare("SELECT nombre FROM inventarios WHERE id = ?");
     $stmt->bind_param("i", $testData['inventoryId']);
     $stmt->execute();
     $existingName = $stmt->get_result()->fetch_assoc()['nombre'];
@@ -190,13 +190,12 @@ $runner->registerTest('updateInventoryName_duplicateInSameGroup', function() use
 });
 
 // Prueba para eliminar un inventario sin bienes asociados
-$runner->registerTest('deleteInventory_success', function() use (&$testData) {
+$runner->registerTest('deleteInventory_success', function() use (&$testData, $inventory) {
     if (!isset($testData['inventoryId'])) {
         echo "<p>Error: Primero debe ejecutarse la prueba 'createInventory_success'.</p>";
         return false;
     }
 
-    $inventory = new Inventory();
     echo "<p>Testing delete({$testData['inventoryId']})...</p>";
     $result = $inventory->delete($testData['inventoryId']);
 
@@ -211,11 +210,10 @@ $runner->registerTest('deleteInventory_success', function() use (&$testData) {
 });
 
 // Prueba para eliminar un inventario con bienes asociados
-$runner->registerTest('deleteInventory_withItems', function() {
-    $inventory = new Inventory();
+$runner->registerTest('deleteInventory_withItems', function() use ($inventory, $database) {
 
     // Buscar un inventario con bienes asociados
-    $stmt = $inventory->getConnection()->prepare("
+    $stmt = $database->getConnection()->prepare("
         SELECT i.id FROM inventarios i
         INNER JOIN bienes_inventarios bi ON i.id = bi.inventario_id
         LIMIT 1
@@ -244,8 +242,7 @@ $runner->registerTest('deleteInventory_withItems', function() {
 });
 
 // Prueba final de limpieza
-$runner->registerTest('limpieza_final', function() use (&$testData) {
-    $inventory = new Inventory(); // Instanciar Inventory dentro de la función
+$runner->registerTest('limpieza_final', function() use (&$testData, $inventory) {
     
     if ($testData['inventoryId'] !== null) {
         echo "<p>Limpieza: Eliminando inventario temporal ID {$testData['inventoryId']}...</p>";

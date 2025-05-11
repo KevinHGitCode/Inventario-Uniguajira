@@ -30,8 +30,42 @@ function abrirModalCrearBien() {
     mostrarModal('#modalCrearBienInventario');
 }
 
+function cerrarInventarioSerial() {
+    const divGoodsInventory = document.getElementById('goods-inventory');
+    const divSerialsGoodsInventory = document.getElementById('serials-goods-inventory');
 
-function verDetalleBienSerialInventario(bien_id, inventario_id) {
-    console.log(bien_id);
-    console.log(inventario_id);
+    // Ocultar la vista de bienes seriales y mostrar la vista principal de bienes
+    divSerialsGoodsInventory.classList.add('hidden');
+    divGoodsInventory.classList.remove('hidden');
+
+    toggleInventoryControls(true);
+}
+
+function verDetalleBienSerialInventario(inventarioId, bienId) {
+    console.log(inventarioId, bienId)
+    const divGoodsInventory = document.getElementById('goods-inventory');
+    const divSerialsGoodsInventory = document.getElementById('serials-goods-inventory');
+    const divContent = document.getElementById('serials-goods-inventory-content');
+
+    // Mostrar loader
+    divContent.innerHTML = '<p>Cargando detalles del bien serial...</p>';
+    divGoodsInventory.classList.add('hidden');
+    divSerialsGoodsInventory.classList.remove('hidden');
+
+    fetch(`/api/get/serialGoodsInventory/${inventarioId}/${bienId}`)
+    .then(res => res.text())
+    .then(data => {
+        if (data) {
+            divContent.innerHTML = data;
+        } else {
+            divContent.innerHTML = '<p>No se encontraron detalles para este bien serial.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        divContent.innerHTML = '<p>Error al cargar los detalles del bien serial.</p>';
+    });
+
+    // Ocultar controles del inventario
+    toggleInventoryControls(false);
 }

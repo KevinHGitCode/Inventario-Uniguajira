@@ -17,6 +17,11 @@
     overflow: hidden;
     pointer-events: none;
     transition: opacity 0.3s ease, max-height 0.2s ease;
+
+    /* Hacer que la barra de control se mantenga fija al hacer scroll */
+    position: sticky;
+    top: 90px; /* Se fija en la parte superior */
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
 }
 
 .control-bar.visible {

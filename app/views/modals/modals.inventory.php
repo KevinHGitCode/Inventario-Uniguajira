@@ -115,6 +115,27 @@
     </div>
 </div>
 
+<!-- Modal para Editar Responsable -->
+<div id="modalEditarResponsable" class="modal">
+    <div class="modal-content modal-content-small">
+        <span class="close" onclick="ocultarModal('#modalEditarResponsable')">&times;</span>
+        <h2>Editar Responsable</h2>
+        <form id="formEditarResponsable" action="/api/inventories/updateResponsable" method="POST" autocomplete="off">
+            <input type="hidden" name="id" id="editarResponsableId" />
+            <div>
+                <label for="editarResponsableNombre">Nuevo Responsable:</label>
+                <input type="text" name="responsable" id="editarResponsableNombre" required />
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- --------------------------------------------------------------- -->
+<!-- ----------------- MODALES BIENES INVENTARIO ------------------- -->
 <!-- --------------------------------------------------------------- -->
 
 <?php include __DIR__ . "/modals.good-inventory.php"; ?>

@@ -56,6 +56,7 @@
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
             <li>
                 <a 
+                    id="record"
                     onclick="loadContent('/record')"
                 >
                     <img src="assets/icons/historial.svg" alt="">

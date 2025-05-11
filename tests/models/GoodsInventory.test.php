@@ -8,6 +8,8 @@ $goodsInventory = new GoodsInventory();
 $goods = new Goods();
 $inventory = new Inventory();
 
+$database = Database::getInstance();
+
 // Crear una instancia del runner pero NO manejar la solicitud web automáticamente
 $runner = new TestRunner();
 
@@ -24,15 +26,15 @@ $testData = &$_SESSION['testData'];
 
 // PREPARACIÓN - Crear inventarios temporales para las pruebas
 $runner->registerTest('crear_inventarios_temporales', 
-    function() use (&$testData, $inventory) {
+    function() use (&$testData, $inventory, $database) {
         echo "<p>Creando inventarios temporales para pruebas...</p>";
         
         // Crear un grupo temporal primero
-        $stmt = $inventory->getConnection()->prepare("INSERT INTO grupos (nombre) VALUES (?)");
+        $stmt = $database->getConnection()->prepare("INSERT INTO grupos (nombre) VALUES (?)");
         $groupName = "Grupo Temporal Test " . rand();
         $stmt->bind_param("s", $groupName);
         $stmt->execute();
-        $groupId = $inventory->getConnection()->insert_id;
+        $groupId = $database->getConnection()->insert_id;
         
         if (!$groupId) {
             echo "<p>Error al crear grupo temporal.</p>";
@@ -94,7 +96,7 @@ $runner->registerTest('crear_bienes_temporales',
 
 // Caso 1: Añadir un bien de tipo cantidad a un inventario
 $runner->registerTest('añadir_bien_cantidad', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['goodId']) || !isset($testData['inventoryId1'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas de preparación.</p>";
             return false;
@@ -118,7 +120,7 @@ $runner->registerTest('añadir_bien_cantidad',
 
 // Caso 2: Añadir un bien de tipo serial a un inventario
 $runner->registerTest('añadir_bien_serial', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['serialGoodId']) || !isset($testData['inventoryId1'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas de preparación.</p>";
             return false;
@@ -145,7 +147,7 @@ $runner->registerTest('añadir_bien_serial',
             
             // También guardar la relación bien-inventario
             $sql = "SELECT bien_inventario_id FROM bienes_equipos WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $result);
             $stmt->execute();
             $bienInvId = $stmt->get_result()->fetch_assoc()['bien_inventario_id'];
@@ -161,7 +163,7 @@ $runner->registerTest('añadir_bien_serial',
 
 // Caso 3: Intentar añadir un bien serial con un serial ya existente
 $runner->registerTest('añadir_bien_serial_duplicado', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['serialGoodId']) || !isset($testData['inventoryId1']) || !isset($testData['serialEquipmentId'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -169,7 +171,7 @@ $runner->registerTest('añadir_bien_serial_duplicado',
 
         // Obtener el serial del equipo recién creado
         $sql = "SELECT serial FROM bienes_equipos WHERE id = ?";
-        $stmt = $goodsInventory->getConnection()->prepare($sql);
+        $stmt = $database->getConnection()->prepare($sql);
         $stmt->bind_param("i", $testData['serialEquipmentId']);
         $stmt->execute();
         $serialExistente = $stmt->get_result()->fetch_assoc()['serial'];
@@ -194,7 +196,7 @@ $runner->registerTest('añadir_bien_serial_duplicado',
         } else {
             echo "<p>Error: Se permitió añadir un bien con serial duplicado.</p>";
             // Eliminar el registro creado para limpieza
-            $stmt = $goodsInventory->getConnection()->prepare("DELETE FROM bienes_equipos WHERE id = ?");
+            $stmt = $database->getConnection()->prepare("DELETE FROM bienes_equipos WHERE id = ?");
             $stmt->bind_param("i", $result);
             $stmt->execute();
             return false;
@@ -204,7 +206,7 @@ $runner->registerTest('añadir_bien_serial_duplicado',
 
 // Caso 4: Obtener bienes por inventario
 $runner->registerTest('obtener_bienes_por_inventario', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['inventoryId1'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -226,7 +228,7 @@ $runner->registerTest('obtener_bienes_por_inventario',
 
 // Caso 5: Obtener bienes seriales por inventario
 $runner->registerTest('obtener_bienes_seriales_por_inventario', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['inventoryId1'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -246,11 +248,33 @@ $runner->registerTest('obtener_bienes_seriales_por_inventario',
     }
 );
 
+// Caso 6: Obtener detalle de un bien serial
+$runner->registerTest('obtener_detalle_bien_serial', 
+    function() use (&$testData, $goodsInventory, $database) {
+        if (!isset($testData['inventoryId1']) || !isset($testData['serialEquipmentId'])) {
+            echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
+            return false;
+        }
+
+        echo "<p>Testing getSerialGoodDetails({$testData['inventoryId1']}, {$testData['serialEquipmentId']})...</p>";
+
+        $serialGoodDetails = $goodsInventory->getSerialGoodDetails($testData['inventoryId1'], $testData['serialEquipmentId']);
+        if (!empty($serialGoodDetails)) {
+            echo "<p>Detalles del bien serial recuperados exitosamente:</p>";
+            renderTable([$serialGoodDetails]);
+            return true;
+        } else {
+            echo "<p>Error o no se encontraron detalles para el bien serial.</p>";
+            return false;
+        }
+    }
+);
+
 // CASOS DE PRUEBA PARA ACTUALIZAR CANTIDAD
 
 // Caso 1: Actualizar cantidad de un bien
 $runner->registerTest('actualizar_cantidad', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['goodInventoryId'])) {
             echo "<p>Error: Primero debe ejecutarse la prueba 'añadir_bien_cantidad'.</p>";
             return false;
@@ -265,7 +289,7 @@ $runner->registerTest('actualizar_cantidad',
             
             // Verificar que la actualización se realizó correctamente
             $sql = "SELECT cantidad FROM bienes_cantidad WHERE bien_inventario_id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['goodInventoryId']);
             $stmt->execute();
             $cantidadActual = $stmt->get_result()->fetch_assoc()['cantidad'];
@@ -281,7 +305,7 @@ $runner->registerTest('actualizar_cantidad',
 
 // Caso 2: Intentar actualizar cantidad con valor inválido
 $runner->registerTest('actualizar_cantidad_invalida', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['goodInventoryId'])) {
             echo "<p>Error: Primero debe ejecutarse la prueba 'añadir_bien_cantidad'.</p>";
             return false;
@@ -313,7 +337,7 @@ $runner->registerTest('actualizar_cantidad_invalida',
 
 // Caso 1: Mover un bien de tipo cantidad a otro inventario
 $runner->registerTest('mover_bien_cantidad', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['goodInventoryId']) || !isset($testData['inventoryId2'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -329,7 +353,7 @@ $runner->registerTest('mover_bien_cantidad',
             $sql = "SELECT bi.id FROM bienes_inventarios bi
                    INNER JOIN bienes_cantidad bc ON bi.id = bc.bien_inventario_id
                    WHERE bi.inventario_id = ? AND bi.bien_id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("ii", $testData['inventoryId2'], $testData['goodId']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -353,7 +377,7 @@ $runner->registerTest('mover_bien_cantidad',
 
 // Caso 2: Mover un bien de tipo serial a otro inventario
 $runner->registerTest('mover_bien_serial', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['serialGoodInventoryId']) || !isset($testData['inventoryId2'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -369,7 +393,7 @@ $runner->registerTest('mover_bien_serial',
             $sql = "SELECT bi.id FROM bienes_inventarios bi
                    INNER JOIN bienes_equipos be ON bi.id = be.bien_inventario_id
                    WHERE bi.inventario_id = ? AND bi.bien_id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("ii", $testData['inventoryId2'], $testData['serialGoodId']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -393,7 +417,7 @@ $runner->registerTest('mover_bien_serial',
 
 // Caso 3: Verificar inventarios después de mover bienes
 $runner->registerTest('verificar_inventarios_post_movimiento', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['inventoryId1']) || !isset($testData['inventoryId2'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -432,7 +456,7 @@ $runner->registerTest('verificar_inventarios_post_movimiento',
 
 // Caso 1: Eliminar un bien de tipo cantidad
 $runner->registerTest('eliminar_bien_cantidad', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['goodInventoryId'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -446,7 +470,7 @@ $runner->registerTest('eliminar_bien_cantidad',
             
             // Verificar que ya no existe
             $sql = "SELECT id FROM bienes_inventarios WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['goodInventoryId']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -469,7 +493,7 @@ $runner->registerTest('eliminar_bien_cantidad',
 
 // Caso 2: Eliminar un bien de tipo serial
 $runner->registerTest('eliminar_bien_serial', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         if (!isset($testData['serialGoodInventoryId'])) {
             echo "<p>Error: Primero deben ejecutarse las pruebas anteriores.</p>";
             return false;
@@ -483,7 +507,7 @@ $runner->registerTest('eliminar_bien_serial',
             
             // Verificar que ya no existe
             $sql = "SELECT id FROM bienes_inventarios WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['serialGoodInventoryId']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -525,13 +549,13 @@ $runner->registerTest('eliminar_bien_inexistente',
 
 // Prueba final de limpieza - eliminar registros temporales
 $runner->registerTest('limpieza_final', 
-    function() use (&$testData, $goodsInventory) {
+    function() use (&$testData, $goodsInventory, $database) {
         echo "<p>Realizando limpieza de registros temporales...</p>";
         
         // Eliminar bienes temporales si aún existen
         if (isset($testData['goodId'])) {
             $sql = "DELETE FROM bienes WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['goodId']);
             $stmt->execute();
             echo "<p>Bien temporal ID {$testData['goodId']} eliminado.</p>";
@@ -539,7 +563,7 @@ $runner->registerTest('limpieza_final',
         
         if (isset($testData['serialGoodId'])) {
             $sql = "DELETE FROM bienes WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['serialGoodId']);
             $stmt->execute();
             echo "<p>Bien serial temporal ID {$testData['serialGoodId']} eliminado.</p>";
@@ -548,7 +572,7 @@ $runner->registerTest('limpieza_final',
         // Eliminar inventarios temporales
         if (isset($testData['inventoryId1'])) {
             $sql = "DELETE FROM inventarios WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['inventoryId1']);
             $stmt->execute();
             echo "<p>Inventario temporal ID {$testData['inventoryId1']} eliminado.</p>";
@@ -556,7 +580,7 @@ $runner->registerTest('limpieza_final',
         
         if (isset($testData['inventoryId2'])) {
             $sql = "DELETE FROM inventarios WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['inventoryId2']);
             $stmt->execute();
             echo "<p>Inventario temporal ID {$testData['inventoryId2']} eliminado.</p>";
@@ -565,7 +589,7 @@ $runner->registerTest('limpieza_final',
         // Eliminar grupo temporal
         if (isset($testData['groupId'])) {
             $sql = "DELETE FROM grupos WHERE id = ?";
-            $stmt = $goodsInventory->getConnection()->prepare($sql);
+            $stmt = $database->getConnection()->prepare($sql);
             $stmt->bind_param("i", $testData['groupId']);
             $stmt->execute();
             echo "<p>Grupo temporal ID {$testData['groupId']} eliminado.</p>";

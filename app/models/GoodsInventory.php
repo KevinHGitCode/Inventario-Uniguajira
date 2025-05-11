@@ -104,6 +104,37 @@ class GoodsInventory {
     }
 
     /**
+     * Obtener detalles de un bien de tipo serial en un inventario.
+     * 
+     * @param int $inventoryId ID del inventario.
+     * @param int $serialGoodId ID del bien serial.
+     * @return array|false Arreglo asociativo con los detalles del bien serial o false si no existe.
+     */
+    public function getSerialGoodDetails($inventoryId, $serialGoodId) {
+        $stmt = $this->connection->prepare("SELECT 
+            inventario_id, 
+            bien_id, 
+            inventario, 
+            bien, 
+            bienes_inventarios_id, 
+            bienes_equipos_id, 
+            descripcion, 
+            marca, 
+            modelo, 
+            serial, 
+            estado, 
+            color, 
+            condiciones_tecnicas, 
+            fecha_ingreso, 
+            fecha_salida 
+        FROM vista_bienes_serial_inventario WHERE inventario_id = ? AND bien_id = ?");
+        $stmt->bind_param("ii", $inventoryId, $serialGoodId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    /**
      * Añadir un bien de tipo cantidad a un inventario.
      * 
      * @param int $inventoryId ID del inventario.
@@ -153,10 +184,7 @@ class GoodsInventory {
         $bienInventarioId = $this->getBienInventarioId($goodId, $inventoryId);
 
         if (!$bienInventarioId) {
-            $stmt = $this->connection->prepare("
-                INSERT INTO bienes_inventarios (bien_id, inventario_id) 
-                VALUES (?, ?)
-            ");
+            $stmt = $this->connection->prepare("INSERT INTO bienes_inventarios (bien_id, inventario_id) VALUES (?, ?)");
             $stmt->bind_param("ii", $goodId, $inventoryId);
             if (!$stmt->execute()) {
                 return false;
@@ -164,20 +192,26 @@ class GoodsInventory {
             $bienInventarioId = $this->connection->insert_id;
         }
 
-        $stmt = $this->connection->prepare("
-            INSERT INTO bienes_equipos (
-                bien_inventario_id, 
-                descripcion, 
-                marca, 
-                modelo, 
-                serial, 
-                estado, 
-                color, 
-                condiciones_tecnicas, 
-                fecha_ingreso
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
+        // Check for duplicate serial
+        $stmt = $this->connection->prepare("SELECT id FROM bienes_equipos WHERE serial = ?");
+        $stmt->bind_param("s", $details['serial']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return false; // Serial already exists
+        }
+
+        $stmt = $this->connection->prepare("INSERT INTO bienes_equipos (
+            bien_inventario_id, 
+            descripcion, 
+            marca, 
+            modelo, 
+            serial, 
+            estado, 
+            color, 
+            condiciones_tecnicas, 
+            fecha_ingreso
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param(
             "issssssss", 
             $bienInventarioId, 
