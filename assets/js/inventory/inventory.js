@@ -7,7 +7,8 @@ function initInventoryFunctions() {
         onSuccess: (response) => {
             showToast(response);
             const grupoId = localStorage.getItem('openGroup');
-            abrirGrupo(grupoId);
+            // abrirGrupo(grupoId);
+            loadContent('/inventory', false);
         }
     });
 
@@ -17,7 +18,8 @@ function initInventoryFunctions() {
         onSuccess: (response) => {
             showToast(response);
             const grupoId = localStorage.getItem('openGroup');
-            abrirGrupo(grupoId);
+            // abrirGrupo(grupoId);
+            loadContent('/inventory', false);
         }
     });
 
@@ -27,7 +29,8 @@ function initInventoryFunctions() {
         onSuccess: (response) => {
             showToast(response);
             const grupoId = localStorage.getItem('openGroup');
-            abrirGrupo(grupoId);
+            // abrirGrupo(grupoId);
+            loadContent('/inventory', false);
         }
     });
 
@@ -61,7 +64,8 @@ function btnEliminarInventario() {
         onSuccess: (response) => {
             if (response.success) {
                 const grupoId = localStorage.getItem('openGroup');
-                abrirGrupo(grupoId, false);
+                // abrirGrupo(grupoId, false);
+                loadContent('/inventory', false);
             }
             showToast(response);
         }
