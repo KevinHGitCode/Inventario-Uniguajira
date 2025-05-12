@@ -20,6 +20,12 @@
 
     </div>
 
+    <?php if (empty($dataGoods)): ?>
+    <div class="empty-state">
+        <i class="fas fa-box-open fa-3x"></i>
+        <p>No hay bienes disponibles</p>
+    </div>
+    <?php else: ?>
     <div class="bienes-grid">
         <?php foreach ($dataGoods as $bien): ?>
         <div class="bien-card card-item">
@@ -57,5 +63,6 @@
         </div>
         <?php endforeach; ?>
     </div>
+    <?php endif; ?>
 
 </div>

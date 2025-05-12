@@ -45,6 +45,7 @@ BEGIN
     VALUES (@usuario_actual, 'INSERT', 'usuarios', NEW.id, mensaje);
 END//
 
+
 CREATE TRIGGER after_update_usuario
 AFTER UPDATE ON usuarios
 FOR EACH ROW
@@ -52,24 +53,34 @@ BEGIN
     DECLARE usuario_editor VARCHAR(100);
     DECLARE usuario_editado VARCHAR(100);
     DECLARE mensaje VARCHAR(255);
+    DECLARE solo_acceso BOOLEAN;
+    
+    -- Determinar si SOLO cambió la fecha de último acceso
+    SET solo_acceso = (
+        OLD.nombre <=> NEW.nombre AND 
+        OLD.nombre_usuario <=> NEW.nombre_usuario AND 
+        OLD.email <=> NEW.email AND 
+        OLD.contraseña <=> NEW.contraseña AND 
+        OLD.rol <=> NEW.rol AND 
+        OLD.foto_perfil <=> NEW.foto_perfil AND
+        OLD.fecha_ultimo_acceso <> NEW.fecha_ultimo_acceso
+    );
     
     -- Obtener el nombre de usuario del editor (quien realiza la acción)
     SELECT nombre_usuario INTO usuario_editor 
     FROM usuarios 
     WHERE id = @usuario_actual;
     
+    -- Si no se puede obtener el nombre de usuario, usar el ID
+    IF usuario_editor IS NULL THEN
+        SET usuario_editor = CONCAT('ID:', @usuario_actual);
+    END IF;
+    
     -- Obtener el nombre de usuario del editado
     SET usuario_editado = NEW.nombre_usuario;
     
     -- Caso 1: Solo se actualizó la fecha de último acceso (inicio de sesión)
-    IF OLD.fecha_ultimo_acceso <> NEW.fecha_ultimo_acceso 
-       AND OLD.nombre = NEW.nombre 
-       AND OLD.nombre_usuario = NEW.nombre_usuario 
-       AND OLD.email = NEW.email 
-       AND OLD.contraseña = NEW.contraseña 
-       AND OLD.rol = NEW.rol 
-       AND OLD.foto_perfil <=> NEW.foto_perfil THEN
-        
+    IF solo_acceso THEN
         SET mensaje = CONCAT('El usuario ', usuario_editado, ' ha iniciado sesión');
     
     -- Caso 2: El usuario actualizó su propio perfil
@@ -85,6 +96,7 @@ BEGIN
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
     VALUES (@usuario_actual, 'UPDATE', 'usuarios', NEW.id, mensaje);
 END//
+
 
 CREATE TRIGGER after_delete_usuario
 AFTER DELETE ON usuarios
@@ -144,6 +156,42 @@ BEGIN
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
     VALUES (@usuario_actual, 'DELETE', 'tareas', OLD.id, CONCAT('Se ha eliminado la tarea ', OLD.nombre));
 END//
+
+-- ========================
+-- TRIGGERS PARA BIENES
+-- ========================
+CREATE TRIGGER after_insert_bien
+AFTER INSERT ON bienes
+FOR EACH ROW
+BEGIN
+    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+    VALUES (@usuario_actual, 'INSERT', 'bienes', NEW.id, CONCAT('Se ha creado el bien ', NEW.nombre, ' de tipo ', NEW.tipo));
+END//
+
+CREATE TRIGGER after_update_bien
+AFTER UPDATE ON bienes
+FOR EACH ROW
+BEGIN
+    IF OLD.nombre != NEW.nombre THEN
+        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha renombrado el bien ', OLD.nombre, ' a ', NEW.nombre));
+    ELSEIF OLD.imagen != NEW.imagen OR (OLD.imagen IS NULL AND NEW.imagen IS NOT NULL) THEN
+        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha actualizado la imagen del bien ', NEW.nombre));
+    ELSE
+        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha actualizado el bien ', NEW.nombre));
+    END IF;
+END//
+
+CREATE TRIGGER after_delete_bien
+AFTER DELETE ON bienes
+FOR EACH ROW
+BEGIN
+    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+    VALUES (@usuario_actual, 'DELETE', 'bienes', OLD.id, CONCAT('Se ha eliminado el bien ', OLD.nombre));
+END//
+
 
 -- ========================
 -- TRIGGERS PARA GRUPOS
@@ -224,44 +272,13 @@ BEGIN
     VALUES (@usuario_actual, 'DELETE', 'inventarios', OLD.id, CONCAT('Se ha eliminado el inventario ', OLD.nombre));
 END//
 
--- ========================
--- TRIGGERS PARA BIENES
--- ========================
-CREATE TRIGGER after_insert_bien
-AFTER INSERT ON bienes
-FOR EACH ROW
-BEGIN
-    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'INSERT', 'bienes', NEW.id, CONCAT('Se ha creado el bien ', NEW.nombre, ' de tipo ', NEW.tipo));
-END//
 
-CREATE TRIGGER after_update_bien
-AFTER UPDATE ON bienes
-FOR EACH ROW
-BEGIN
-    IF OLD.nombre != NEW.nombre THEN
-        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha renombrado el bien ', OLD.nombre, ' a ', NEW.nombre));
-    ELSEIF OLD.imagen != NEW.imagen OR (OLD.imagen IS NULL AND NEW.imagen IS NOT NULL) THEN
-        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha actualizado la imagen del bien ', NEW.nombre));
-    ELSE
-        INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-        VALUES (@usuario_actual, 'UPDATE', 'bienes', NEW.id, CONCAT('Se ha actualizado el bien ', NEW.nombre));
-    END IF;
-END//
-
-CREATE TRIGGER after_delete_bien
-AFTER DELETE ON bienes
-FOR EACH ROW
-BEGIN
-    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'DELETE', 'bienes', OLD.id, CONCAT('Se ha eliminado el bien ', OLD.nombre));
-END//
 
 -- ================================
 -- TRIGGERS PARA BIENES_INVENTARIOS
 -- ================================
+
+
 CREATE TRIGGER after_insert_bien_inventario
 AFTER INSERT ON bienes_inventarios
 FOR EACH ROW
@@ -269,7 +286,6 @@ BEGIN
     DECLARE nombre_bien VARCHAR(100);
     DECLARE nombre_inventario VARCHAR(100);
     DECLARE tipo_bien ENUM('Cantidad', 'Serial');
-    DECLARE cantidad_bien INT DEFAULT 1;
     
     -- Obtener el nombre del bien y su tipo
     SELECT b.nombre, b.tipo INTO nombre_bien, tipo_bien
@@ -281,18 +297,12 @@ BEGIN
     FROM inventarios i
     WHERE i.id = NEW.inventario_id;
     
-    -- Si es tipo cantidad, verificar si ya tiene un registro en bienes_cantidad
-    IF tipo_bien = 'Cantidad' THEN
-        SELECT IFNULL(bc.cantidad, 1) INTO cantidad_bien
-        FROM bienes_cantidad bc
-        WHERE bc.bien_inventario_id = NEW.id
-        LIMIT 1;
-    END IF;
-    
-    -- Insertar en historial con mensaje específico
-    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
-    VALUES (@usuario_actual, 'INSERT', 'bienes_inventarios', NEW.id, 
-            CONCAT('Se añadieron ', cantidad_bien, ' ', nombre_bien, ' al inventario ', nombre_inventario));
+    -- NO insertar en historial aquí, se hará desde los triggers de bienes_cantidad o bienes_equipos
+    -- Solo guardamos un registro temporal si es necesario para debugging
+    -- SET @ultimo_bien_inventario_id = NEW.id;
+    -- SET @ultimo_nombre_bien = nombre_bien;
+    -- SET @ultimo_nombre_inventario = nombre_inventario;
+    -- SET @ultimo_tipo_bien = tipo_bien;
 END//
 
 CREATE TRIGGER after_delete_bien_inventario
@@ -315,12 +325,33 @@ BEGIN
     -- Insertar en historial
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
     VALUES (@usuario_actual, 'DELETE', 'bienes_inventarios', OLD.id, 
-            CONCAT('Se eliminaron registros de ', nombre_bien, ' del inventario ', nombre_inventario));
+            CONCAT('Se eliminaron todos los registros de ', nombre_bien, ' del inventario ', nombre_inventario));
 END//
 
 -- ================================
 -- TRIGGERS PARA BIENES_CANTIDAD
 -- ================================
+
+CREATE TRIGGER after_insert_bien_cantidad
+AFTER INSERT ON bienes_cantidad
+FOR EACH ROW
+BEGIN
+    DECLARE nombre_bien VARCHAR(100);
+    DECLARE nombre_inventario VARCHAR(100);
+    
+    -- Obtener el nombre del bien y del inventario
+    SELECT b.nombre, i.nombre INTO nombre_bien, nombre_inventario
+    FROM bienes_inventarios bi
+    JOIN bienes b ON b.id = bi.bien_id
+    JOIN inventarios i ON i.id = bi.inventario_id
+    WHERE bi.id = NEW.bien_inventario_id;
+    
+    -- Insertar en historial el verdadero registro de la acción
+    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+    VALUES (@usuario_actual, 'INSERT', 'bienes_inventarios', NEW.bien_inventario_id, 
+            CONCAT('Se añadieron ', NEW.cantidad, ' ', nombre_bien, ' al inventario ', nombre_inventario));
+END//
+
 CREATE TRIGGER after_update_bien_cantidad
 AFTER UPDATE ON bienes_cantidad
 FOR EACH ROW
@@ -368,6 +399,28 @@ END//
 -- ================================
 -- TRIGGERS PARA BIENES_EQUIPOS (SERIAL)
 -- ================================
+
+CREATE TRIGGER after_insert_bien_equipo
+AFTER INSERT ON bienes_equipos
+FOR EACH ROW
+BEGIN
+    DECLARE nombre_bien VARCHAR(100);
+    DECLARE nombre_inventario VARCHAR(100);
+    
+    -- Obtener el nombre del bien y del inventario
+    SELECT b.nombre, i.nombre INTO nombre_bien, nombre_inventario
+    FROM bienes_inventarios bi
+    JOIN bienes b ON b.id = bi.bien_id
+    JOIN inventarios i ON i.id = bi.inventario_id
+    WHERE bi.id = NEW.bien_inventario_id;
+    
+    -- Insertar en historial el verdadero registro de la acción
+    INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
+    VALUES (@usuario_actual, 'INSERT', 'bienes_inventarios', NEW.bien_inventario_id, 
+            CONCAT('Se añadió equipo ', nombre_bien, ' (S/N: ', 
+                   IFNULL(NEW.serial, 'Sin serial'), ') al inventario ', nombre_inventario));
+END//
+
 CREATE TRIGGER after_update_bien_equipo
 AFTER UPDATE ON bienes_equipos
 FOR EACH ROW
@@ -386,13 +439,13 @@ BEGIN
     IF OLD.estado != NEW.estado THEN
         INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
         VALUES (@usuario_actual, 'UPDATE', 'bienes_equipos', NEW.id, 
-                CONCAT('El estado del equipo ', nombre_bien, ' (S/N: ', NEW.serial, ') en el inventario ', 
+                CONCAT('El estado del equipo ', nombre_bien, ' (S/N: ', IFNULL(NEW.serial, 'Sin serial'), ') en el inventario ', 
                        nombre_inventario, ' cambió de ', OLD.estado, ' a ', NEW.estado));
     ELSE
         INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
         VALUES (@usuario_actual, 'UPDATE', 'bienes_equipos', NEW.id, 
                 CONCAT('Se actualizó la información del equipo ', nombre_bien, ' (S/N: ', 
-                       NEW.serial, ') en el inventario ', nombre_inventario));
+                       IFNULL(NEW.serial, 'Sin serial'), ') en el inventario ', nombre_inventario));
     END IF;
 END//
 
@@ -414,7 +467,7 @@ BEGIN
     INSERT INTO historial (usuario_id, accion, tabla, registro_id, detalles)
     VALUES (@usuario_actual, 'DELETE', 'bienes_equipos', OLD.id, 
             CONCAT('Se eliminó el registro del equipo ', nombre_bien, ' (S/N: ', 
-                   OLD.serial, ') del inventario ', nombre_inventario));
+                   IFNULL(OLD.serial, 'Sin serial'), ') del inventario ', nombre_inventario));
 END//
 
 -- ================================

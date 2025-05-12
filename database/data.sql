@@ -275,7 +275,7 @@ VALUES
     (8, 'Computadores', 'Serial', 'assets/uploads/img/goods/img_67fb377a73eaa.png'),
     (9, 'Sillas', 'Cantidad', 'assets/uploads/img/goods/img_67fb3861cf13d.png'),
     (10, 'Rack grande', 'Cantidad', 'assets/uploads/img/goods/img_68215005cb13d.png'),
-    (11, 'Rack mediano', 'Cantidad', 'assets/uploads/img/goods/img_682150295f31a.png')
+    (11, 'Rack mediano', 'Cantidad', 'assets/uploads/img/goods/img_682150295f31a.png'),
     (12, 'VideoBeam', 'Serial', 'assets/uploads/img/goods/img_681eb9f740fb1.png');
 
 -- Relacionar bienes con el inventario "Sala de redes"
