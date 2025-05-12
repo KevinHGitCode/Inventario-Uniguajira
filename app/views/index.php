@@ -60,7 +60,6 @@
     <script src="assets/js/helpers/search.js"></script>
     <script src="assets/js/helpers/toast.js"></script>
     <script src="assets/js/tasks.js"></script>
-    <script src="assets/js/scripts.js"></script>
 
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/goods.js"></script>

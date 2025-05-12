@@ -104,7 +104,6 @@ async function cargarBienesInventario(idInventory) {
             mostrarEstadoVacio(bienesGrid);
         }
 
-        actualizarInfoInventario(idInventory);
         
         console.timeEnd('Cargar bienes'); // Fin del tiempo total
         

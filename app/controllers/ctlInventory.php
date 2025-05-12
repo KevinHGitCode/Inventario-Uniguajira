@@ -156,7 +156,7 @@ class ctlInventory {
         $inventory = new Inventory();
         header('Content-Type: application/json');
 
-        if (!validateHttpRequest('POST', ['id', 'responsable'])) {
+        if (!validateHttpRequest('POST', ['id'])) {
             return;
         }
 

@@ -124,7 +124,7 @@
             <input type="hidden" name="id" id="editarResponsableId" />
             <div>
                 <label for="editarResponsableNombre">Nuevo Responsable:</label>
-                <input type="text" name="responsable" id="editarResponsableNombre" required />
+                <input type="text" name="responsable" id="editarResponsableNombre" />
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn submit-btn">Guardar Cambios</button>

@@ -6,8 +6,7 @@ function initInventoryFunctions() {
         resetOnSuccess: true,
         onSuccess: (response) => {
             showToast(response);
-            const grupoId = localStorage.getItem('openGroup');
-            // abrirGrupo(grupoId);
+
             loadContent('/inventory', false);
         }
     });
@@ -17,23 +16,9 @@ function initInventoryFunctions() {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
             showToast(response);
-            const grupoId = localStorage.getItem('openGroup');
-            // abrirGrupo(grupoId);
-            loadContent('/inventory', false);
-        }
-    });
 
-    // Inicializar formulario para actualizar inventario
-    inicializarFormularioAjax('#formActualizarInventario', {
-        closeModalOnSuccess: true,
-        onBefore: (formData, op) => {
-            console.log("grupoId")
-            return true;
-        },
-        onSuccess: (response) => {
-            showToast(response);
-            const grupoId = localStorage.getItem('openGroup');
-            // abrirGrupo(grupoId);
+            console.log("hola esto es un cambio")
+
             loadContent('/inventory', false);
         }
     });
@@ -49,6 +34,24 @@ function initInventoryFunctions() {
     });
 
 }
+
+// Función para inicializar el formulario de actualizar estado
+// Esta funcion es llamada en sidebar.js 
+function initEstadoInventarioForm() {
+    // Inicializar formulario para cambiar estado del inventario
+    inicializarFormularioAjax('#estadoInventarioForm', {
+        onSuccess: (response, form) => {
+            showToast(response);
+
+            const estados = ['bueno', 'regular', 'malo'];
+            const idx = form.querySelector('[name="estado"]').value;
+
+            cambiarEstadoInventario(estados[idx - 1]);
+            console.log('el estado se trato de cambiar a', estados[idx - 1])
+        }
+    });
+}
+
 
 // Función para abrir el modal de renombrar inventario
 function btnRenombrarInventario() {
@@ -101,16 +104,16 @@ function abrirInventario(idInventory, scrollUpRequired = true) {
 
     // Cargar bienes usando la nueva función
     cargarBienesInventario(idInventory);
-    // en la funcion cargarBienesInventario se incluye actualizarInfoInventario
+
+    // Mostrar controles del inventario
+    actualizarInfoInventario(idInventory);
+    toggleInventoryControls(true);
 
     // Inicializar búsqueda
     iniciarBusqueda('searchGoodInventory');
     
     // Guardar estado en localStorage
     localStorage.setItem('openInventory', idInventory);
-
-    // Mostrar controles del inventario
-    toggleInventoryControls(true);
 
     // Scroll a la parte superior si es necesario
     if (scrollUpRequired) {
@@ -121,7 +124,7 @@ function abrirInventario(idInventory, scrollUpRequired = true) {
 // Actualiza la información visual del inventario seleccionado
 function actualizarInfoInventario(idInventory) {
     // Actualizar el nombre del inventario
-    const inventoryCard = document.querySelector(`.card-item[data-id="${idInventory}"]`);
+    const inventoryCard = document.querySelector(`#inventories-content .card-item[data-id="${idInventory}"]`);
     const inventoryName = inventoryCard.getAttribute('data-name') || 'Inventario';
     document.getElementById('inventory-name').innerText = inventoryName;
 
@@ -134,7 +137,9 @@ function actualizarInfoInventario(idInventory) {
     const idInventario = localStorage.getItem('openInventory');
     id.value = idInventario || '';
 
-    console.log("abrir12121", inventoryCard.dataset)
+    console.log("actualizarInfoInventario", inventoryCard.dataset)
+
+    cambiarEstadoInventario(inventoryCard.dataset.estado)
 
 }
 

@@ -83,14 +83,10 @@ function loadContent(path, scrollUpRequired = true) {
                 break;
                 
             case '/inventory':
-                // Inicializar formulario para cambiar estado del inventario
-                inicializarFormularioAjax('#estadoInventarioForm', {
-                    onSuccess: (response) => {
-                        showToast(response);
-                    }
-                });
 
                 iniciarBusqueda('searchGroup');
+
+                initEstadoInventarioForm();
 
                 // comprobamos que existe al menos una funcion de gruops.js
                 // significa que se cargaron los archivos del rol administrador

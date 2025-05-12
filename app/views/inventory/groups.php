@@ -5,29 +5,29 @@
     <div class="inventory-header">
         <h1>Inventario</h1>
         
-        <div class="inventory-controls">
+        <div class="inventory-controls hidden">
             <div class="status-control">
                 <form id="estadoInventarioForm" method="post" action="/api/inventories/updateEstado" class="status-indicator">
-                    <input type="text" id="estado_id_inventario" name="id_inventario" >
+                    <input type="hidden" id="estado_id_inventario" name="id_inventario" >
                     <input type="hidden" id="estado_value" name="estado" >
                     
                     <span class="status-label">Estado:</span>
                     <div class="status-lights" >
-                        <div class="light light-red" 
+                        <div class="light light-red inactive" 
                             onclick="
-                                    this.closest('form').estado.value='malo'; 
+                                    this.closest('form').estado.value='3'; 
                                     this.closest('form').querySelector('button[type=submit]').click();
                                     " 
                             title="mal estado"></div>
-                        <div class="light light-yellow" 
+                        <div class="light light-yellow inactive" 
                             onclick="
-                                    this.closest('form').estado.value='regular'; 
+                                    this.closest('form').estado.value='2'; 
                                     this.closest('form').querySelector('button[type=submit]').click();
                                     " 
                             title="estado regular"></div>
-                        <div class="light light-green" 
+                        <div class="light light-green inactive" 
                             onclick="
-                                    this.closest('form').estado.value='bueno'; 
+                                    this.closest('form').estado.value='1'; 
                                     this.closest('form').querySelector('button[type=submit]').click();
                                     " 
                             title="buen estado"></div>
