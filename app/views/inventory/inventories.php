@@ -5,7 +5,7 @@
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
                     data-id="<?= htmlspecialchars($inventory['id']) ?>" 
                     data-name="<?= htmlspecialchars($inventory['nombre']) ?>"
-                    data-responsable="<?= htmlspecialchars($inventory['responsable']) ?>"
+                    data-responsable="<?= htmlspecialchars($inventory['responsable'] ?? '' ) ?>"
                     data-estado="<?= htmlspecialchars($inventory['estado_conservacion']) ?>"
                     data-type="inventory"
                     onclick="toggleSelectItem(this)"
