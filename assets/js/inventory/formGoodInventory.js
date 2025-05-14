@@ -154,9 +154,13 @@ function limpiarCamposSerial() {
     });
 
     // Establecer fecha actual para el campo de fecha
-    const today = new Date().toISOString().split('T')[0];
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // getMonth() devuelve de 0 a 11
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    const fechaActual = `${año}-${mes}-${dia}`;
     const fechaField = document.getElementById('fechaIngresoBien');
-    fechaField.value = today;
+    fechaField.value = fechaActual;
     fechaField.disabled = false;
 }
 
