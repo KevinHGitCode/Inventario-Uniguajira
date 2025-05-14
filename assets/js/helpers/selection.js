@@ -69,7 +69,7 @@ function updateControlBar(type) {
 }
 
 // Función para limpiar la selección
-function clearSelection() {
+function deselectItem() {
     if (selectedItem) {
         selectedItem.element.classList.remove('selected');
         const type = selectedItem.type;
@@ -88,7 +88,7 @@ function handleOutsideClick(event) {
     
     const cardItem = event.target.closest('.card-item');
     // Si se hizo clic fuera de un item, limpiar la selección
-    if (!cardItem) clearSelection();
+    if (!cardItem) deselectItem();
 }
 
 // Función para inicializar la selección
@@ -99,7 +99,7 @@ function initializeSelection() {
 
 // Función para desactivar la selección
 function deactivateSelection() {
-    clearSelection();
+    deselectItem();
     document.removeEventListener('click', handleOutsideClick);
     console.log('Selection functionality deactivated');
 }

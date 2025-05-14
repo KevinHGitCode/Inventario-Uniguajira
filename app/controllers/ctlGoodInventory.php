@@ -117,16 +117,68 @@ class ctlGoodInventory {
     }
 
     /**
-     * Actualizar la cantidad de un bien en el inventario
+     * Eliminar un bien de tipo cantidad del inventario
      */
-    public function updateQuantity() {
+    public function deleteQuantity($idInventario, $idBien) {
         header('Content-Type: application/json');
 
-        if (!validateHttpRequest('POST', ['bienId', 'cantidad'])) {
+        if (!validateHttpRequest('DELETE')) {
+            return;
+        }
+
+        if (empty($idInventario) || empty($idBien)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID de inventario y bien requeridos.']);
+            return;
+        }
+
+        $resultado = $this->goodsInventory->deleteQuantityGood($idInventario, $idBien);
+
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Bien eliminado del inventario exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el bien del inventario.']);
+        }
+    }
+
+    /**
+     * Eliminar un bien de tipo serial del inventario
+     */
+    public function deleteSerial($idBienSerial) {
+        header('Content-Type: application/json');
+
+        if (!validateHttpRequest('DELETE')) {
+            return;
+        }
+
+        if (empty($idBienSerial)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID del equipo requeridos.']);
+            return;
+        }
+
+        $resultado = $this->goodsInventory->deleteSerialGood($idBienSerial);
+
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Bien serial eliminado del inventario exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el bien serial del inventario.']);
+        }
+    }
+
+    /**
+     * Actualizar la cantidad de un bien en el inventario
+     */    public function updateQuantity() {
+        header('Content-Type: application/json');
+
+        if (!validateHttpRequest('POST', ['bienId', 'inventarioId', 'cantidad'])) {
             return;
         }
 
         $bienId = $_POST['bienId'];
+        $inventarioId = $_POST['inventarioId'];
         $cantidad = $_POST['cantidad'];
 
         if ($cantidad < 0) {
@@ -135,13 +187,51 @@ class ctlGoodInventory {
             return;
         }
 
-        $resultado = $this->goodsInventory->updateQuantity($bienId, $cantidad);
+        $resultado = $this->goodsInventory->updateQuantity($bienId, $inventarioId, $cantidad);
 
         if ($resultado) {
             echo json_encode(['success' => true, 'message' => 'Cantidad actualizada exitosamente.']);
         } else {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'No se pudo actualizar la cantidad.']);
+        }
+    }
+
+    /**
+     * Actualizar los detalles de un bien serial
+     */
+    public function updateSerial() {
+        header('Content-Type: application/json');
+
+        if (!validateHttpRequest('POST', ['bienEquipoId', 'serial'])) {
+            return;
+        }
+
+        $bienEquipoId = $_POST['bienEquipoId'];
+        
+        $details = [
+            'descripcion' => $_POST['descripcion'] ?? '',
+            'marca' => $_POST['marca'] ?? '',
+            'modelo' => $_POST['modelo'] ?? '',
+            'serial' => $_POST['serial'],
+            'estado' => $_POST['estado'] ?? 'activo',
+            'color' => $_POST['color'] ?? '',
+            'condiciones_tecnicas' => $_POST['condiciones_tecnicas'] ?? '',
+            'fecha_ingreso' => $_POST['fecha_ingreso'] ?? date('Y-m-d')
+        ];
+
+        try {
+            $resultado = $this->goodsInventory->updateSerial($bienEquipoId, $details);
+
+            if ($resultado) {
+                echo json_encode(['success' => true, 'message' => 'Bien serial actualizado exitosamente.']);
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el bien serial.']);
+            }
+        } catch (Exception $e) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 

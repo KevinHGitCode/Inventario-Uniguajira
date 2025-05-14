@@ -209,14 +209,14 @@
         <div id="control-bar-good" class="control-bar">
             <div class="selected-name">1 seleccionado</div>
             <div class="control-actions">
-                <button class="control-btn" title="Cambiar cantidad" onclick="btnCambiarCantidadBien()">
+                <button class="control-btn" title="Cambiar cantidad" onclick="btnEditarBienCantidad()">
                     <i class="fas fa-sort-numeric-up"></i>
                 </button>
                 <!-- TODO: Not implement yet -->
                 <!-- <button class="control-btn" title="Mover" onclick="btnMoverBien()">
                     <i class="fas fa-exchange-alt"></i>
                 </button> -->
-                <button class="control-btn" title="Eliminar" onclick="btnEliminarBien()">
+                <button class="control-btn" title="Eliminar" onclick="btnEliminarBienCantidad()">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>

@@ -33,7 +33,11 @@ function eliminarRegistro(options) {
         })
         .then(res => res.json())
         .then(response => {
-            config.onSuccess(response);
+            if (response.success) {
+                config.onSuccess(response);
+            } else {
+                config.onError(response);
+            }
         })
         .catch(error => {
             config.onError(error);

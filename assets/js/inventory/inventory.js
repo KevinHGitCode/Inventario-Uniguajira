@@ -35,65 +35,6 @@ function initInventoryFunctions() {
 
 }
 
-// Función para inicializar el formulario de actualizar estado
-// Esta funcion es llamada en sidebar.js 
-function initEstadoInventarioForm() {
-    // Inicializar formulario para cambiar estado del inventario
-    inicializarFormularioAjax('#estadoInventarioForm', {
-        onSuccess: (response, form) => {
-            showToast(response);
-
-            const estados = ['bueno', 'regular', 'malo'];
-            const idx = form.querySelector('[name="estado"]').value;
-
-            cambiarEstadoInventario(estados[idx - 1]);
-            console.log('el estado se trato de cambiar a', estados[idx - 1])
-        }
-    });
-}
-
-
-// Función para abrir el modal de renombrar inventario
-function btnRenombrarInventario() {
-    console.log(selectedItem); // mensaje de depuración
-    const id = selectedItem.id;
-    const nombreActual = selectedItem.name;
-    
-    document.getElementById("renombrarInventarioId").value = id;
-    document.getElementById("renombrarInventarioNombre").value = nombreActual;
-
-    mostrarModal('#modalRenombrarInventario');
-}
-
-
-// Función para eliminar inventario
-function btnEliminarInventario() {
-    const idInventario = selectedItem.id;
-
-    eliminarRegistro({
-        url: `/api/inventories/delete/${idInventario}`,
-        onSuccess: (response) => {
-            if (response.success) {
-                const grupoId = localStorage.getItem('openGroup');
-                loadContent('/inventory', false);
-            }
-            showToast(response);
-        }
-    });
-}
-
-function toggleInventoryControls(show) {
-    const controls = document.querySelector('.inventory-controls');
-    console.log(controls)
-    if (controls) {
-        if (show) {
-            controls.classList.remove('hidden');
-        } else {
-            controls.classList.add('hidden');
-        }
-    }
-}
-
 function abrirInventario(idInventory, scrollUpRequired = true) {
     const divGoodsInventory = document.getElementById('goods-inventory');
     const divInventories = document.getElementById('inventories');
@@ -121,28 +62,6 @@ function abrirInventario(idInventory, scrollUpRequired = true) {
     }
 }
 
-// Actualiza la información visual del inventario seleccionado
-function actualizarInfoInventario(idInventory) {
-    // Actualizar el nombre del inventario
-    const inventoryCard = document.querySelector(`#inventories-content .card-item[data-id="${idInventory}"]`);
-    const inventoryName = inventoryCard.getAttribute('data-name') || 'Inventario';
-    document.getElementById('inventory-name').innerText = inventoryName;
-
-    // Obtener y mostrar el responsable
-    const responsable = inventoryCard.getAttribute('data-responsable') || '';
-    document.getElementById('responsable-inventario').innerText = responsable ? `- Responsable: ${responsable}` : '';
-
-    // obtenten el dato almacenado en localstorage y agrega ese valor en estado_id_inventario
-    const id = document.getElementById('estado_id_inventario');
-    const idInventario = localStorage.getItem('openInventory');
-    id.value = idInventario || '';
-
-    console.log("actualizarInfoInventario", inventoryCard.dataset)
-
-    cambiarEstadoInventario(inventoryCard.dataset.estado)
-
-}
-
 // cerrar inventario
 function cerrarInventario() {
     document.getElementById('goods-inventory').classList.add('hidden');
@@ -160,40 +79,32 @@ function cerrarInventario() {
     toggleInventoryControls(false);
 }
 
+// Función para abrir el modal de renombrar inventario
+function btnRenombrarInventario() {
+    console.log(selectedItem); // mensaje de depuración
+    const id = selectedItem.id;
+    const nombreActual = selectedItem.name;
+    
+    document.getElementById("renombrarInventarioId").value = id;
+    document.getElementById("renombrarInventarioNombre").value = nombreActual;
 
-// Función para cambiar el estado del inventario
-function cambiarEstadoInventario(estado) {
-    // Obtener todas las luces
-    const luces = document.querySelectorAll('.light');
+    mostrarModal('#modalRenombrarInventario');
+}
 
-    // Eliminar clases activas e inactivas de todas las luces
-    luces.forEach(luz => {
-        luz.classList.remove('active');
-        luz.classList.add('inactive');
+// Función para eliminar inventario
+function btnEliminarInventario() {
+    const idInventario = selectedItem.id;
+
+    eliminarRegistro({
+        url: `/api/inventories/delete/${idInventario}`,
+        onSuccess: (response) => {
+            if (response.success) {
+                const grupoId = localStorage.getItem('openGroup');
+                loadContent('/inventory', false);
+            }
+            showToast(response);
+        }
     });
-
-    // Activar la luz seleccionada según el estado
-    let luzSeleccionada;
-    switch (estado) {
-        case 'malo':
-            luzSeleccionada = document.querySelector('.light-red');
-            break;
-        case 'regular':
-            luzSeleccionada = document.querySelector('.light-yellow');
-            break;
-        case 'bueno':
-            luzSeleccionada = document.querySelector('.light-green');
-            break;
-    }
-
-    if (luzSeleccionada) {
-        luzSeleccionada.classList.remove('inactive');
-        luzSeleccionada.classList.add('active');
-
-        // Aquí puedes agregar el código para enviar el cambio al servidor
-        console.log(`Estado cambiado a: ${estado}`);
-        // Por ejemplo: guardarEstadoInventario(estado);
-    }
 }
 
 // Función para abrir el modal de editar responsable del inventario
@@ -204,4 +115,67 @@ function btnEditarResponsable() {
         document.getElementById('editarResponsableId').value = idInventario;
     }
     mostrarModal('#modalEditarResponsable');
+}
+
+
+// ==============================================================================
+// ============ FUNCIONES PARA INFORMACION DEL INVENTARIO  ======================
+// ============ ESTADO RESPONSABLE Y COMPONENTES ASOSIADOS ======================
+// ==============================================================================
+
+
+// Función para cambiar el estado del inventario (funcion compactada)
+function cambiarEstadoInventario(estado) {
+    document.querySelectorAll('.light').forEach(luz => luz.classList.remove('active', 'inactive'));
+    const estados = { malo: '.light-red', regular: '.light-yellow', bueno: '.light-green' };
+    Object.values(estados).forEach(sel => document.querySelector(sel)?.classList.add('inactive'));
+    const luz = document.querySelector(estados[estado]);
+    if (luz) luz.classList.remove('inactive'), luz.classList.add('active');
+    // console.log(`Estado cambiado a: ${estado}`);
+}
+
+// Actualiza la información visual del inventario seleccionado
+function actualizarInfoInventario(idInventory) {
+    const inventoryCard = document.querySelector(`#inventories-content .card-item[data-id="${idInventory}"]`);
+
+    // Actualizar el nombre del inventario
+    const inventoryName = inventoryCard.getAttribute('data-name');
+    const nameElem = document.getElementById('inventory-name');
+    nameElem.innerText = inventoryName;
+
+    // Actualizar el responsable del inventario
+    const responsable = inventoryCard.getAttribute('data-responsable');
+    const responsableElem = document.getElementById('responsable-inventario');
+    responsableElem.innerText = responsable ? `- Responsable: ${responsable}` : '';
+
+    // Actualizar el id del inventario en el input oculto
+    const idInput = document.getElementById('estado_id_inventario');
+    idInput.value = idInventory;
+
+    // Cambiar el estado visual del inventario
+    cambiarEstadoInventario(inventoryCard.dataset.estado);
+    
+}
+
+// Función para inicializar el formulario de actualizar estado
+// Esta funcion es llamada en sidebar.js 
+function initEstadoInventarioForm() {
+    // Inicializar formulario para cambiar estado del inventario
+    inicializarFormularioAjax('#estadoInventarioForm', {
+        onSuccess: (response, form) => {
+            const estados = ['bueno', 'regular', 'malo'];
+            const idx = form.querySelector('[name="estado"]').value;
+
+            cambiarEstadoInventario(estados[idx - 1]);
+        }
+    });
+}
+
+function toggleInventoryControls(show) {
+    const controls = document.querySelector('.inventory-controls');
+    if (show) {
+        controls.classList.remove('hidden');
+    } else {
+        controls.classList.add('hidden');
+    }
 }

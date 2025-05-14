@@ -63,7 +63,8 @@ BEGIN
         OLD.contraseña <=> NEW.contraseña AND 
         OLD.rol <=> NEW.rol AND 
         OLD.foto_perfil <=> NEW.foto_perfil AND
-        OLD.fecha_ultimo_acceso <> NEW.fecha_ultimo_acceso
+        (OLD.fecha_ultimo_acceso <> NEW.fecha_ultimo_acceso OR 
+        (OLD.fecha_ultimo_acceso IS NULL AND NEW.fecha_ultimo_acceso IS NOT NULL))
     );
     
     -- Obtener el nombre de usuario del editor (quien realiza la acción)

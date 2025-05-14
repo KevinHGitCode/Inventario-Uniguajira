@@ -2,12 +2,20 @@
     <?php if (isset($dataSerialGoodsInventory) && !empty($dataSerialGoodsInventory)): ?>
 
         <!-- Por cada bien serial del inventario -->
-        <?php foreach ($dataSerialGoodsInventory as $serialGood): ?>
-            <div class="bien-card card-item"
+        <?php foreach ($dataSerialGoodsInventory as $serialGood): ?>            <div class="bien-card card-item"
                 <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                    data-id="<?= htmlspecialchars($serialGood['bienes_equipos_id'] ?? '') ?>" 
+                    data-id="<?= htmlspecialchars($serialGood['bienes_equipos_id']) ?>" 
+                    data-inventory-id="<?= htmlspecialchars($serialGood['inventario_id']) ?>"
+                    data-bien-id="<?= htmlspecialchars($serialGood['bien_id']) ?>"
                     data-name="<?= htmlspecialchars($serialGood['bien']) ?>"
+                    data-description="<?= htmlspecialchars($serialGood['descripcion'] ?? '') ?>"
+                    data-brand="<?= htmlspecialchars($serialGood['marca'] ?? '') ?>"
+                    data-model="<?= htmlspecialchars($serialGood['modelo'] ?? '') ?>"
                     data-serial="<?= htmlspecialchars($serialGood['serial']) ?>"
+                    data-status="<?= htmlspecialchars($serialGood['estado'] ?? '') ?>"
+                    data-color="<?= htmlspecialchars($serialGood['color'] ?? '') ?>"
+                    data-condition="<?= htmlspecialchars($serialGood['condiciones_tecnicas'] ?? '') ?>"
+                    data-entry-date="<?= htmlspecialchars($serialGood['fecha_ingreso'] ?? '') ?>"
                     data-type="serial-good"
                     onclick="toggleSelectItem(this)"
                 <?php endif; ?>

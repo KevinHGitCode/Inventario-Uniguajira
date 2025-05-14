@@ -6,18 +6,13 @@ async function cargarBienesInventario(idInventory) {
     divContent.innerHTML = '<p>Cargando bienes...</p>';
     
     try {
-        console.time('Cargar bienes'); // Marca de tiempo inicial
-        console.time('Fetch bienes');  // Solo fetch
         // Realizar solicitud para obtener datos JSON
         const response = await fetch(`/api/get/goodsInventory/${idInventory}`);
-        console.timeEnd('Fetch bienes');
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
         
-        console.time('Parsear JSON');  // Solo parseo
         const bienes = await response.json();
-        console.timeEnd('Parsear JSON');
         
         // Limpiar el contenedor
         divContent.innerHTML = '';
@@ -31,11 +26,9 @@ async function cargarBienesInventario(idInventory) {
         
         // Verificar si hay bienes
         if (bienes && bienes.length > 0) {
-            console.time('Renderizar bienes'); // Marca de tiempo para renderizado
             
             // Obtener el rol del usuario de manera segura
             const userRol = getUserRol();
-            console.log('Rol de usuario detectado:', userRol);
             
             // Determinar si el usuario puede seleccionar items (administradores o roles autorizados)
             const puedeSeleccionar = ['administrador'].includes(userRol);
@@ -46,14 +39,20 @@ async function cargarBienesInventario(idInventory) {
                 bienElement.className = 'bien-card card-item';
                 
                 // Siempre agregar los atributos data-* para mantener consistencia
-                bienElement.dataset.id = bien.bien_id || '';
-                bienElement.dataset.name = bien.bien || '';
-                bienElement.dataset.cantidad = bien.cantidad || '0';
+                bienElement.dataset.id = bien.bien_id;
+                bienElement.dataset.name = bien.bien;
+                bienElement.dataset.cantidad = bien.cantidad;
                 bienElement.dataset.type = 'good';
+                bienElement.dataset.inventarioId = bien.inventario_id;
+                bienElement.dataset.inventario = bien.inventario;
+                bienElement.dataset.tipo = bien.tipo;
+                bienElement.dataset.imagen = bien.imagen;
                 
-                // Solo agregar evento onclick si el usuario tiene permisos
-                if (puedeSeleccionar) {
+                // Agregar evento según el tipo de bien y permisos del usuario
+                if (puedeSeleccionar && bien.tipo === 'Cantidad') {
                     bienElement.onclick = function() { toggleSelectItem(this); };
+                } else if (puedeSeleccionar && bien.tipo !== 'Cantidad') {
+                    bienElement.onclick = function() { deselectItem(this); };
                 }
                 
                 // Crear la estructura HTML del bien
@@ -97,18 +96,12 @@ async function cargarBienesInventario(idInventory) {
                 bienesGrid.appendChild(bienElement);
             });
             
-            console.timeEnd('Renderizar bienes'); // Fin del tiempo de renderizado
-            
         } else {
             // Mostrar estado vacío si no hay bienes
             mostrarEstadoVacio(bienesGrid);
         }
 
-        
-        console.timeEnd('Cargar bienes'); // Fin del tiempo total
-        
     } catch (error) {
-        console.error('Error al cargar bienes:', error);
         // Limpiar el contenedor y mostrar mensaje de error
         divContent.innerHTML = '';
         const bienesGrid = document.createElement('div');

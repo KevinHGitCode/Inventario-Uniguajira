@@ -31,7 +31,9 @@ class ctlInventory {
         $goodsInventory = new GoodsInventory(); // Instantiate GoodsInventory here
         $dataSerialGoodsInventory = $goodsInventory->getSerialGoodDetails($id_inventory, $id_goodSerial);
 
-        // echo $dataSerialGoodsInventory;
+        // echo "<pre>";
+        // var_dump($dataSerialGoodsInventory);
+        // echo "</pre>";
         // header('Content-Type: application/json');
         // echo json_encode($dataSerialGoodsInventory);
 

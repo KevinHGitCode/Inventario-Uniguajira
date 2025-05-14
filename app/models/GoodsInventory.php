@@ -232,6 +232,55 @@ class GoodsInventory {
     }
 
     /**
+     * Actualizar los detalles de un bien serial en el inventario.
+     * 
+     * @param int $bienEquipoId ID del bien equipo a actualizar
+     * @param array $details Detalles actualizados del bien
+     * @return bool Resultado de la operación
+     */
+    public function updateSerial($bienEquipoId, $details) {
+        // Verificar si el serial ya existe en otro bien
+        if (isset($details['serial'])) {
+            $stmt = $this->connection->prepare("SELECT id FROM bienes_equipos WHERE serial = ? AND id != ?");
+            $stmt->bind_param("si", $details['serial'], $bienEquipoId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                throw new Exception('Ya existe un bien con este número de serial.');
+            }
+        }
+
+        // Preparar la consulta de actualización
+        $stmt = $this->connection->prepare("
+            UPDATE bienes_equipos 
+            SET descripcion = ?,
+                marca = ?,
+                modelo = ?,
+                serial = ?,
+                estado = ?,
+                color = ?,
+                condiciones_tecnicas = ?,
+                fecha_ingreso = ?
+            WHERE id = ?
+        ");
+
+        $stmt->bind_param(
+            "ssssssssi",
+            $details['descripcion'],
+            $details['marca'],
+            $details['modelo'],
+            $details['serial'],
+            $details['estado'],
+            $details['color'],
+            $details['condiciones_tecnicas'],
+            $details['fecha_ingreso'],
+            $bienEquipoId
+        );
+
+        return $stmt->execute();
+    }
+
+    /**
      * Eliminar un bien de un inventario.
      * 
      * @param int $id ID del bien en inventario.
@@ -303,19 +352,126 @@ class GoodsInventory {
     }
 
     /**
+     * Eliminar un bien de tipo cantidad del inventario
+     * 
+     * @param int $idInventario ID del inventario
+     * @param int $idBien ID del bien
+     * @return bool Resultado de la operación
+     */
+    public function deleteQuantityGood($idInventario, $idBien) {
+        // 1. Buscar la relación
+        $checkStmt = $this->connection->prepare("
+            SELECT bi.id 
+            FROM bienes_inventarios bi
+            INNER JOIN bienes b ON bi.bien_id = b.id
+            WHERE bi.inventario_id = ? 
+            AND bi.bien_id = ? 
+            AND b.tipo = 'Cantidad'
+        ");
+        $checkStmt->bind_param("ii", $idInventario, $idBien);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        
+        // 2. Si no se encuentra return false
+        if ($result->num_rows == 0) {
+            return false;
+        }
+        
+        // 3. Si la encuentra la elimina
+        $deleteStmt = $this->connection->prepare("
+            DELETE FROM bienes_inventarios
+            WHERE inventario_id = ? AND bien_id = ?
+        ");
+        $deleteStmt->bind_param("ii", $idInventario, $idBien);
+        $success = $deleteStmt->execute();
+        
+        return $success;
+    }
+
+    /**
+     * Eliminar un bien de tipo serial del inventario
+     * 
+     * @param int $idBienSerial ID del bien serial (en la tabla bienes_equipos)
+     * @return bool Resultado de la operación
+     */
+    public function deleteSerialGood($idBienSerial) {
+        // 1. Buscar el bien en la tabla bienes_equipos
+        $bienStmt = $this->connection->prepare("
+            SELECT be.id, be.bien_inventario_id
+            FROM bienes_equipos be
+            WHERE be.id = ?
+        ");
+        $bienStmt->bind_param("i", $idBienSerial);
+        $bienStmt->execute();
+        $bienResult = $bienStmt->get_result();
+        
+        // Si no existe el bien, retornar false
+        if ($bienResult->num_rows == 0) {
+            return false;
+        }
+        
+        $bienData = $bienResult->fetch_assoc();
+        $bienInventarioId = $bienData['bien_inventario_id'];
+        
+        // 2. Contar cuántos bienes del mismo tipo hay en ese inventario
+        $countStmt = $this->connection->prepare("
+            SELECT COUNT(*) as total
+            FROM bienes_equipos
+            WHERE bien_inventario_id = ?
+        ");
+        $countStmt->bind_param("i", $bienInventarioId);
+        $countStmt->execute();
+        $countResult = $countStmt->get_result();
+        $countData = $countResult->fetch_assoc();
+        $totalBienes = $countData['total'];
+        
+        // 3. Eliminar el registro en la tabla bienes_equipos
+        $deleteEquipoStmt = $this->connection->prepare("
+            DELETE FROM bienes_equipos
+            WHERE id = ?
+        ");
+        $deleteEquipoStmt->bind_param("i", $idBienSerial);
+        $deleteEquipoSuccess = $deleteEquipoStmt->execute();
+        
+        if (!$deleteEquipoSuccess) {
+            return false;
+        }
+        
+        // 4. Si solo había uno, eliminar también la relación
+        if ($totalBienes <= 1) {
+            $deleteRelacionStmt = $this->connection->prepare("
+                DELETE FROM bienes_inventarios
+                WHERE id = ?
+            ");
+            $deleteRelacionStmt->bind_param("i", $bienInventarioId);
+            $deleteRelacionStmt->execute();
+        }
+        
+        return true;
+    }
+
+    /**
      * Actualizar la cantidad de un bien en el inventario.
      * 
-     * @param int $bienId ID del bien en inventario.
+     * @param int $bienId ID del bien.
+     * @param int $inventarioId ID del inventario.
      * @param int $cantidad Nueva cantidad.
      * @return bool Resultado de la operación.
      */
-    public function updateQuantity($bienId, $cantidad) {
+    public function updateQuantity($bienId, $inventarioId, $cantidad) {
+        // Obtener el ID de la relación bien_inventario
+        $bienInventarioId = $this->getBienInventarioId($bienId, $inventarioId);
+        
+        if (!$bienInventarioId) {
+            return false;
+        }
+
         $stmt = $this->connection->prepare("
             UPDATE bienes_cantidad 
             SET cantidad = ? 
             WHERE bien_inventario_id = ?
         ");
-        $stmt->bind_param("ii", $cantidad, $bienId);
+        $stmt->bind_param("ii", $cantidad, $bienInventarioId);
         return $stmt->execute();
     }
 

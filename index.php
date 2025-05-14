@@ -56,7 +56,7 @@ $router->add('/api/get/serialGoodsInventory/:id_inventory/:id_goodSerial', 'ctlI
 
 // Rutas para la API de navegacion de '/folders' (ok)
 $router->add('/api/reports/getAll/:id_folder', 'ctlReports', 'getReportsByFolder');  // abrir grupo
-$router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');  // abrir inventario
+// $router->add('/api/get/goodsInventory/:id_inventory', 'ctlInventory', 'getGoodsOfInventory');  // abrir inventario
 
 
 // Rutas para la API de grupos (ok)
@@ -80,18 +80,11 @@ $router->add('/api/folders/delete/:id', 'ctlReports', 'deleteFolder');
 
 // Rutas para la API de bienes en inventario
 $router->add('/api/goods-inventory/create', 'ctlGoodInventory', 'create');
-$router->add('/api/goods-inventory/delete/:id', 'ctlGoodInventory', 'delete');
+$router->add('/api/goods-inventory/delete-quantity/:id_inventario/:id_bien', 'ctlGoodInventory', 'deleteQuantity');
+$router->add('/api/goods-inventory/delete-serial/:id_bien_equipo', 'ctlGoodInventory', 'deleteSerial');
 $router->add('/api/goods-inventory/update-quantity', 'ctlGoodInventory', 'updateQuantity');
+$router->add('/api/goods-inventory/update-serial', 'ctlGoodInventory', 'updateSerial');
 $router->add('/api/goods-inventory/move', 'ctlGoodInventory', 'moveGood');
-
-// $router->add('/api/goods-inventory/create', 'ctlInventory', 'addGood');
-// $router->add('/api/goods-inventory/update-quantity', 'ctlInventory', 'updateQuantity');
-// $router->add('/api/goods-inventory/move', 'ctlInventory', 'moveGood');
-// $router->add('/api/goods-inventory/delete', 'ctlInventory', 'removeGood');
-
-// $router->add('/api/goods-inventory/create', 'ctlGoodsInventory', 'create');
-// $router->add('/api/goods-inventory/delete/:id', 'ctlGoodsInventory', 'delete');
-// $router->add('/api/goods-inventory/update', 'ctlGoodsInventory', 'update');
 
 
 // Rutas para la API de carpetas (ok)
