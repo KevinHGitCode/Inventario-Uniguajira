@@ -30,6 +30,7 @@ SELECT
     b.id AS bien_id,
     i.nombre AS inventario,
     b.nombre AS bien,
+    b.imagen AS imagen,
     bi.id AS bienes_inventarios_id,
     be.id AS bienes_equipos_id,
     be.descripcion,

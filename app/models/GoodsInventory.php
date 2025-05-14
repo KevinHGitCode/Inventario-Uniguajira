@@ -116,6 +116,7 @@ class GoodsInventory {
             bien_id, 
             inventario, 
             bien, 
+            imagen, 
             bienes_inventarios_id, 
             bienes_equipos_id, 
             descripcion, 
