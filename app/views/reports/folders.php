@@ -106,8 +106,8 @@
             <div class="report-option-box">
                 <h3>Generar</h3>
                 <ul class="report-generation-list">
-                    <li onclick="generarReporte('inventario')"><i class="fas fa-arrow-right"></i> reporte de un inventario</li>
-                    <li onclick="generarReporte('grupo')"><i class="fas fa-arrow-right"></i> reporte de un grupo de inventarios</li>
+                    <li onclick="mostrarModal('#modalCrearReporteDeUnInventario')"><i class="fas fa-arrow-right"></i> reporte de un inventario</li>
+                    <li onclick="mostrarModal('#modalCrearReporteDeUnGrupo')"></i> reporte de un grupo</li>
                     <li onclick="generarReporte('todos')"><i class="fas fa-arrow-right"></i> reporte de todos los inventarios</li>
                     <li onclick="generarReporte('bienes')"><i class="fas fa-arrow-right"></i> reporte de bienes</li>
                     <li onclick="generarReporte('equipos')"><i class="fas fa-arrow-right"></i> reporte de equipos</li>
@@ -117,32 +117,6 @@
 
         <div id="report-content-item" class="report-item-grid">
             <!-- Aquí se cargarán dinámicamente los reportes -->
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal para opciones de reporte -->
-<div id="modalOpcionesReporte" class="report-modal">
-    <div class="report-modal-content">
-        <div class="report-modal-header">
-            <h2 id="modalReportTitle">Generar Reporte</h2>
-            <span class="report-modal-close" onclick="cerrarModal('#modalOpcionesReporte')">&times;</span>
-        </div>
-        <div class="report-modal-body">
-            <form id="formGenerarReporte" onsubmit="generarReporteSubmit(event)">
-                <input type="hidden" id="reportType" name="reportType">
-                <input type="hidden" id="folderId" name="folderId">
-                
-                <div id="opcionesReporte">
-                    <!-- Las opciones se cargarán dinámicamente según el tipo de reporte -->
-                </div>
-                
-                <div class="report-form-actions">
-                    <button type="button" class="report-btn-cancel" onclick="cerrarModal('#modalOpcionesReporte')">Cancelar</button>
-                    <button type="submit" class="report-btn-save">Generar</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

@@ -63,6 +63,7 @@ $router->add('/api/reports/getAll/:id_folder', 'ctlReports', 'getReportsByFolder
 $router->add('/api/groups/create', 'ctlGroup', 'create');
 $router->add('/api/groups/rename', 'ctlGroup', 'rename');
 $router->add('/api/groups/delete/:id', 'ctlGroup', 'delete');
+$router->add('/api/groups/getAll', 'ctlGroup', 'getAll');
 
 
 // Rutas para la API de inventario (ok)
@@ -71,6 +72,7 @@ $router->add('/api/inventories/rename', 'ctlInventory', 'rename');
 $router->add('/api/inventories/delete/:id', 'ctlInventory', 'delete');
 $router->add('/api/inventories/updateEstado', 'ctlInventory', 'updateEstado');
 $router->add('/api/inventories/updateResponsable', 'ctlInventory', 'updateResponsable');
+$router->add('/api/inventories/getByGroupId/:id', 'ctlInventory', 'getInventoriesByGroup');
 
 // Rutas para la API de carpetas de reportes (ok)
 $router->add('/api/folders/create', 'ctlReports', 'createFolder');

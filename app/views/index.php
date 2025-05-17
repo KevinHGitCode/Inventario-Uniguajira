@@ -76,6 +76,7 @@
     <script src="assets/js/inventory/goods-inventory-loader.js"></script>
     <script src="assets/js/inventory/formGoodInventory.js"></script>
     <script src="assets/js/reports/folders.js"></script>
+    <script src="assets/js/reports/reports.js"></script>
     <script src="assets/js/historial.js"></script>
     <script src="assets/js/onLoaded.js"></script>
 </body>

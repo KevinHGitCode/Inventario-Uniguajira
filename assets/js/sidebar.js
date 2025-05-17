@@ -106,6 +106,7 @@ function loadContent(path, scrollUpRequired = true) {
                 iniciarBusqueda('searchFolder');
                 if (typeof initFoldersFunctions === 'function') {
                     initializeSelection();
+                    cargarGrupos();
                 }
 
                 break;

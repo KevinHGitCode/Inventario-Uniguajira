@@ -58,3 +58,59 @@
         </form>
     </div>
 </div>
+
+
+<!-- Modal Crear Reporte de un inventario -->
+<div id="modalCrearReporteDeUnInventario" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearReporteDeUnInventario')">&times;</span>
+        <h2>Reporte de un inventario</h2>
+        <form id="formReporteDeUnInventario" action="/api/reports/create" method="POST" autocomplete="off">
+            <div>
+                <label for="nombreReporte">Nombre del reporte</label>
+                <input type="text" name="nombreReporte" id="nombreReporte" required />
+            </div>
+            <div>
+                <label for="grupoSeleccionado">Grupo</label>
+                <select name="grupoSeleccionado" id="grupoSeleccionado" required>
+                    <option value="">Seleccione un grupo</option>
+                    <!-- Las opciones se cargarán dinámicamente -->
+                </select>
+            </div>
+            <div>
+                <label for="inventarioSeleccionado">Inventario</label>
+                <select name="inventarioSeleccionado" id="inventarioSeleccionado" required disabled>
+                    <option value="">Primero seleccione un grupo</option>
+                    <!-- Las opciones se cargarán dinámicamente basadas en el grupo seleccionado -->
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="create-btn-report" class="btn submit-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Crear Reporte de un grupo -->
+<div id="modalCrearReporteDeUnGrupo" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearReporteDeUnGrupo')">&times;</span>
+        <h2>Reporte de un grupo</h2>
+        <form id="formReporteDeUnGrupo" action="/api/reports/create" method="POST" autocomplete="off">
+            <div>
+                <label for="nombreReporte">Nombre del reporte</label>
+                <input type="text" name="nombreReporte" id="nombreReporteOfGrupo" required />
+            </div>
+            <div>
+                <label for="grupoSeleccionado">Grupo</label>
+                <select name="grupoSeleccionado" id="grupoSeleccionadoOfGrupo" required>
+                    <option value="">Seleccione un grupo</option>
+                    <!-- Las opciones se cargarán dinámicamente -->
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="create-btn-report-Grupo" class="btn submit-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>

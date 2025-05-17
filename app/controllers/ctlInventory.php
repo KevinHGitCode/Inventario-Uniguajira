@@ -10,6 +10,23 @@ class ctlInventory {
         
     }
 
+    public function getInventoriesByGroup($id_group) {
+        $group = new Groups(); // Instantiate Groups here
+        $id = intval($id_group);
+        if ($id <= 0) {
+            http_response_code(400);
+            echo json_encode(['error' => 'ID de grupo no válido']);
+            exit;
+        }
+        
+        // Obtener los inventarios del grupo desde el modelo
+        $inventories = $group->getInventoriesByGroup($id);
+        
+        // Devolver como JSON
+        header('Content-Type: application/json');
+        echo json_encode($inventories);
+    }
+
     // para navegacion
     public function getInventoriesOfGroup($id_group) {
         $group = new Groups(); // Instantiate Groups here
