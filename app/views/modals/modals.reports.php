@@ -60,12 +60,15 @@
 </div>
 
 
-<!-- Modal Crear Reporte de un inventario -->
+<!-- Modal Crear Reporte de un inventario - ACTUALIZADO -->
 <div id="modalCrearReporteDeUnInventario" class="modal">
     <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#modalCrearReporteDeUnInventario')">&times;</span>
         <h2>Reporte de un inventario</h2>
         <form id="formReporteDeUnInventario" action="/api/reports/create" method="POST" autocomplete="off">
+            <!-- Campo oculto para folder_id -->
+            <input type="hidden" name="folder_id" id="folderIdInventario" />
+            
             <div>
                 <label for="nombreReporte">Nombre del reporte</label>
                 <input type="text" name="nombreReporte" id="nombreReporte" required />
@@ -73,30 +76,31 @@
             <div>
                 <label for="grupoSeleccionado">Grupo</label>
                 <select name="grupoSeleccionado" id="grupoSeleccionado" required>
-                    <option value="">Seleccione un grupo</option>
                     <!-- Las opciones se cargarán dinámicamente -->
                 </select>
             </div>
             <div>
                 <label for="inventarioSeleccionado">Inventario</label>
-                <select name="inventarioSeleccionado" id="inventarioSeleccionado" required disabled>
-                    <option value="">Primero seleccione un grupo</option>
+                <select name="inventarioSeleccionado" id="inventarioSeleccionado" required disabled>    
                     <!-- Las opciones se cargarán dinámicamente basadas en el grupo seleccionado -->
                 </select>
             </div>
             <div class="form-actions">
-                <button type="submit" id="create-btn-report" class="btn submit-btn">Crear</button>
+                <button type="submit" id="create-btn-report-inventary" class="btn submit-btn">Crear</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Modal Crear Reporte de un grupo -->
+<!-- Modal Crear Reporte de un grupo - ACTUALIZADO -->
 <div id="modalCrearReporteDeUnGrupo" class="modal">
     <div class="modal-content modal-content-medium">
         <span class="close" onclick="ocultarModal('#modalCrearReporteDeUnGrupo')">&times;</span>
         <h2>Reporte de un grupo</h2>
         <form id="formReporteDeUnGrupo" action="/api/reports/create" method="POST" autocomplete="off">
+            <!-- Campo oculto para folder_id -->
+            <input type="hidden" name="folder_id" id="folderIdGrupo" />
+            
             <div>
                 <label for="nombreReporte">Nombre del reporte</label>
                 <input type="text" name="nombreReporte" id="nombreReporteOfGrupo" required />
@@ -104,12 +108,71 @@
             <div>
                 <label for="grupoSeleccionado">Grupo</label>
                 <select name="grupoSeleccionado" id="grupoSeleccionadoOfGrupo" required>
-                    <option value="">Seleccione un grupo</option>
                     <!-- Las opciones se cargarán dinámicamente -->
                 </select>
             </div>
             <div class="form-actions">
                 <button type="submit" id="create-btn-report-Grupo" class="btn submit-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Crear Reporte de un grupo - ACTUALIZADO -->
+<div id="modalCrearReporteDeUnTodosLosInventarios" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearReporteDeUnTodosLosInventarios')">&times;</span>
+        <h2>Reporte de todos los inventarios</h2>
+        <form id="formReporteDeTodosLosInventarios" action="/api/reports/create" method="POST" autocomplete="off">
+            <!-- Campo oculto para folder_id -->
+            <input type="hidden" name="folder_id" id="folderIdTodosLosInventarios" />
+            
+            <div>
+                <label for="nombreReporte">Nombre del reporte</label>
+                <input type="text" name="nombreReporte" id="nombreReporteDeTodosLosInventarios" required />
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="create-btn-report-all-inventary" class="btn submit-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Crear Reporte de un grupo - ACTUALIZADO -->
+<div id="modalCrearReporteDeBienes" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearReporteDeBienes')">&times;</span>
+        <h2>Reporte de bienes</h2>
+        <form id="formReporteDeBienes" action="/api/reports/create" method="POST" autocomplete="off">
+            <!-- Campo oculto para folder_id -->
+            <input type="hidden" name="folder_id" id="folderIdDeBienes" />
+            
+            <div>
+                <label for="nombreReporte">Nombre del reporte</label>
+                <input type="text" name="nombreReporte" id="nombreReporteDeBienes" required />
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="create-btn-report-goods" class="btn submit-btn">Crear</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Crear Reporte de un grupo - ACTUALIZADO -->
+<div id="modalCrearReporteDeEquipos" class="modal">
+    <div class="modal-content modal-content-medium">
+        <span class="close" onclick="ocultarModal('#modalCrearReporteDeEquipos')">&times;</span>
+        <h2>Reporte de equipos</h2>
+        <form id="formReporteDeEquipos" action="/api/reports/create" method="POST" autocomplete="off">
+            <!-- Campo oculto para folder_id -->
+            <input type="hidden" name="folder_id" id="folderIdDeEquipos" />
+            
+            <div>
+                <label for="nombreReporte">Nombre del reporte</label>
+                <input type="text" name="nombreReporte" id="nombreReporteDeEquipos" required />
+            </div>
+            <div class="form-actions">
+                <button type="submit" id="create-btn-report-serial" class="btn submit-btn">Crear</button>
             </div>
         </form>
     </div>

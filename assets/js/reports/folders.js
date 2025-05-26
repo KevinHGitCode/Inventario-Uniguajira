@@ -52,19 +52,21 @@ function btnEliminarCarpeta() {
     });
 }
 
-// Función para abrir grupo y cargar inventarios
+let currentFolderId = null;
+
+// Tu función abrirCarpeta actualizada
 function abrirCarpeta(idFolder, scrollUpRequired = true) {
+    // AGREGAR: Guardar el ID de la carpeta actual
+    currentFolderId = idFolder;
+    
     const divFolders = document.getElementById('folders');
     const divReports = document.getElementById('report-content');
     const divContent = document.getElementById('report-content-item');
 
-    // Actualizar el campo oculto en el modal de crear inventario
-    const folderIdInput = document.getElementById('folder_id_crear_reporte');
-    if (folderIdInput) {
-        folderIdInput.value = idFolder;
-    }
+    // Actualizar TODOS los campos ocultos de folder_id en los modales
+    updateAllFolderIdFields(idFolder);
 
-    // Mostrar loader
+    // Tu código existente
     console.log(divReports);
     divContent.innerHTML = '<p>Cargando reportes...</p>';
     divFolders.classList.add('hidden');
@@ -73,14 +75,11 @@ function abrirCarpeta(idFolder, scrollUpRequired = true) {
     fetch(`/api/reports/getAll/${idFolder}`)
     .then(res => res.text())
     .then(html => {
-        // const folderName = document.getElementById(`folder-name${idFolder}`).textContent;
-        // document.getElementById('folder-name').innerText = folderName;
         divContent.innerHTML = html;
-
         iniciarBusqueda('searchReport');
-            
+                     
         if (scrollUpRequired)
-            window.scrollTo(0, 0);  
+            window.scrollTo(0, 0);
     })
     .catch(error => {
         console.error('Error:', error);
@@ -88,12 +87,35 @@ function abrirCarpeta(idFolder, scrollUpRequired = true) {
     });
 }
 
-// Función para cerrar grupo (mejorada)
+// Tu función cerrarCarpeta actualizada
 function cerrarCarpeta() {
+    // AGREGAR: Limpiar el ID de la carpeta actual
+    currentFolderId = null;
+    
+    // Limpiar todos los campos de folder_id
+    updateAllFolderIdFields('');
+    
+    // Tu código existente
     document.getElementById('report-content').classList.add('hidden');
     document.getElementById('folders').classList.remove('hidden');
-    // const input = document.getElementById('searchFolder');
-    // input.value = ''; // Borra el valor
-    // input.dispatchEvent(new Event('input')); // Notifica que el valor cambió
-    // input.dispatchEvent(new KeyboardEvent('keyup', { key: 'Backspace', code: 'Backspace' }));
+}
+
+function updateAllFolderIdFields(folderId) {
+    // Lista de todos los IDs de campos folder_id en tus modales
+    const folderIdFields = [
+        'folder_id_crear_reporte', // El que ya tienes
+        'folderIdInventario',      // Para modal de inventario
+        'folderIdGrupo',           // Para modal de grupo
+        'folderIdTodosLosInventarios', // Para modal de todos los inventarios
+        'folderIdDeBienes', // Para modal de reporte de bienes
+        'folderIdDeEquipos', // Para modal de reporte de equipos
+
+    ];
+    
+    folderIdFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = folderId;
+        }
+    });
 }

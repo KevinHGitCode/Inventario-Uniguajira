@@ -6,26 +6,41 @@ const datosInventarios = {
 
 // Función para cargar los grupos cuando se abre el modal
 function cargarGrupos() {
+    // Si ya tenemos los grupos en caché, no hacer petición nuevamente
+    if (datosInventarios.grupos.length > 0) {
+        return Promise.resolve(datosInventarios.grupos);
+    }
+    
     // Hacer una petición AJAX para obtener los grupos
-    fetch('/api/groups/getAll')
+    return fetch('/api/groups/getAll')
         .then(response => response.json())
         .then(data => {
             datosInventarios.grupos = data;
             
-            // Limpiar y rellenar el select de grupos
-            const selectGrupos = document.getElementById('grupoSeleccionado');
-            selectGrupos.innerHTML = '<option value="">Seleccione un grupo</option>';
+            // Array con los IDs de ambos selects de grupos
+            const selectGruposIds = ['grupoSeleccionado', 'grupoSeleccionadoOfGrupo'];
             
-            data.forEach(grupo => {
-                const option = document.createElement('option');
-                option.value = grupo.id;
-                option.textContent = grupo.nombre;
-                selectGrupos.appendChild(option);
+            // Llenar ambos selects de grupos
+            selectGruposIds.forEach(selectId => {
+                const selectGrupos = document.getElementById(selectId);
+                if (selectGrupos) {
+                    selectGrupos.innerHTML = '<option value="">Seleccione un grupo</option>';
+                    
+                    data.forEach(grupo => {
+                        const option = document.createElement('option');
+                        option.value = grupo.id;
+                        option.textContent = grupo.nombre;
+                        selectGrupos.appendChild(option);
+                    });
+                }
             });
+            
+            return data;
         })
         .catch(error => {
             console.error('Error al cargar los grupos:', error);
             alert('Error al cargar los grupos. Por favor, inténtelo de nuevo.');
+            throw error;
         });
 }
 
@@ -78,18 +93,160 @@ function actualizarSelectInventarios(inventarios) {
     }
 }
 
+// Función que se llama cuando se abre cualquier modal de reportes
+function inicializarModalReporte(modalId) {
+    // Cargar grupos automáticamente cuando se abre cualquier modal
+    cargarGrupos();
+    
+    // Si es el modal de inventario, resetear el select de inventarios
+    if (modalId === '#modalCrearReporteDeUnInventario') {
+        const selectInventarios = document.getElementById('inventarioSeleccionado');
+        if (selectInventarios) {
+            selectInventarios.disabled = true;
+            selectInventarios.innerHTML = '<option value="">Primero seleccione un grupo</option>';
+        }
+    }
+}
+
+// Función para inicializar los formularios de reportes
+function initFormsReporte() {
+    // Inicializar formulario de reporte de inventario
+    inicializarFormularioAjax('#formReporteDeUnInventario', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        customData: () => {
+            return {
+                nombreReporte: document.getElementById('nombreReporte').value,
+                grupoId: document.getElementById('grupoSeleccionado').value,
+                inventarioId: document.getElementById('inventarioSeleccionado').value,
+                tipoReporte: 'inventario',
+                folder_id: currentFolderId || document.getElementById('folderIdInventario')?.value // AGREGAR ESTA LÍNEA
+            };
+        },
+        onSuccess: (response) => {
+            showToast(response);
+            // Si hay URL del PDF, abrirlo
+            if (response.pdfUrl) {
+                window.open(response.pdfUrl, '_blank');
+            }
+            
+            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
+            if (currentFolderId) {
+                // Recargar reportes de la carpeta actual sin hacer scroll
+                abrirCarpeta(currentFolderId, false);
+            }
+        }
+    });
+
+    // Inicializar formulario de reporte de grupo
+    inicializarFormularioAjax('#formReporteDeUnGrupo', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        customData: () => {
+            return {
+                nombreReporte: document.getElementById('nombreReporteOfGrupo').value,
+                grupoId: document.getElementById('grupoSeleccionadoOfGrupo').value,
+                tipoReporte: 'grupo',
+                folder_id: currentFolderId || document.getElementById('folderIdGrupo')?.value // AGREGAR ESTA LÍNEA
+            };
+        },
+        onSuccess: (response) => {
+            showToast(response);
+            // Si hay URL del PDF, abrirlo
+            if (response.pdfUrl) {
+                window.open(response.pdfUrl, '_blank');
+            }
+            
+            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
+            if (currentFolderId) {
+                // Recargar reportes de la carpeta actual sin hacer scroll
+                abrirCarpeta(currentFolderId, false);
+            }
+        }
+    });
+
+    // Inicializar formulario de reporte de todos los invetarios
+    inicializarFormularioAjax('#formReporteDeTodosLosInventarios', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        customData: () => {
+            return {
+                nombreReporte: document.getElementById('nombreReporteDeTodosLosInventarios').value,
+                tipoReporte: 'allInventories',
+                folder_id: currentFolderId || document.getElementById('folderIdTodosLosInventarios')?.value // AGREGAR ESTA LÍNEA
+            };
+        },
+        onSuccess: (response) => {
+            showToast(response);
+            // Si hay URL del PDF, abrirlo
+            if (response.pdfUrl) {
+                window.open(response.pdfUrl, '_blank');
+            }
+            
+            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
+            if (currentFolderId) {
+                // Recargar reportes de la carpeta actual sin hacer scroll
+                abrirCarpeta(currentFolderId, false);
+            }
+        }
+    });
+
+    // Inicializar formulario de reporte de bienes
+    inicializarFormularioAjax('#formReporteDeBienes', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        customData: () => {
+            return {
+                nombreReporte: document.getElementById('nombreReporteDeBienes').value,
+                tipoReporte: 'goods',
+                folder_id: currentFolderId || document.getElementById('folderIdDeBienes')?.value // AGREGAR ESTA LÍNEA
+            };
+        },
+        onSuccess: (response) => {
+            showToast(response);
+            // Si hay URL del PDF, abrirlo
+            if (response.pdfUrl) {
+                window.open(response.pdfUrl, '_blank');
+            }
+            
+            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
+            if (currentFolderId) {
+                // Recargar reportes de la carpeta actual sin hacer scroll
+                abrirCarpeta(currentFolderId, false);
+            }
+        }
+    });
+
+    // Inicializar formulario de reporte de equipos
+    inicializarFormularioAjax('#formReporteDeEquipos', {
+        resetOnSuccess: true,
+        closeModalOnSuccess: true,
+        customData: () => {
+            return {
+                nombreReporte: document.getElementById('nombreReporteDeEquipos').value,
+                tipoReporte: 'serial',
+                folder_id: currentFolderId || document.getElementById('folderIdDeEquipos')?.value // AGREGAR ESTA LÍNEA
+            };
+        },
+        onSuccess: (response) => {
+            showToast(response);
+            // Si hay URL del PDF, abrirlo
+            if (response.pdfUrl) {
+                window.open(response.pdfUrl, '_blank');
+            }
+            
+            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
+            if (currentFolderId) {
+                // Recargar reportes de la carpeta actual sin hacer scroll
+                abrirCarpeta(currentFolderId, false);
+            }
+        }
+    });
+}
+
 // Configurar event listeners cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    // Event listener para cuando se abre el modal
-    const abrirModalBtn = document.getElementById('btn-abrir-modal-reporte');
-    if (abrirModalBtn) {
-        abrirModalBtn.addEventListener('click', function() {
-            cargarGrupos();
-            mostrarModal('#modalCrearReporteDeUnInventario');
-        });
-    }
-    
-    // Event listener para cuando cambia el grupo seleccionado
+    // Event listener para cuando cambia el grupo seleccionado (solo para modal de inventario)
     const selectGrupo = document.getElementById('grupoSeleccionado');
     if (selectGrupo) {
         selectGrupo.addEventListener('change', function() {
@@ -106,55 +263,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Event listener para el envío del formulario
-    const formReporte = document.getElementById('formReporteDeUnInventario');
-    if (formReporte) {
-        formReporte.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Obtener los valores seleccionados
-            const nombreReporte = document.getElementById('nombreReporte').value;
-            const grupoId = document.getElementById('grupoSeleccionado').value;
-            const inventarioId = document.getElementById('inventarioSeleccionado').value;
-            
-            // Validar que se seleccionaron grupo e inventario
-            if (!grupoId || !inventarioId) {
-                alert('Por favor, seleccione un grupo y un inventario.');
-                return;
-            }
-            
-            // Enviar la solicitud para generar el reporte
-            fetch('/api/reports/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nombreReporte: nombreReporte,
-                    grupoId: grupoId,
-                    inventarioId: inventarioId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Reporte generado con éxito');
-                    ocultarModal('#modalCrearReporteDeUnInventario');
-                    // Aquí podrías redirigir al PDF generado
-                    if (data.pdfUrl) {
-                        window.open(data.pdfUrl, '_blank');
-                    }
-                } else {
-                    alert('Error al generar el reporte: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al procesar la solicitud');
-            });
-        });
-    }
+    // Inicializar formularios de reportes
+    initFormsReporte();
 });
 
-
-//Como hago que todo este js funcione para ambos modales, ya que son iguales pero con campo menos
+function mostrarModalReporte(modalId) {
+    if (!currentFolderId) {
+        alert('Error: Debes estar dentro de una carpeta para crear reportes');
+        return;
+    }
+    
+    // Asegurar que los campos folder_id están actualizados antes de mostrar el modal
+    updateAllFolderIdFields(currentFolderId);
+    
+    // Mostrar el modal
+    mostrarModal(modalId);
+}

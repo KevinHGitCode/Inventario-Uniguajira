@@ -106,11 +106,21 @@
             <div class="report-option-box">
                 <h3>Generar</h3>
                 <ul class="report-generation-list">
-                    <li onclick="mostrarModal('#modalCrearReporteDeUnInventario')"><i class="fas fa-arrow-right"></i> reporte de un inventario</li>
-                    <li onclick="mostrarModal('#modalCrearReporteDeUnGrupo')"></i> reporte de un grupo</li>
-                    <li onclick="generarReporte('todos')"><i class="fas fa-arrow-right"></i> reporte de todos los inventarios</li>
-                    <li onclick="generarReporte('bienes')"><i class="fas fa-arrow-right"></i> reporte de bienes</li>
-                    <li onclick="generarReporte('equipos')"><i class="fas fa-arrow-right"></i> reporte de equipos</li>
+                    <li onclick="mostrarModalReporte('#modalCrearReporteDeUnInventario')">
+                        <i class="fas fa-arrow-right"></i> reporte de un inventario
+                    </li>
+                    <li onclick="mostrarModalReporte('#modalCrearReporteDeUnGrupo')">
+                        <i class="fas fa-arrow-right"></i> reporte de un grupo
+                    </li>
+                    <li onclick="mostrarModalReporte('#modalCrearReporteDeUnTodosLosInventarios')">
+                        <i class="fas fa-arrow-right"></i> reporte de todos los inventarios
+                    </li>
+                    <li onclick="mostrarModalReporte('#modalCrearReporteDeBienes')">
+                        <i class="fas fa-arrow-right"></i> reporte de bienes
+                    </li>
+                    <li onclick="mostrarModalReporte('#modalCrearReporteDeEquipos')">
+                        <i class="fas fa-arrow-right"></i> reporte de equipos
+                    </li>
                 </ul>
             </div>
         </div>
