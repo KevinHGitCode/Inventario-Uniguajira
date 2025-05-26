@@ -234,7 +234,7 @@ class InventoryGroupReportGenerator {
         if (!$outputPath) {
             $groupInfo = $this->getGroupInfo($groupId);
             $safeGroupName = preg_replace('/[^a-z0-9]/i', '_', $groupInfo['nombre']);
-            $outputPath = __DIR__ . '/../pdfs/reporte_grupo_' . $safeGroupName . '_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_grupo_' . $safeGroupName . '_' . date('Y-m-d') . '.pdf';
         }
         
         $reportHtml = $this->generateGroupInventoriesReportHtml($groupId);
@@ -244,16 +244,17 @@ class InventoryGroupReportGenerator {
 }
 
 // Script principal para generar el reporte
+if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
+    // Verificar si se ha recibido el ID de grupo como parámetro
+    $groupId = isset($_GET['grupo_id']) ? (int)$_GET['grupo_id'] : 1; // Valor predeterminado: 1
 
-// Verificar si se ha recibido el ID de grupo como parámetro
-$groupId = isset($_GET['grupo_id']) ? (int)$_GET['grupo_id'] : 1; // Valor predeterminado: 1
+    // Inicializar el generador de reportes
+    $reportGenerator = new InventoryGroupReportGenerator();
 
-// Inicializar el generador de reportes
-$reportGenerator = new InventoryGroupReportGenerator();
+    // Generar y mostrar el PDF
+    // $reportGenerator->generateAndStreamGroupReport($groupId);
 
-// Generar y mostrar el PDF
-$reportGenerator->generateAndStreamGroupReport($groupId);
-
-// Alternativamente, para guardar el PDF en un archivo:
-// $outputPath = $reportGenerator->generateAndSaveGroupReport($groupId);
-// echo "PDF generado y guardado en: " . $outputPath;
+    // Alternativamente, para guardar el PDF en un archivo:
+    $outputPath = $reportGenerator->generateAndSaveGroupReport($groupId);
+    // echo "PDF generado y guardado en: " . $outputPath;
+}

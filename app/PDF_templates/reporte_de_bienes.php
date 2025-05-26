@@ -146,7 +146,7 @@ class AllGoodsReportGenerator {
      */
     public function generateAndSaveReport($outputPath = null) {
         if (!$outputPath) {
-            $outputPath = __DIR__ . '/../pdfs/reporte_bienes_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_bienes_' . date('Y-m-d') . '.pdf';
         }
         
         $reportHtml = $this->generateAllGoodsReportHtml();
@@ -161,9 +161,9 @@ if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
     $reportGenerator = new AllGoodsReportGenerator();
     
     // Generar y mostrar el PDF
-    $reportGenerator->generateAndStreamReport();
+    // $reportGenerator->generateAndStreamReport();
     
     // Alternativamente, para guardar el PDF en un archivo:
-    // $outputPath = $reportGenerator->generateAndSaveReport();
+    $outputPath = $reportGenerator->generateAndSaveReport();
     // echo "PDF generado y guardado en: " . $outputPath;
 }

@@ -175,28 +175,55 @@ class ctlReports
      * @param string $description Descripción del reporte.
      * @return array Respuesta con el ID del reporte creado o un mensaje de error.
      */
-    public function createReport($name, $folderId, $description = '')
-    {
-        try {
-            $reportId = $this->reportModel->createReport($name, $folderId, $description);
+    public function createReport(){
+        header('Content-Type: application/json');
 
-            if ($reportId) {
-                return [
-                    'status' => 'success',
-                    'message' => 'Report created successfully.',
-                    'reportId' => $reportId
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Report could not be created. Folder might not exist.'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error creating report: ' . $e->getMessage()
-            ];
+        if (!validateHttpRequest('POST', ['folder_id', 'nombreReporte' , 'tipoReporte'])) {
+            return;
+        }
+
+        $folderId = $_POST['folder_id'];
+        $nombreReporte = $_POST['nombreReporte'];
+        $tipoReporte = $_POST['tipoReporte'];
+
+        $success = false;
+
+        if ($tipoReporte == 'inventario') {  // tipo cantidad
+            $InventoryId = $_POST['inventarioSeleccionado'] ?? null;
+            require_once 'app/PDF_templates/reporte_de_un_inventario.php';
+            $reportGenerator = new InventoryReportGenerator();
+            $outputPath = $reportGenerator->generateAndSaveReport($InventoryId);
+            
+        } else if ($tipoReporte == 'grupo') {  // tipo serial
+            $GrupoId = $_POST['grupoSeleccionado'] ?? null;
+            require_once 'app/PDF_templates/reporte_de_un_grupo.php';
+            $reportGenerator = new InventoryGroupReportGenerator();
+            $outputPath = $reportGenerator->generateAndSaveGroupReport($GrupoId);
+            
+        } else if ($tipoReporte == 'allInventories') {  // tipo serial
+            require_once 'app/PDF_templates/reporte_de_todos_los_inventarios.php';
+            $reportGenerator = new AllGroupsInventoryReportGenerator();
+            $outputPath = $reportGenerator->generateAndSaveAllGroupsReport();
+            
+        } else if ($tipoReporte == 'goods') {  // tipo serial
+            require_once 'app/PDF_templates/reporte_de_bienes.php';
+            $reportGenerator = new AllGoodsReportGenerator();
+            $outputPath = $reportGenerator->generateAndSaveReport();
+            
+        } else if ($tipoReporte == 'serial') {  // tipo serial
+            require_once 'app/PDF_templates/reporte_de_equipos.php';
+            $reportGenerator = new SerialGoodsReportGenerator();
+            $outputPath = $reportGenerator->generateAndSaveReport();
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Tipo de reporte no soportado."' . $tipoReporte . '"']);
+            return;
+        }
+
+        $success = $this->reportModel->createReport($nombreReporte, $folderId, $outputPath);
+        
+        if ($success) {
+            echo json_encode(['success' => true, 'message' => 'Reporte generado exitosamente.']);
         }
     }
 

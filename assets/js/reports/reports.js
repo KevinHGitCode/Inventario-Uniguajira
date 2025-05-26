@@ -114,25 +114,16 @@ function initFormsReporte() {
     inicializarFormularioAjax('#formReporteDeUnInventario', {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
-        customData: () => {
-            return {
-                nombreReporte: document.getElementById('nombreReporte').value,
-                grupoId: document.getElementById('grupoSeleccionado').value,
-                inventarioId: document.getElementById('inventarioSeleccionado').value,
-                tipoReporte: 'inventario',
-                folder_id: currentFolderId || document.getElementById('folderIdInventario')?.value // AGREGAR ESTA LÍNEA
-            };
+        customBody: (form) => {
+            const formData = new FormData(form);
+            formData.set('nombreReporte', document.getElementById('nombreReporte').value);
+            formData.set('tipoReporte', 'inventario');
+            formData.set('folder_id', currentFolderId || document.getElementById('folderIdInventario')?.value);
+            return formData;
         },
         onSuccess: (response) => {
             showToast(response);
-            // Si hay URL del PDF, abrirlo
-            if (response.pdfUrl) {
-                window.open(response.pdfUrl, '_blank');
-            }
-            
-            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
             if (currentFolderId) {
-                // Recargar reportes de la carpeta actual sin hacer scroll
                 abrirCarpeta(currentFolderId, false);
             }
         }
@@ -142,50 +133,35 @@ function initFormsReporte() {
     inicializarFormularioAjax('#formReporteDeUnGrupo', {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
-        customData: () => {
-            return {
-                nombreReporte: document.getElementById('nombreReporteOfGrupo').value,
-                grupoId: document.getElementById('grupoSeleccionadoOfGrupo').value,
-                tipoReporte: 'grupo',
-                folder_id: currentFolderId || document.getElementById('folderIdGrupo')?.value // AGREGAR ESTA LÍNEA
-            };
+        customBody: (form) => {
+            const formData = new FormData(form);
+            formData.set('nombreReporte', document.getElementById('nombreReporteOfGrupo').value);
+            formData.set('tipoReporte', 'grupo');
+            formData.set('folder_id', currentFolderId || document.getElementById('folderIdGrupo')?.value);
+            return formData;
         },
         onSuccess: (response) => {
             showToast(response);
-            // Si hay URL del PDF, abrirlo
-            if (response.pdfUrl) {
-                window.open(response.pdfUrl, '_blank');
-            }
-            
-            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
             if (currentFolderId) {
-                // Recargar reportes de la carpeta actual sin hacer scroll
                 abrirCarpeta(currentFolderId, false);
             }
         }
     });
 
-    // Inicializar formulario de reporte de todos los invetarios
+    // Inicializar formulario de reporte de todos los inventarios
     inicializarFormularioAjax('#formReporteDeTodosLosInventarios', {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
-        customData: () => {
-            return {
-                nombreReporte: document.getElementById('nombreReporteDeTodosLosInventarios').value,
-                tipoReporte: 'allInventories',
-                folder_id: currentFolderId || document.getElementById('folderIdTodosLosInventarios')?.value // AGREGAR ESTA LÍNEA
-            };
+        customBody: (form) => {
+            const formData = new FormData(form);
+            formData.set('nombreReporte', document.getElementById('nombreReporteDeTodosLosInventarios').value);
+            formData.set('tipoReporte', 'allInventories');
+            formData.set('folder_id', currentFolderId || document.getElementById('folderIdTodosLosInventarios')?.value);
+            return formData;
         },
         onSuccess: (response) => {
             showToast(response);
-            // Si hay URL del PDF, abrirlo
-            if (response.pdfUrl) {
-                window.open(response.pdfUrl, '_blank');
-            }
-            
-            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
             if (currentFolderId) {
-                // Recargar reportes de la carpeta actual sin hacer scroll
                 abrirCarpeta(currentFolderId, false);
             }
         }
@@ -195,23 +171,16 @@ function initFormsReporte() {
     inicializarFormularioAjax('#formReporteDeBienes', {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
-        customData: () => {
-            return {
-                nombreReporte: document.getElementById('nombreReporteDeBienes').value,
-                tipoReporte: 'goods',
-                folder_id: currentFolderId || document.getElementById('folderIdDeBienes')?.value // AGREGAR ESTA LÍNEA
-            };
+        customBody: (form) => {
+            const formData = new FormData(form);
+            formData.set('nombreReporte', document.getElementById('nombreReporteDeBienes').value);
+            formData.set('tipoReporte', 'goods');
+            formData.set('folder_id', currentFolderId || document.getElementById('folderIdDeBienes')?.value);
+            return formData;
         },
         onSuccess: (response) => {
             showToast(response);
-            // Si hay URL del PDF, abrirlo
-            if (response.pdfUrl) {
-                window.open(response.pdfUrl, '_blank');
-            }
-            
-            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
             if (currentFolderId) {
-                // Recargar reportes de la carpeta actual sin hacer scroll
                 abrirCarpeta(currentFolderId, false);
             }
         }
@@ -221,23 +190,16 @@ function initFormsReporte() {
     inicializarFormularioAjax('#formReporteDeEquipos', {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
-        customData: () => {
-            return {
-                nombreReporte: document.getElementById('nombreReporteDeEquipos').value,
-                tipoReporte: 'serial',
-                folder_id: currentFolderId || document.getElementById('folderIdDeEquipos')?.value // AGREGAR ESTA LÍNEA
-            };
+        customBody: (form) => {
+            const formData = new FormData(form);
+            formData.set('nombreReporte', document.getElementById('nombreReporteDeEquipos').value);
+            formData.set('tipoReporte', 'serial');
+            formData.set('folder_id', currentFolderId || document.getElementById('folderIdDeEquipos')?.value);
+            return formData;
         },
         onSuccess: (response) => {
             showToast(response);
-            // Si hay URL del PDF, abrirlo
-            if (response.pdfUrl) {
-                window.open(response.pdfUrl, '_blank');
-            }
-            
-            // OPCIONAL: Recargar la vista de reportes para mostrar el nuevo reporte
             if (currentFolderId) {
-                // Recargar reportes de la carpeta actual sin hacer scroll
                 abrirCarpeta(currentFolderId, false);
             }
         }

@@ -169,7 +169,7 @@ class InventoryReportGenerator {
      */
     public function generateAndSaveReport($inventoryId, $outputPath = null) {
         if (!$outputPath) {
-            $outputPath = __DIR__ . '/../pdfs/reporte_inventario_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_inventario_' . date('Y-m-d') . '.pdf';
         }
         
         $reportHtml = $this->generateInventoryReportHtml($inventoryId);
@@ -187,9 +187,9 @@ if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
     $inventoryId = isset($_GET['id']) ? (int)$_GET['id'] : 37; // Valor por defecto como en el código original
     
     // Generar y mostrar el PDF
-    $reportGenerator->generateAndStreamReport($inventoryId);
+    // $reportGenerator->generateAndStreamReport($inventoryId);
     
     // Alternativamente, para guardar el PDF en un archivo:
-    // $outputPath = $reportGenerator->generateAndSaveReport($inventoryId);
+    $outputPath = $reportGenerator->generateAndSaveReport($inventoryId);
     // echo "PDF generado y guardado en: " . $outputPath;
 }
