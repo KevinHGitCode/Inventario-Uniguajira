@@ -125,6 +125,24 @@
             </div>
         </div>
 
+        <!-- Barra de control para reportes -->
+        <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
+            <div id="control-bar-report" class="control-bar" style="display: none;">
+                <div class="selected-name">0 seleccionados</div>
+                <div class="control-actions">
+                    <button class="control-btn" title="Renombrar" onclick="btnRenombrarReporte()">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="control-btn" title="Eliminar" onclick="btnEliminarReporte()">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <!-- <button class="control-btn" title="Más acciones">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button> -->
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div id="report-content-item" class="report-item-grid">
             <!-- Aquí se cargarán dinámicamente los reportes -->
         </div>

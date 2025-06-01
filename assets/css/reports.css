@@ -1,6 +1,3 @@
-/* Estilos específicos para la sección de Reportes */
-
-/* Layout general */
 .container.content {
     padding: 20px;
     max-width: 1500px;
@@ -148,7 +145,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
     gap: 10px;
 }
 
@@ -174,15 +171,15 @@
     object-fit: cover;
 }
 
-/* Elementos de reportes PDF */
+/* Elementos de reportes PDF - ACTUALIZADO CON DISEÑO UNIFICADO */
 .report-item-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
     gap: 15px;
 }
 
 .report-item-card {
     background: #fff;
+    margin-bottom: 15px;
     padding: 15px;
     border-radius: 12px;
     display: flex;
@@ -222,6 +219,7 @@
 .report-item-title {
     font-size: 20px;
     font-weight: bold;
+    margin-bottom: 5px;
     margin: 0;
 }
 
@@ -238,15 +236,23 @@
 }
 
 .report-btn-download {
+    background-color: #9c3a3a;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
     text-decoration: none;
-    font-size: 20px;
-    color: #555;
-    transition: color 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
 }
 
 .report-btn-download:hover {
-    color: #a3333d;
-    cursor: pointer;
+    background-color: #a3333d;
+    transform: translateY(-2px);
+    color: white;
 }
 
 .report-btn-download i {
