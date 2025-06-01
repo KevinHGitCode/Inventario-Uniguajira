@@ -52,7 +52,7 @@ class Reports {
                 r.id as id, 
                 r.nombre as nombre, 
                 r.fecha_creacion as fecha_creacion,
-                r.descripcion as descripcion
+                r.ruta_reporte as ruta_reporte
             FROM reportes r
             WHERE r.carpeta_id = ?
             ORDER BY r.fecha_creacion DESC
@@ -163,7 +163,7 @@ class Reports {
      * @param string $description Descripción del reporte (opcional).
      * @return int|false ID del reporte creado si fue exitoso, False si hubo un error.
      */
-    public function createReport($name, $folderId, $description = '') {
+    public function createReport($name, $folderId, $ruta) {
         // Verificar si la carpeta existe
         $checkStmt = $this->connection->prepare("SELECT id FROM carpetas_reportes WHERE id = ?");
         $checkStmt->bind_param("i", $folderId);
@@ -175,8 +175,8 @@ class Reports {
         }
 
         // Insertar el nuevo reporte
-        $stmt = $this->connection->prepare("INSERT INTO reportes (nombre, carpeta_id, descripcion, fecha_creacion) VALUES (?, ?, ?, NOW())");
-        $stmt->bind_param("sis", $name, $folderId, $description);
+        $stmt = $this->connection->prepare("INSERT INTO reportes (nombre, carpeta_id, ruta_reporte, fecha_creacion) VALUES (?, ?, ?, NOW())");
+        $stmt->bind_param("sis", $name, $folderId, $ruta);
         if ($stmt->execute()) {
             return $stmt->insert_id; // Retornar el ID del reporte recién creado
         }

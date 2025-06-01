@@ -173,7 +173,7 @@ CREATE TABLE reportes (
     carpeta_id INT,  -- Relación con carpetas_reportes
     nombre VARCHAR(100) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    descripcion TEXT,  -- Contenido detallado del reporte
+    ruta_reporte VARCHAR(255),  -- Contenido detallado del reporte
     FOREIGN KEY (carpeta_id) REFERENCES carpetas_reportes(id) ON DELETE SET NULL
 );
 

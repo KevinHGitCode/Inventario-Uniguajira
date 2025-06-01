@@ -29,7 +29,7 @@
 
                 <div class="report-folder-right">
                     <button class="btn-open" onclick="">
-                        <i class="fas fa-external-link-alt"></i> Abrir
+                        <i class="fas fa-external-link-alt"></i> Descargar
                     </button>
                 </div>
                 

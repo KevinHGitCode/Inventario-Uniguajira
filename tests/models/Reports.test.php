@@ -32,10 +32,10 @@ $runner->registerTest('obtener_carpetas', function() use ($reports) {
 // PRUEBAS DE CREACIÓN DE CARPETAS
 $runner->registerTest('crear_carpeta_valida', function() use (&$testData, $reports) {
     $nombre = "Carpeta Temporal " . time();
-    $descripcion = "Descripción de prueba";
+    $ruta = "Ruta de prueba";
     
-    echo "<p>Testing createFolder('$nombre', '$descripcion')...</p>";
-    $folderId = $reports->createFolder($nombre, $descripcion);
+    echo "<p>Testing createFolder('$nombre', '$ruta')...</p>";
+    $folderId = $reports->createFolder($nombre, $ruta);
 
     if ($folderId !== false) {
         echo "<p>Carpeta creada con ID: $folderId</p>";
@@ -78,10 +78,10 @@ $runner->registerTest('crear_reporte_valido', function() use (&$testData, $repor
     }
 
     $nombre = "Reporte Temporal " . time();
-    $descripcion = "Descripción del reporte";
+    $ruta = "Ruta del reporte";
     
-    echo "<p>Testing createReport('$nombre', {$testData['folderId']}, '$descripcion')...</p>";
-    $reportId = $reports->createReport($nombre, $testData['folderId'], $descripcion);
+    echo "<p>Testing createReport('$nombre', {$testData['folderId']}, '$ruta')...</p>";
+    $reportId = $reports->createReport($nombre, $testData['folderId'], $ruta);
 
     if ($reportId !== false) {
         echo "<p>Reporte creado con ID: $reportId</p>";
