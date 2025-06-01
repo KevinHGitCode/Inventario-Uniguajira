@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="report-folder-right">
-                    <button class="btn-open" onclick="">
+                    <button class="btn-open" onclick="downloadReport(<?= htmlspecialchars($reports['id']) ?>, '<?= htmlspecialchars($reports['nombre']) ?>')">
                         <i class="fas fa-external-link-alt"></i> Descargar
                     </button>
                 </div>

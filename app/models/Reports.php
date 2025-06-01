@@ -63,6 +63,30 @@ class Reports {
     }
 
     /**
+     * Obtener un reporte específico por su ID.
+     * 
+     * @param int $reportId ID del reporte.
+     * @return array|null Datos del reporte o null si no existe.
+     */
+    public function getReportById($reportId) {
+        $stmt = $this->connection->prepare("
+            SELECT 
+                r.id as id,
+                r.nombre as nombre,
+                r.fecha_creacion as fecha_creacion,
+                r.ruta_reporte as ruta_reporte,
+                r.carpeta_id as carpeta_id
+            FROM reportes r 
+            WHERE r.id = ?
+        ");
+        $stmt->bind_param("i", $reportId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        return $result->fetch_assoc();
+    }
+
+    /**
      * Crear una nueva carpeta.
      * 
      * @param string $name Nombre de la carpeta.

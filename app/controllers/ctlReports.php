@@ -257,4 +257,125 @@ class ctlReports
             ];
         }
     }
+
+    /**
+     * Función para descargar un reporte PDF
+     * 
+     * @param int $reportId ID del reporte a descargar
+     * @param object $reportsModel Instancia del modelo de reportes
+     * @return bool true si la descarga fue exitosa, false en caso contrario
+     */
+    public function downloadReport() {
+        header('Content-Type: application/json');
+        
+        if (!validateHttpRequest('POST', ['report_id'])) {
+            return;
+        }
+        
+        $reportId = $_POST['report_id'];
+        
+        try {
+            // Validar el ID del reporte
+            if (!is_numeric($reportId) || $reportId <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'ID de reporte inválido']);
+                return;
+            }
+            
+            // Obtener los detalles del reporte
+            $report = $this->reportModel->getReportById($reportId);
+            
+            if (!$report) {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => 'Reporte no encontrado']);
+                return;
+            }
+            
+            // Verificar que el archivo existe
+            $filePath = $report['ruta_reporte'];
+            
+            // Si la ruta es relativa, construir la ruta completa
+            if (!file_exists($filePath)) {
+                // Intentar con diferentes rutas base
+                $possiblePaths = [
+                    $_SERVER['DOCUMENT_ROOT'] . '/' . $filePath,
+                    dirname(__DIR__, 2) . '/' . $filePath, // Retroceder 2 niveles
+                    dirname(__DIR__) . '/' . $filePath,     // Retroceder 1 nivel
+                    '../' . $filePath,
+                    './' . $filePath,
+                    $filePath
+                ];
+                
+                $fullPath = null;
+                foreach ($possiblePaths as $path) {
+                    if (file_exists($path)) {
+                        $fullPath = $path;
+                        break;
+                    }
+                }
+                
+                if (!$fullPath) {
+                    http_response_code(404);
+                    echo json_encode(['success' => false, 'message' => 'Archivo no encontrado en el servidor']);
+                    return;
+                }
+                
+                $filePath = $fullPath;
+            }
+            
+            // Verificar que es un PDF
+            $fileInfo = pathinfo($filePath);
+            if (strtolower($fileInfo['extension']) !== 'pdf') {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'El archivo no es un PDF válido']);
+                return;
+            }
+            
+            // Preparar el nombre del archivo para descarga
+            $downloadName = $this->sanitizeFileName($report['nombre']) . '.pdf';
+            
+            // Cambiar headers para descarga de archivo
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $downloadName . '"');
+            header('Content-Length: ' . filesize($filePath));
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Expires: 0');
+            
+            // Limpiar el buffer de salida
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+            
+            // Enviar el archivo
+            readfile($filePath);
+            exit;
+            
+        } catch (Exception $e) {
+            error_log("Error en descarga de reporte ID {$reportId}: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
+            return;
+        }
+    }
+
+    /**
+     * Función auxiliar para sanitizar nombre de archivo
+     * 
+     * @param string $filename Nombre original del archivo
+     * @return string Nombre sanitizado
+     */
+    private function sanitizeFileName($filename) {
+        // Remover caracteres especiales y espacios múltiples
+        $filename = preg_replace('/[^a-zA-Z0-9\s\-_.]/', '', $filename);
+        $filename = preg_replace('/\s+/', '_', $filename);
+        $filename = trim($filename, '_');
+        
+        // Si queda vacío, usar nombre por defecto
+        if (empty($filename)) {
+            $filename = 'reporte_' . date('Y-m-d_H-i-s');
+        }
+        
+        return $filename;
+    }
 }

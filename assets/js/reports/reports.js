@@ -241,3 +241,55 @@ function mostrarModalReporte(modalId) {
     // Mostrar el modal
     mostrarModal(modalId);
 }
+
+
+function downloadReport(reportId, reportName) {
+    // Prevenir la propagación del evento para evitar conflictos con el onclick del card
+    event.stopPropagation();
+    
+    // Mostrar indicador de carga
+    const button = event.target.closest('button');
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Descargando...';
+    button.disabled = true;
+    
+    // Hacer petición fetch para descargar el reporte
+    const formData = new FormData();
+    formData.append('report_id', reportId);
+    
+    return fetch('/api/reports/download', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // Crear URL del blob y descargar
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${reportName}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Limpiar recursos
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        return true;
+    })
+    .catch(error => {
+        console.error('Error al descargar el reporte:', error);
+        alert('Error al descargar el reporte. Por favor, inténtelo de nuevo.');
+        throw error;
+    })
+    .finally(() => {
+        // Restaurar botón
+        button.innerHTML = originalContent;
+        button.disabled = false;
+    });
+}
