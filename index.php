@@ -97,8 +97,8 @@ $router->add('/api/folders/delete/:id', 'ctlReports', 'deleteFolder');
 
 // Rutas para la API de reportes (ok)
 $router->add('/api/reports/create', 'ctlReports', 'createReport');
-$router->add('/api/reports/rename', 'ctlReports', 'rename');
-$router->add('/api/reports/delete/:id', 'ctlReports', 'delete');
+$router->add('/api/reports/rename', 'ctlReports', 'renameReport');
+$router->add('/api/reports/delete/:id', 'ctlReports', 'deleteReport');
 $router->add('/api/reports/download', 'ctlReports', 'downloadReport');
 
 // Mas rutas...

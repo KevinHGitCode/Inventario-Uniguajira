@@ -293,3 +293,42 @@ function downloadReport(reportId, reportName) {
         button.disabled = false;
     });
 }
+
+
+function initReportsFunctions() {
+    // Inicializar formulario para renombrar reporte
+    // ruta del form: /api/reports/rename
+    inicializarFormularioAjax('#formRenombrarReporte', {
+        closeModalOnSuccess: true,
+        onSuccess: (response) => {
+            showToast(response);
+            loadContent('/reports', false);
+        }
+    });
+}
+
+
+function btnRenombrarReporte() {
+    console.log(selectedItem); // mensaje de depuración
+    const id = selectedItem.id;
+    const nombreActual = selectedItem.name;
+    document.getElementById("reporteRenombrarId").value = id;
+    document.getElementById("reporteRenombrarNombre").value = nombreActual;
+
+    mostrarModal('#modalRenombrarReporte');
+}
+
+// eliminarGrupo()
+function btnEliminarReporte() {
+    const idReport = selectedItem.id;
+
+    eliminarRegistro({
+        url: `/api/reports/delete/${idReport}`,
+        onSuccess: (response) => {
+            if (response.success) {
+                loadContent('/reports', false);
+            }
+            showToast(response);
+        }
+    });
+}

@@ -127,7 +127,7 @@
 
         <!-- Barra de control para reportes -->
         <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-            <div id="control-bar-report" class="control-bar" style="display: none;">
+            <div id="control-bar-report" class="control-bar">
                 <div class="selected-name">0 seleccionados</div>
                 <div class="control-actions">
                     <button class="control-btn" title="Renombrar" onclick="btnRenombrarReporte()">

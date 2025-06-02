@@ -177,3 +177,36 @@
         </form>
     </div>
 </div>
+
+
+<!-- Modal Renombrar reporte -->
+<div id="modalRenombrarReporte" class="modal">
+    <div class="modal-content modal-content-small">
+        <span id="cerrarModalRenombrarReporte" class="close" onclick="ocultarModal('#modalRenombrarReporte')">&times;</span>
+        <h2>Renombrar reporte</h2>
+        <form 
+            id="formRenombrarReporte" 
+            action="/api/reports/rename"
+            method="POST"
+            autocomplete="off"
+        >
+            <input type="hidden" name="report_id" id="reporteRenombrarId" />
+
+            <div>
+                <label for="reporteRenombrarNombre">Nuevo Nombre:</label>
+                <input
+                    type="text"
+                    name="nombre"
+                    id="reporteRenombrarNombre"
+                    required
+                />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn submit-btn">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

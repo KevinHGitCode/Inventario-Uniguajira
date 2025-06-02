@@ -107,6 +107,10 @@ function loadContent(path, scrollUpRequired = true) {
                 if (typeof initFoldersFunctions === 'function') {
                     initializeSelection();
                     cargarGrupos();
+
+                    if (currentFolderId) {
+                        abrirCarpeta(currentFolderId, false);
+                    }
                 }
 
                 break;

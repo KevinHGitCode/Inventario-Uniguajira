@@ -29,5 +29,9 @@ window.onload = () => {
         initFoldersFunctions();
     }
 
+    if (typeof initReportsFunctions === 'function') {
+        initReportsFunctions();
+    }
+
 
 }

@@ -234,27 +234,67 @@ class ctlReports
      * @param string $newName Nuevo nombre del reporte.
      * @return array Respuesta con el resultado del renombrado.
      */
-    public function renameReport($reportId, $newName)
-    {
-        try {
-            $success = $this->reportModel->renameReport($reportId, $newName);
+    public function renameReport(){
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+            return;
+        }
+    
+        $id = $_POST['report_id'] ?? null;
+        $newName = $_POST['nombre'] ?? '';
+    
+        if (empty($id) || empty($newName)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID y nuevo nombre son requeridos.']);
+            return;
+        }
+    
+        $resultado = $this->reportModel->renameReport($id, $newName);
+    
+        if ($resultado) {
+            // // Invalidate related caches
+            // $this->cache->remove("all_groups");
+            // $this->cache->invalidateEntity('group_' . $id);
+            
+            echo json_encode(['success' => true, 'message' => 'Reporte actualizado exitosamente.']);
+            return;
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el reporte. Puede que el reporte no exista o el nombre sea igual al anterior.']);
+        }
+    }
 
-            if ($success) {
-                return [
-                    'status' => 'success',
-                    'message' => 'Report renamed successfully.'
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'Report could not be renamed or name is unchanged.'
-                ];
-            }
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error renaming report: ' . $e->getMessage()
-            ];
+    /**
+     * Manejar la eliminación de un reporte.
+     *
+     * @param int $reportId ID del reporte.
+     * @return void
+     */
+    public function deleteReport($reportId){
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
+            return;
+        }
+    
+        if (empty($reportId)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'ID requerido.']);
+            return;
+        }
+    
+        $resultado = $this->reportModel->deleteReport($reportId);
+    
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Reporte eliminado exitosamente.']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el reporte. Puede que no exista.']);
         }
     }
 
