@@ -146,7 +146,7 @@ class AllGoodsReportGenerator {
      */
     public function generateAndSaveReport($outputPath = null) {
         if (!$outputPath) {
-            $outputPath = 'assets/storage/pdfs/reporte_bienes_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_bienes_' . date('Y-m-d_H-i-s') . '.pdf';
         }
         
         $reportHtml = $this->generateAllGoodsReportHtml();

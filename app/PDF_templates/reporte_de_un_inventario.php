@@ -171,7 +171,7 @@ class InventoryReportGenerator {
         if (!$outputPath) {
             $inventoryInfo = $this->getInventoryInfo($inventoryId);
             $safeInventoryName = preg_replace('/[^a-z0-9]/i', '_', $inventoryInfo['nombre']);
-            $outputPath = 'assets/storage/pdfs/reporte_inventario_salon_'. $safeInventoryName . '_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_inventario_salon_'. $safeInventoryName . '_' . date('Y-m-d_H-i-s') . '.pdf';
         }
         
         $reportHtml = $this->generateInventoryReportHtml($inventoryId);

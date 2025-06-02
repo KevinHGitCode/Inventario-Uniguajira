@@ -287,7 +287,11 @@ class ctlReports
             echo json_encode(['success' => false, 'message' => 'ID requerido.']);
             return;
         }
-    
+        
+        $rutaPDF = $this->reportModel->getPdfPathByReportId((int)$reportId);
+            if ($rutaPDF && file_exists($rutaPDF)) {
+                unlink($rutaPDF);
+            }
         $resultado = $this->reportModel->deleteReport($reportId);
     
         if ($resultado) {

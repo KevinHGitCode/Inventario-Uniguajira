@@ -234,7 +234,7 @@ class InventoryGroupReportGenerator {
         if (!$outputPath) {
             $groupInfo = $this->getGroupInfo($groupId);
             $safeGroupName = preg_replace('/[^a-z0-9]/i', '_', $groupInfo['nombre']);
-            $outputPath = 'assets/storage/pdfs/reporte_grupo_' . $safeGroupName . '_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_grupo_' . $safeGroupName . '_' . date('Y-m-d_H-i-s') . '.pdf';
         }
         
         $reportHtml = $this->generateGroupInventoriesReportHtml($groupId);

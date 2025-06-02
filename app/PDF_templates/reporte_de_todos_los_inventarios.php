@@ -195,7 +195,7 @@ class AllGroupsInventoryReportGenerator {
      */
     public function generateAndSaveAllGroupsReport($outputPath = null) {
         if (!$outputPath) {
-            $outputPath = 'assets/storage/pdfs/reporte_general_inventarios_' . date('Y-m-d') . '.pdf';
+            $outputPath = 'assets/storage/pdfs/reporte_general_inventarios_' . date('Y-m-d_H-i-s') . '.pdf';
         }
         $reportHtml = $this->generateAllGroupsInventoriesReportHtml();
         $this->pdfGenerator->generateAndSavePdf($reportHtml, $outputPath);

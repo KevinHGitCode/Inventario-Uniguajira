@@ -265,6 +265,21 @@ class Reports {
     }
 
     /**
+     * Obtener la ruta del PDF de un reporte por su ID.
+     * 
+     * @param int $id ID del reporte.
+     * @return string|null Ruta del PDF o null si no existe.
+     */
+    public function getPdfPathByReportId($id) {
+        $stmt = $this->connection->prepare("SELECT ruta_reporte FROM reportes WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['ruta_reporte'] ?? null;
+    }
+
+    /**
      * Obtener detalles de un inventario específico.
      * 
      * @param int $inventoryId ID del inventario.
