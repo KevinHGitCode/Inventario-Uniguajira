@@ -255,5 +255,77 @@ function inicializarHistorial() {
     }
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', inicializarHistorial);
+// -----------------------
+function clearFilters() {
+    // Clear all user checkboxes
+    document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Clear all action checkboxes
+    document.querySelectorAll('.action-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Uncheck the 'select all' checkboxes
+    document.getElementById('allUsers').checked = false;
+    document.getElementById('allActions').checked = false;
+
+    // Reset the table to show all rows
+    document.querySelectorAll('table tbody tr').forEach(row => {
+        row.style.display = '';
+    });
+}
+
+function mostrarModal(modalId) {
+    const modal = document.querySelector(modalId);
+    if (modal) {
+        modal.style.display = 'block';
+        modal.classList.add('active'); // Optional: Add a class to indicate the modal is active
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('Modalfiltrarhistorial');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.classList.remove('active'); // Optional: Remove the active class
+    }
+}
+
+function applyFilters() {
+    const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
+    const selectedActions = Array.from(document.querySelectorAll('.action-checkbox:checked')).map(cb => cb.value);
+
+    document.querySelectorAll('table tbody tr').forEach(row => {
+        const user = row.querySelector('td:nth-child(2)').textContent.trim();
+        const action = row.querySelector('td:nth-child(3)').textContent.trim();
+
+        const matchesUser = selectedUsers.length === 0 || selectedUsers.includes(user);
+        const matchesAction = selectedActions.length === 0 || selectedActions.includes(action);
+
+        row.style.display = matchesUser && matchesAction ? '' : 'none';
+    });
+
+    // Close the modal after applying filters
+    closeModal();
+}
+
+function toggleAllUsers() {
+    const allUsersCheckbox = document.getElementById('allUsers');
+    const userCheckboxes = document.querySelectorAll('.user-checkbox');
+    userCheckboxes.forEach(checkbox => {
+        checkbox.checked = allUsersCheckbox.checked;
+    });
+}
+
+function toggleAllActions() {
+    const allActionsCheckbox = document.getElementById('allActions');
+    const actionCheckboxes = document.querySelectorAll('.action-checkbox');
+    actionCheckboxes.forEach(checkbox => {
+        checkbox.checked = allActionsCheckbox.checked;
+    });
+}
+
+// scripts boton reporte---------------------------->>>>>>>
+
