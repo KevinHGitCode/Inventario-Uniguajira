@@ -3,9 +3,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- LIBRERÍAS PARA GENERAR PDF --->
+
+
+<!-- LIBRERÍAS PARA GENERAR PDF - VERSIONES CORREGIDAS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+<script src="assets/js/historial.js"></script>
+
 
 <div class="record-container">
     <h1>Historial</h1>
@@ -26,7 +30,7 @@
             <i class="fas fa-filter"></i>
             Filtros
         </button>
-        <button class="report-btn" id="reportBtn"> 
+        <button class="report-btn" id="reportBtn"  onclick="generatePDF()"> 
             <i class="fas fa-file-pdf"></i> <!-- Icon for PDF file -->
             Reporte
         </button>
@@ -175,17 +179,6 @@
 <!-- Asegúrate de incluir FontAwesome para los iconos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<!-- Incluir el script de historial -->
-<script src="assets/js/historial.js"></script>
-<script>
-    // Asegurar que el botón invoque la función desde historial.js
-    document.getElementById('reportBtn').addEventListener('click', () => {
-        generarReportePDF();
-    });
-</script>
-<script>
-    // Asegurar que el botón invoque la función desde historial.js
-    document.getElementById('reportBtn').addEventListener('click', () => {
-        generarReportePDF();
-    });
-</script>
+
+
+
