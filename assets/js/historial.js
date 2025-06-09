@@ -255,77 +255,99 @@ function inicializarHistorial() {
     }
 }
 
-// -----------------------
-function clearFilters() {
-    // Clear all user checkboxes
-    document.querySelectorAll('.user-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
+// boton de filtro -----------------------
 
-    // Clear all action checkboxes
-    document.querySelectorAll('.action-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    // Uncheck the 'select all' checkboxes
-    document.getElementById('allUsers').checked = false;
-    document.getElementById('allActions').checked = false;
-
-    // Reset the table to show all rows
-    document.querySelectorAll('table tbody tr').forEach(row => {
-        row.style.display = '';
-    });
-}
-
-function mostrarModal(modalId) {
-    const modal = document.querySelector(modalId);
-    if (modal) {
-        modal.style.display = 'block';
-        modal.classList.add('active'); // Optional: Add a class to indicate the modal is active
-    }
-}
-
-function closeModal() {
-    const modal = document.getElementById('Modalfiltrarhistorial');
-    if (modal) {
-        modal.style.display = 'none';
-        modal.classList.remove('active'); // Optional: Remove the active class
-    }
-}
-
-function applyFilters() {
-    const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(cb => cb.value);
-    const selectedActions = Array.from(document.querySelectorAll('.action-checkbox:checked')).map(cb => cb.value);
-
-    document.querySelectorAll('table tbody tr').forEach(row => {
-        const user = row.querySelector('td:nth-child(2)').textContent.trim();
-        const action = row.querySelector('td:nth-child(3)').textContent.trim();
-
-        const matchesUser = selectedUsers.length === 0 || selectedUsers.includes(user);
-        const matchesAction = selectedActions.length === 0 || selectedActions.includes(action);
-
-        row.style.display = matchesUser && matchesAction ? '' : 'none';
-    });
-
-    // Close the modal after applying filters
-    closeModal();
-}
-
+// Función para alternar todos los checkboxes de usuarios cuando se cambia "Todos los usuarios"
 function toggleAllUsers() {
     const allUsersCheckbox = document.getElementById('allUsers');
     const userCheckboxes = document.querySelectorAll('.user-checkbox');
-    userCheckboxes.forEach(checkbox => {
-        checkbox.checked = allUsersCheckbox.checked;
+    userCheckboxes.forEach(cb => {
+        cb.checked = allUsersCheckbox.checked;
     });
 }
 
+// Función para alternar todos los checkboxes de acciones cuando se cambia "Todas las acciones"
 function toggleAllActions() {
     const allActionsCheckbox = document.getElementById('allActions');
     const actionCheckboxes = document.querySelectorAll('.action-checkbox');
-    actionCheckboxes.forEach(checkbox => {
-        checkbox.checked = allActionsCheckbox.checked;
+    actionCheckboxes.forEach(cb => {
+        cb.checked = allActionsCheckbox.checked;
     });
 }
+
+// Sincronizar el checkbox "Todas las acciones" si cambia algún checkbox de acción
+function updateActionSelection() {
+    const allActionsCheckbox = document.getElementById('allActions');
+    const actionCheckboxes = document.querySelectorAll('.action-checkbox');
+    const allChecked = Array.from(actionCheckboxes).every(cb => cb.checked);
+    allActionsCheckbox.checked = allChecked;
+}
+
+// Aplicar filtros a la tabla de historial según los usuarios y acciones seleccionados
+function applyFilters() {
+    const userCheckboxes = document.querySelectorAll('.user-checkbox');
+    const actionCheckboxes = document.querySelectorAll('.action-checkbox');
+
+    const selectedUsers = Array.from(userCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const selectedActions = Array.from(actionCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    const rows = document.querySelectorAll('.record-table tbody tr');
+
+    rows.forEach(row => {
+        const userCell = row.cells[1].textContent.trim();
+        const actionCell = row.cells[2].textContent.trim();
+
+        // Si no se seleccionan usuarios, se considera que se seleccionan todos
+        const userMatch = selectedUsers.length === 0 || selectedUsers.includes(userCell);
+        // Si no se seleccionan acciones, se considera que se seleccionan todas
+        const actionMatch = selectedActions.length === 0 || selectedActions.includes(actionCell);
+
+        if (userMatch && actionMatch) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    // Cerrar el modal después de aplicar los filtros
+    closeModal();
+}
+
+// Limpiar todos los filtros y mostrar todas las filas
+function clearFilters() {
+    // Desmarcar todos los checkboxes de usuarios y el de 'todos'
+    const allUsersCheckbox = document.getElementById('allUsers');
+    allUsersCheckbox.checked = false;
+    document.querySelectorAll('.user-checkbox').forEach(cb => { cb.checked = false; });
+
+    // Desmarcar todos los checkboxes de acciones y el de 'todos'
+    const allActionsCheckbox = document.getElementById('allActions');
+    allActionsCheckbox.checked = false;
+    document.querySelectorAll('.action-checkbox').forEach(cb => { cb.checked = false; });
+
+    // Mostrar todas las filas
+    document.querySelectorAll('.record-table tbody tr').forEach(row => {
+        row.style.display = '';
+    });
+
+    // Cerrar el modal
+    closeModal();
+}
+
+
+
+
+
+
+
+
+
+
 
 // scripts boton reporte---------------------------->>>>>>>
 function generatePDF() {
