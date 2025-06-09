@@ -187,7 +187,7 @@ class InventoryGroupReportGenerator {
                     <div class="logo">
                         ' . $logoHtml . '
                     </div>
-                    <h1>Reporte de Inventarios: ' . htmlspecialchars($groupInfo['nombre']) . '</h1>
+                    <h1>REPORTE DE GRUPO: ' . htmlspecialchars($groupInfo['nombre']) . '</h1>
                     <p>Fecha de generación: ' . $date . '</p>
                 </div>';
         

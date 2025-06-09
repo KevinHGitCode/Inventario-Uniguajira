@@ -135,7 +135,7 @@ class AllGoodsReportGenerator {
                     <div class="logo">
                         ' . $logoHtml . '
                     </div>
-                    <h1>Reporte de Bienes Uniguajira Maicao</h1>
+                    <h1>REPORTES DE TODOS LOS BIENES UNIGUAJIRA MAICAO</h1>
                     <p>Fecha de generación: ' . $date . '</p>
                 </div>
                 

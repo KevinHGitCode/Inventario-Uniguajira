@@ -153,7 +153,7 @@ class InventoryReportGenerator {
                     <div class="logo">
                         ' . $logoHtml . '
                     </div>  
-                    <h1>Reporte de Inventario: ' . htmlspecialchars($info['nombre']) . '</h1>
+                    <h1>REPORTE DE INVENTARIO: ' . htmlspecialchars($info['nombre']) . '</h1>
                     <p>Fecha de generación: ' . $date . '</p>
                 </div>
                 <div class="info">

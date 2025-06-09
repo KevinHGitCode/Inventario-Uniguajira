@@ -187,7 +187,7 @@ class SerialGoodsReportGenerator {
                     <div class="logo">
                         ' . $logoHtml . '
                     </div>
-                    <h1>Reporte de Equipos Uniguajira Maicao</h1>
+                    <h1>REPORTE DE TODOS LOS EQUIPOS UNIGUAJIRA MAICAO</h1>
                     <p>Fecha de generación: ' . $date . '</p>
                 </div>';
 
