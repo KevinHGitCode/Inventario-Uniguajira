@@ -55,6 +55,32 @@ class InventoryGroupReportGenerator {
     }
     
     /**
+     * Convierte imagen a base64 para usar en PDF
+     * 
+     * @param string $imagePath Ruta de la imagen
+     * @return string|null Imagen en base64 o null si no existe
+     */
+    private function getImageBase64($imagePath) {
+        // Intentar diferentes rutas posibles
+        $possiblePaths = [
+            __DIR__ . '/../../assets/images/logoUniguajira.png',
+            __DIR__ . '/../../../assets/images/logoUniguajira.png',
+            $_SERVER['DOCUMENT_ROOT'] . '/Inventario-Uniguajira/assets/images/logoUniguajira.png',
+            realpath(__DIR__ . '/../../') . '/assets/images/logoUniguajira.png'
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path)) {
+                $imageData = file_get_contents($path);
+                $imageType = pathinfo($path, PATHINFO_EXTENSION);
+                return 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * Genera el HTML para el reporte completo de inventarios por grupo
      * 
      * @param int $groupId ID del grupo
@@ -70,12 +96,26 @@ class InventoryGroupReportGenerator {
         date_default_timezone_set('America/Bogota');
         $date = date('d/m/Y');
         
+        // Obtener imagen en base64
+        $logoBase64 = $this->getImageBase64('logoUniguajira.png');
+        
+        // Crear el HTML del logo
+        $logoHtml = '';
+        if ($logoBase64) {
+            $logoHtml = '<img src="' . $logoBase64 . '" width="500" alt="Logo Uniguajira">';
+        } else {
+            // Fallback si no se encuentra la imagen
+            $logoHtml = '<div style="width: 300px; height: 100px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <span style="color: #333; font-weight: bold;">UNIGUAJIRA MAICAO</span>
+                        </div>';
+        }
+        
         $html = '
         <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="UTF-8">
-                <title>Reporte de Inventarios - ' . htmlspecialchars($groupInfo['nombre']) . '</title>
+                <title>REPORTE DE GRUPO - ' . htmlspecialchars($groupInfo['nombre']) . '</title>
                 <style>
                     body {
                         font-family: Arial, sans-serif;
@@ -136,12 +176,16 @@ class InventoryGroupReportGenerator {
                     .page-break {
                         page-break-after: always;
                     }
+                    .logo {
+                        text-align: center;
+                        margin-bottom: 10px;
+                    }
                 </style>
             </head>
             <body>
                 <div class="header">
                     <div class="logo">
-                        <img src="http://' . $_SERVER['HTTP_HOST'] . '/Inventario-Uniguajira/assets/images/logoUniguajira.png" width="300">
+                        ' . $logoHtml . '
                     </div>
                     <h1>Reporte de Inventarios: ' . htmlspecialchars($groupInfo['nombre']) . '</h1>
                     <p>Fecha de generación: ' . $date . '</p>
@@ -192,9 +236,9 @@ class InventoryGroupReportGenerator {
                     </table>
                 </div>';
             
-            // Añadir un salto de página después de cada inventario excepto el último
+            // Añadir separador visual entre inventarios
             if ($index < count($inventories) - 1) {
-                $html .= '<div class="page-break"></div>';
+                $html .= '<hr style="border: none; border-top: 2px solid #4a90e2; margin: 30px 0; opacity: 0.3;">';
             }
         }
         

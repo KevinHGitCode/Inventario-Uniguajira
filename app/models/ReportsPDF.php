@@ -96,15 +96,22 @@ class ReportsPDF {
     public function getAllSerialGoods() {
         $stmt = $this->connection->prepare("
             SELECT 
-                bien,
-                descripcion,
-                marca,
-                modelo,
-                serial,
-                estado,
-                condiciones_tecnicas
+                vbsi.bien,
+                vbsi.descripcion,
+                vbsi.marca,
+                vbsi.modelo,
+                vbsi.serial,
+                vbsi.estado,
+                vbsi.condiciones_tecnicas,
+                vbsi.bienes_inventarios_id,
+                bi.inventario_id,
+                i.nombre as nombre_inventario
             FROM 
-                vista_bienes_serial_inventario
+                vista_bienes_serial_inventario vbsi
+            LEFT JOIN 
+                bienes_inventarios bi ON vbsi.bienes_inventarios_id = bi.id
+            LEFT JOIN 
+                inventarios i ON bi.inventario_id = i.id
         ");
         $stmt->execute();
         
