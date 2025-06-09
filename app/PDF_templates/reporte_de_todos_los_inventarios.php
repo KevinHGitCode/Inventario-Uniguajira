@@ -34,6 +34,32 @@ class AllGroupsInventoryReportGenerator {
     }
     
     /**
+     * Convierte imagen a base64 para usar en PDF
+     * 
+     * @param string $imagePath Ruta de la imagen
+     * @return string|null Imagen en base64 o null si no existe
+     */
+    private function getImageBase64($imagePath) {
+        // Intentar diferentes rutas posibles
+        $possiblePaths = [
+            __DIR__ . '/../../assets/images/logoUniguajira.png',
+            __DIR__ . '/../../../assets/images/logoUniguajira.png',
+            $_SERVER['DOCUMENT_ROOT'] . '/Inventario-Uniguajira/assets/images/logoUniguajira.png',
+            realpath(__DIR__ . '/../../') . '/assets/images/logoUniguajira.png'
+        ];
+        
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path)) {
+                $imageData = file_get_contents($path);
+                $imageType = pathinfo($path, PATHINFO_EXTENSION);
+                return 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * Genera el HTML para el reporte completo de todos los grupos y sus inventarios (solo vista simple)
      * 
      * @return string HTML del reporte
@@ -43,12 +69,27 @@ class AllGroupsInventoryReportGenerator {
         $allGroups = $this->getAllGroups();
         date_default_timezone_set('America/Bogota');
         $date = date('d/m/Y');
+        
+        // Obtener imagen en base64
+        $logoBase64 = $this->getImageBase64('logoUniguajira.png');
+        
+        // Crear el HTML del logo
+        $logoHtml = '';
+        if ($logoBase64) {
+            $logoHtml = '<img src="' . $logoBase64 . '" width="500" alt="Logo Uniguajira">';
+        } else {
+            // Fallback si no se encuentra la imagen
+            $logoHtml = '<div style="width: 300px; height: 100px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <span style="color: #333; font-weight: bold;">UNIGUAJIRA MAICAO</span>
+                        </div>';
+        }
+        
         $html = '
         <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="UTF-8">
-                <title>Reporte General de Inventarios</title>
+                <title>REPORTE GENERAL DE INVENTARIOS</title>
                 <style>
                     body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
                     table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -79,7 +120,7 @@ class AllGroupsInventoryReportGenerator {
             <body>
                 <div class="header">
                     <div class="logo">
-                        <img src="http://' . $_SERVER['HTTP_HOST'] . '/Inventario-Uniguajira/assets/images/logoUniguajira.png" width="300">
+                        ' . $logoHtml . '
                     </div>
                     <h1>REPORTE GENERAL DE INVENTARIOS</h1>
                     <p>Fecha de generación: ' . $date . '</p>
