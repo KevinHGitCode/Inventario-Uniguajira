@@ -350,13 +350,29 @@ function clearFilters() {
 
 
 // scripts boton reporte---------------------------->>>>>>>
+// Función para cargar jsPDF dinámicamente
+function loadJsPDFDynamically() {
+    const script1 = document.createElement('script');
+    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script1.onload = function() {
+        const script2 = document.createElement('script');
+        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js';
+        script2.onload = function() {
+            console.log('Librerías cargadas dinámicamente');
+            setTimeout(generatePDF, 100); // Reintentar después de cargar
+        };
+        document.head.appendChild(script2);
+    };
+    document.head.appendChild(script1);
+}
+
 function generatePDF() {
     console.log('=== DEBUG JSPDF ===');
     console.log('window.jspdf:', typeof window.jspdf);
     console.log('window.jsPDF:', typeof window.jsPDF);
 
     if ((!window.jspdf || !window.jspdf.jsPDF) && !window.jsPDF) {
-        alert('Las librerías PDF no están cargadas. Cargando...');
+        alert('Cargando..........');
         loadJsPDFDynamically();
         return;
     }
@@ -374,74 +390,21 @@ function generatePDF() {
     try {
         const doc = new jsPDF();
 
-        doc.setFontSize(16);
-        doc.text('Reporte de Historial', 20, 20);
-        doc.setFontSize(12);
-        doc.text('Fecha de generación: ' + new Date().toLocaleDateString(), 20, 35);
+        // Cargar la imagen
+        const img = new Image();
+        img.src = 'assets/images/logoUniguajira.png'; // Ruta de la imagen
 
-        const table = document.querySelector('.record-table');
-        if (!table) {
-            console.error('No se encontró la tabla de historial.');
-            alert('Error: No se encontró la tabla de historial.');
-            return;
-        }
+        img.onload = function() {
+            // Agregar imagen al encabezado
+            doc.addImage(img, 'WEBP', 10, 10, 50, 20); // Ajusta la posición y tamaño según sea necesario
 
-        const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
-        const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
-            return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim());
-        });
-
-        doc.autoTable({
-            head: [headers],
-            body: rows,
-            startY: 40,
-        });
-
-        doc.save('historial_reporte.pdf');
-        console.log('✅ PDF generado exitosamente');
-
-    } catch (error) {
-        console.error('❌ Error al generar PDF:', error);
-        alert('Error al generar PDF: ' + error.message);
-    }
-}
-
-// Función para cargar jsPDF dinámicamente
-function loadJsPDFDynamically() {
-    const script1 = document.createElement('script');
-    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-    script1.onload = function() {
-        const script2 = document.createElement('script');
-        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js';
-        script2.onload = function() {
-            console.log('Librerías cargadas dinámicamente');
-            setTimeout(generatePDF, 100); // Reintentar después de cargar
-        };
-        document.head.appendChild(script2);
-    };
-    document.head.appendChild(script1);
-}
-document.addEventListener('DOMContentLoaded', () => {
-    const reportBtn = document.getElementById('reportBtn');
-    if (reportBtn) {
-        reportBtn.addEventListener('click', () => {
-            console.log('Botón Reportes presionado.');
-
-            // Verificar si jsPDF está disponible
-            if (!window.jspdf || !window.jspdf.jsPDF) {
-                console.error('jsPDF no está cargado correctamente.');
-                alert('Error: jsPDF no está disponible.');
-                return;
-            }
-
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Título del documento
+            // Ajustar la posición del texto para dar espacio entre la imagen y el título
+            const titleY = 45; // Cambia esta coordenada Y para ajustar el espacio
             doc.setFontSize(16);
-            doc.text('Reporte de Historial', 20, 20);
+            doc.text('Reporte de Historial', 20, titleY);
+            doc.setFontSize(12);
+            doc.text('Fecha de generación: ' + new Date().toLocaleDateString(), 20, titleY + 15); // Espacio adicional para la fecha
 
-            // Obtener datos de la tabla
             const table = document.querySelector('.record-table');
             if (!table) {
                 console.error('No se encontró la tabla de historial.');
@@ -449,30 +412,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const rows = [];
-            table.querySelectorAll('tbody tr').forEach(row => {
-                const rowData = [];
-                row.querySelectorAll('td').forEach(cell => {
-                    rowData.push(cell.textContent.trim());
-                });
-                rows.push(rowData);
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+                return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim());
             });
 
-            // Generar tabla en el PDF
             doc.autoTable({
-                head: [['N°', 'Usuario', 'Acción', 'Tabla', 'Registro ID', 'Detalles', 'Fecha y Hora']],
+                head: [headers],
                 body: rows,
-                startY: 30,
+                startY: titleY + 30, // Ajusta la posición para que no se superponga con el encabezado
             });
 
-            // Guardar el PDF
             doc.save('historial_reporte.pdf');
             console.log('✅ PDF generado exitosamente');
+        };
+
+        img.onerror = function() {
+            console.error('❌ Error al cargar la imagen.');
+            alert('Error al cargar la imagen.');
+        };
+
+    } catch (error) {
+        console.error('❌ Error al generar PDF:', error);
+        alert('Error al generar PDF: ' + error.message);
+    }
+}
+
+// Código para el botón de generación de PDF
+document.addEventListener('DOMContentLoaded', () => {
+    const reportBtn = document.getElementById('reportBtn');
+    if (reportBtn) {
+        reportBtn.addEventListener('click', () => {
+            console.log('Botón Reportes presionado.');
+            generatePDF();
         });
     } else {
         console.error('No se encontró el botón Reportes.');
     }
 });
+
 // Test simple - añadir al final del archivo
 console.log('historial.js cargado correctamente');
 
@@ -480,4 +458,3 @@ function testButton() {
     alert('¡El botón funciona!');
     console.log('Botón clickeado');
 }
-
