@@ -1,7 +1,13 @@
 <?php require_once 'app/controllers/sessionCheck.php'; ?>
 
-<div class="content">
-    <h2>Lista de bienes</h2>
+<div class="content">    
+    <div class="goods-header">
+        <h2>Lista de bienes</h2>
+        <!-- Botón para subir Excel -->
+        <label class="excel-upload-btn" title="Subir Excel" onclick="toggleExcelUploadUI()">
+            <i class="fas fa-file-excel"></i>
+        </label>
+    </div>
 
     <div class="top-bar">
         <div class="search-container">
@@ -26,7 +32,7 @@
         <p>No hay bienes disponibles</p>
     </div>
     <?php else: ?>
-    <div class="bienes-grid">
+    <div id="bienes-grid" class="bienes-grid">
         <?php foreach ($dataGoods as $bien): ?>
         <div class="bien-card card-item">
             <img
@@ -65,4 +71,48 @@
     </div>
     <?php endif; ?>
 
+    <div id="excel-upload-content" class="hidden">
+        <h3>Cargar datos de bienes desde Excel</h3>
+        <!-- Espacio para subir el archivo (un cuadro con bordes punteados) 
+                que dice "Arrastra y suelta un archivo aquí"
+        -->
+        <div id="excel-upload-area" class="excel-upload-area" style="border: 2px dashed #ccc; padding: 20px; text-align: center;">
+            <p>Arrastra y suelta un archivo aquí o haz clic para seleccionar un archivo</p>
+            <input
+                type="file"
+                id="excelFileInput"
+                accept=".xlsx, .xls, .csv"
+                class="hidden"
+                onchange="handleFileUpload(event)"
+            />
+            <button id="btn-select-excel" class="select-btn" onclick="document.getElementById('excelFileInput').click()">
+                Seleccionar archivo
+            </button>
+        </div>
+
+<br>
+
+        <h3>Previsualización de datos</h3>
+        <div id="excel-preview-table">
+            <!-- Tabla de previsualización -->
+            <table class="hidden">
+                <thead>
+                    <tr>
+                        <th>Bien</th>
+                        <th>Tipo</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+                <tbody id="excel-preview-body">
+                    <!-- Las filas se agregarán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+
+        <button onclick="btnClearExcelUploadUI()">Cancelar</button>
+        <button id="btnEnviarExcel" onclick="sendGoodsData(collectGoodsData())" disabled>Enviar</button>
+
+    </div>
+
 </div>
+

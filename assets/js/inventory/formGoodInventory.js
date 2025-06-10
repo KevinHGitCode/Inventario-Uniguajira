@@ -18,6 +18,10 @@ function initAutocompleteForBien() {
         noDataText: 'No hay bienes disponibles'
     });
 
+    // Variable global para acceder a autocomplete desde cualquier parte
+    window.globalAutocomplete = autocomplete; // Cambiar a window.globalAutocomplete
+    console.log(globalAutocomplete)
+
     // Ocultar sugerencias al abrir o cerrar el modal
     const modalBtn = document.querySelector('[data-target="#modalCrearBienInventario"]');
     if (modalBtn) {

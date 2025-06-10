@@ -4,6 +4,9 @@ function initFormsBien() {
         resetOnSuccess: true,
         closeModalOnSuccess: true,
         onSuccess: (response) => {
+
+            window.globalAutocomplete.recargarDatos(); // Usar window.globalAutocomplete
+
             showToast(response);
             loadContent('/goods', false);
         }
@@ -13,6 +16,9 @@ function initFormsBien() {
     inicializarFormularioAjax('#formActualizarBien', {
         closeModalOnSuccess: true,
         onSuccess: (response) => {
+
+            window.globalAutocomplete.recargarDatos(); // Usar window.globalAutocomplete
+
             showToast(response);
             loadContent('/goods', false);
         }
@@ -23,9 +29,8 @@ function eliminarBien(id) {
     eliminarRegistro({
         url: `/api/goods/delete/${id}`,
         onSuccess: (response) => {
-            if (response.success) {
-                loadContent('/goods', false);
-            }
+            window.globalAutocomplete.recargarDatos(); // Usar window.globalAutocomplete
+            loadContent('/goods', false);
             showToast(response);
         }
     });

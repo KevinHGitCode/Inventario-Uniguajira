@@ -223,6 +223,8 @@ function initAutocompleteSearch(containerSelector, options) {
             fetch(options.dataUrl)
                 .then(response => response.json())
                 .then(data => {
+                    // console.table(data)
+
                     if (!data || data.length === 0) {
                         const li = document.createElement('li');
                         li.classList.add('text-danger');
@@ -258,21 +260,45 @@ function initAutocompleteSearch(containerSelector, options) {
         }
     });
     
-    // Inicialización: ocultar sugerencias
-    ocultarSugerencias();
-    
+    // Función para cargar datos desde la API
+    function cargarDatos() {
+        return fetch(options.dataUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (!data || data.length === 0) {
+                    console.warn('No hay datos disponibles');
+                    items = [];
+                } else {
+                    items = data;
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar datos:', error);
+                items = [];
+            });
+    }
+
+    // Cargar datos al inicializar
+    cargarDatos().then(() => {
+        console.log('Datos cargados al inicializar:', items);
+    });
+
     // Retornar funciones públicas
     return {
         ocultarSugerencias,
         mostrarSugerencias,
         seleccionarItem,
         recargarDatos: function() {
-            // Limpiar datos en caché para forzar recarga
-            items = [];
-            // Disparar el evento input si hay texto en el campo
-            if (input.value.trim() !== '') {
-                input.dispatchEvent(new Event('input'));
-            }
+            cargarDatos().then(() => {
+                console.log('Datos recargados:', items);
+                // Disparar el evento input si hay texto en el campo
+                if (input.value.trim() !== '') {
+                    input.dispatchEvent(new Event('input'));
+                }
+            });
+        },
+        getItems: function() {
+            return items;
         }
     };
 }

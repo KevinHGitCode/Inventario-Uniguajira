@@ -47,6 +47,7 @@ $router->add('/api/goods/get/json', 'ctlGoods', 'getJson');
 $router->add('/api/goods/create', 'ctlGoods', 'create');
 $router->add('/api/goods/delete/:id', 'ctlGoods', 'delete');
 $router->add('/api/goods/update', 'ctlGoods', 'update');
+$router->add('/api/goods/batchCreate', 'ctlGoods', 'batchCreate');
 
 
 // Rutas para la API de navegacion de '/inventory' (ok)

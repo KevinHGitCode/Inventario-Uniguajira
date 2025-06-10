@@ -71,3 +71,75 @@
         cursor: pointer;
     }
 }
+
+/* Encabezado de la página de bienes */
+.goods-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.goods-header h2 {
+    margin: 0;
+}
+
+/* Botón para subir Excel */
+.excel-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(29, 111, 66, 0.1);
+    color: #217346;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.excel-upload-btn i {
+    font-size: 1.2em;
+}
+
+.excel-upload-btn input {
+    display: none;
+}
+
+#excel-upload-sugar {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+}
+
+.excel-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+.excel-preview-table th, .excel-preview-table td {
+    border: 1px solid #e0e0e0;
+    padding: 8px 12px;
+    text-align: center;
+}
+.excel-valido {
+    background: #eafbe7;
+}
+.excel-invalido {
+    background: #fdeaea;
+}
+.cancel-btn {
+    background: #eee;
+    color: #a3333d;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-left: 6px;
+}
+.cancel-btn:hover {
+    background: #f5c6cb;
+}

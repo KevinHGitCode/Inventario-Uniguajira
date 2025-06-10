@@ -53,6 +53,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/navbar.js"></script>
     <script src="assets/js/helpers/submitForm.js"></script>
@@ -63,6 +65,7 @@
 
     <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
     <script src="assets/js/goods.js"></script>
+    <script src="assets/js/goods-excel-upload.js"></script>
     <script src="assets/js/helpers/modal.js"></script>
     <script src="assets/js/helpers/selection.js"></script>
     <script src="assets/js/helpers/autocomplete.js"></script>

@@ -170,5 +170,38 @@ class Goods {
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }
+
+    /**
+     * Inserta múltiples bienes en la base de datos de manera eficiente.
+     * 
+     * @param array $goods Array de bienes a insertar, donde cada bien es un array con 'nombre', 'tipo' e 'imagen'.
+     * @return array|false Array de IDs de los bienes insertados si fue exitoso, False en caso contrario.
+     */
+    public function batchInsert($goods) {
+        $placeholders = [];
+        $values = [];
+
+        foreach ($goods as $good) {
+            $placeholders[] = '(?, ?, ?)';
+            $values[] = $good['nombre'];
+            $values[] = $good['tipo'];
+            $values[] = $good['imagen'] ?? null;
+        }
+
+        $query = "INSERT INTO bienes (nombre, tipo, imagen) VALUES " . implode(', ', $placeholders);
+        $stmt = $this->connection->prepare($query);
+
+        $stmt->bind_param(str_repeat('sis', count($goods)), ...$values);
+
+        if ($stmt->execute()) {
+            $insertedIds = [];
+            for ($i = 0; $i < $stmt->affected_rows; $i++) {
+                $insertedIds[] = $this->connection->insert_id + $i;
+            }
+            return $insertedIds;
+        }
+
+        return false;
+    }
 }
 ?>

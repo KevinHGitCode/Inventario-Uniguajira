@@ -160,4 +160,33 @@ class ctlGoods {
             echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el bien o no hubo cambios.']);
         }
     }
+
+    public function batchCreate() {
+        header('Content-Type: application/json');
+
+        // Validate HTTP request method
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+            return;
+        }
+
+        // Decode JSON input
+        $inputData = json_decode(file_get_contents('php://input'), true);
+        if (!$inputData || !isset($inputData['goods']) || !is_array($inputData['goods'])) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
+            return;
+        }
+
+        // Call the model to insert goods
+        $result = $this->goodsModel->batchInsert($inputData['goods']);
+
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Bienes creados exitosamente', 'ids' => $result]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Error al crear los bienes']);
+        }
+    }
 }
