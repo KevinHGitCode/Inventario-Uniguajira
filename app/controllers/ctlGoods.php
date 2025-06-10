@@ -161,32 +161,119 @@ class ctlGoods {
         }
     }
 
-    public function batchCreate() {
-        header('Content-Type: application/json');
+public function batchCreate() {
+    header('Content-Type: application/json');
 
-        // Validate HTTP request method
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-            return;
+    $logs = [];
+
+    // Validate HTTP request method
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        $logs[] = 'Método no permitido: ' . $_SERVER['REQUEST_METHOD'];
+        echo json_encode(['success' => false, 'message' => 'Método no permitido', 'logs' => $logs]);
+        return;
+    }
+
+    // Validate if goods data exists in POST
+    if (!isset($_POST['goods']) || !is_array($_POST['goods'])) {
+        http_response_code(400);
+        $logs[] = 'Datos inválidos: goods no está presente o no es un array';
+        echo json_encode(['success' => false, 'message' => 'Datos inválidos', 'logs' => $logs]);
+        return;
+    }
+
+    // Debug: Log received data
+    $logs[] = 'POST data recibida: ' . print_r($_POST['goods'], true);
+    $logs[] = 'FILES data recibida: ' . print_r(array_keys($_FILES), true);
+
+    $processedGoods = [];
+
+    foreach ($_POST['goods'] as $index => $good) {
+        $nombre = isset($good['nombre']) ? trim($good['nombre']) : null;
+        $tipo = isset($good['tipo']) ? (int)$good['tipo'] : null;
+        
+        // CORRECCIÓN PRINCIPAL: Usar la clave correcta para acceder a las imágenes
+        $imagenKey = "goods_{$index}_imagen";
+        $imagen = isset($_FILES[$imagenKey]) ? $_FILES[$imagenKey] : null;
+        $rutaDestino = null;
+
+        $logs[] = "Procesando bien índice $index: nombre='$nombre', tipo='$tipo', imagen_key='$imagenKey'";
+
+        // Validate required fields
+        if (!$nombre || !$tipo || !in_array($tipo, [1, 2])) {
+            $logs[] = "Bien en índice $index omitido: campos requeridos faltantes o tipo inválido (nombre: '$nombre', tipo: '$tipo').";
+            continue;
         }
 
-        // Decode JSON input
-        $inputData = json_decode(file_get_contents('php://input'), true);
-        if (!$inputData || !isset($inputData['goods']) || !is_array($inputData['goods'])) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
-            return;
+        // Handle image upload
+        if ($imagen) {
+            $logs[] = "Imagen encontrada para índice $index: " . print_r($imagen, true);
+            
+            if ($imagen['error'] === UPLOAD_ERR_OK) {
+                // Incluir el helper si no está incluido
+                if (!function_exists('validarYGuardarImagen')) {
+                    require_once 'imageHelper.php'; // Ajusta la ruta según tu estructura
+                }
+                
+                $resultadoImagen = validarYGuardarImagen($imagen, 'assets/uploads/img/goods/', 2);
+
+                if ($resultadoImagen['success']) {
+                    $rutaDestino = $resultadoImagen['path'];
+                    $logs[] = "Imagen para bien '$nombre' (índice $index) guardada correctamente en '$rutaDestino'.";
+                } else {
+                    $logs[] = "Error al guardar imagen para bien '$nombre' (índice $index): " . $resultadoImagen['message'];
+                    // Continuar sin imagen en lugar de omitir todo el bien
+                }
+            } elseif ($imagen['error'] !== UPLOAD_ERR_NO_FILE) {
+                $logs[] = "Error al subir imagen para bien '$nombre' (índice $index): código de error " . $imagen['error'];
+            }
+        } else {
+            $logs[] = "Bien '$nombre' (índice $index) sin imagen adjunta.";
         }
 
-        // Call the model to insert goods
-        $result = $this->goodsModel->batchInsert($inputData['goods']);
+        // Agregar el bien procesado (con o sin imagen)
+        $processedGoods[] = [
+            'nombre' => $nombre,
+            'tipo' => $tipo,
+            'imagen' => $rutaDestino
+        ];
+        
+        $logs[] = "Bien '$nombre' agregado para procesamiento (imagen: " . ($rutaDestino ? "sí" : "no") . ")";
+    }
+
+    $logs[] = "Total de bienes a procesar: " . count($processedGoods);
+
+    // Verificar que hay bienes para procesar
+    if (empty($processedGoods)) {
+        $logs[] = 'No hay bienes válidos para procesar.';
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'No hay bienes válidos para procesar', 'logs' => $logs]);
+        return;
+    }
+
+    // Call the model to insert goods
+    try {
+        $result = $this->goodsModel->batchInsert($processedGoods);
 
         if ($result) {
-            echo json_encode(['success' => true, 'message' => 'Bienes creados exitosamente', 'ids' => $result]);
+            $logs[] = 'Bienes creados exitosamente en la base de datos.';
+            echo json_encode([
+                'success' => true, 
+                'message' => 'Bienes creados exitosamente', 
+                'ids' => $result, 
+                'logs' => $logs,
+                'processed_count' => count($processedGoods)
+            ]);
         } else {
+            $logs[] = 'El modelo retornó false al intentar insertar los bienes.';
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Error al crear los bienes']);
+            echo json_encode(['success' => false, 'message' => 'Error al crear los bienes en la base de datos', 'logs' => $logs]);
         }
+    } catch (Exception $e) {
+        $logs[] = 'Excepción en batchInsert: ' . $e->getMessage();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error interno: ' . $e->getMessage(), 'logs' => $logs]);
     }
+}
+
 }
