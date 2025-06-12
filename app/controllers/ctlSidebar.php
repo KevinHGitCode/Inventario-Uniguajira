@@ -30,13 +30,21 @@ class ctlSidebar {
         
         // Filtrar en el controlador
         $dataTasks = [
-            'pendientes' => array_filter($allTasks, function($t) {
-                return $t['estado'] === 'por hacer';
-            }),
-            'completadas' => array_filter($allTasks, function($t) {
-                return $t['estado'] === 'completado';
-            })
+            'pendientes' => array_values(array_filter($allTasks, function($t) {
+            return $t['estado'] === 'por hacer';
+            })),
+            'completadas' => array_values(array_filter($allTasks, function($t) {
+            return $t['estado'] === 'completado';
+            }))
         ];
+
+        // Ordenar por fecha ascendente (más antigua primero)
+        foreach ($dataTasks as &$tasks) {
+            usort($tasks, function($a, $b) {
+            return strtotime($a['fecha']) <=> strtotime($b['fecha']);
+            });
+        }
+        unset($tasks);
         
         $username = $_SESSION['user_name'];
         require __DIR__ . '/../views/home.php';

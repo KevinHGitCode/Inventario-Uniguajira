@@ -71,7 +71,7 @@ require_once __DIR__ . '/../helpers/dateHelper.php';
                             <?php endif; ?>
                         </div>
                         <div class="task-footer">
-                            <span class="task-date completo">
+                            <span class="task-date <?= getDateStatus($task['fecha']) ?>">
                                 <?= formatDate($task['fecha']) ?>
                             </span>
                             <button class="task-trash-button" onclick="deleteTask(<?= $task['id'] ?>)">
