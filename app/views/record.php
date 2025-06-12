@@ -15,11 +15,11 @@
         </div>
     
         <!-- Botón de filtro -->
-        <button class="filter-btn" id="filterBtn"  onclick="mostrarModal('#Modalfiltrarhistorial')"> 
+        <button class="create-btn" id="filterBtn"  onclick="mostrarModal('#Modalfiltrarhistorial')"> 
             <i class="fas fa-filter"></i>
             Filtros
         </button>
-        <button class="report-btn" id="reportBtn"  onclick="generatePDF()"> 
+        <button class="create-btn" id="reportBtn"  onclick="generatePDF()"> 
             <i class="fas fa-file-pdf"></i> <!-- Icon for PDF file -->
             Reporte
         </button>
