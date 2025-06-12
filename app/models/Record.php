@@ -37,8 +37,7 @@ class Record {
             historial.fecha_hora
             FROM historial
             INNER JOIN usuarios ON historial.usuario_id = usuarios.id
-            ORDER BY historial.id DESC
-            LIMIT 250;
+            ORDER BY historial.id DESC;
         ");
         $stmt->execute();
         $result = $stmt->get_result();

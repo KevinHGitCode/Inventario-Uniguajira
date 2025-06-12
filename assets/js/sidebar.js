@@ -78,8 +78,7 @@ function loadContent(path, scrollUpRequired = true) {
                 break;
 
             case '/record':
-                activarBusquedaEnTablaHistorial();
-                iniciarBusquedaHistorial('searchRecordInput');
+                inicializarHistorial()
                 break;
                 
             case '/inventory':

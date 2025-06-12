@@ -343,4 +343,26 @@ class ctlUser {
             echo json_encode(['success' => false, 'message' => 'No se pudo eliminar el usuario']);
         }
     }
+
+    /**
+     * Método para obtener los nombres de todos los usuarios.
+     * Retorna un JSON con un array de nombres.
+     */
+    public function getAllUserNames() {
+        header('Content-Type: application/json');
+        
+        $users = $this->userModel->getAllUsers();
+
+        $adminNames = [];
+        foreach ($users as $user) {
+            if ($user['rol'] === 'administrador') {
+                $adminNames[] = $user['nombre_usuario'];
+            }
+        }
+        
+        echo json_encode([
+            'success' => true,
+            'user_names' => $adminNames
+        ]);
+    }
 }

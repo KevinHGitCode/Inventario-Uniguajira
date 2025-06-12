@@ -9,6 +9,15 @@ window.onload = () => {
         })
         .catch(error => console.error('Error al cargar la sesión:', error));
 
+    // Obtener todos los nombres de usuario y guardarlos en window.allUserNames
+    fetch('/api/users/names')
+        .then(response => response.json())
+        .then(data => {
+            window.allUserNames = data.user_names || [];
+            console.log('Nombres de usuarios cargados:', window.allUserNames);
+        })
+        .catch(error => console.error('Error al cargar los nombres de usuario:', error));
+
     cargarUltimaSeleccion();
 
     editarPerfil();

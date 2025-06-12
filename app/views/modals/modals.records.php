@@ -67,11 +67,13 @@
                 <div style="display:flex;flex-direction:column;gap:12px;">
                     <label>
                         <span>Desde</span>
-                        <input type="date" id="dateFrom" class="form-input" />
+                        <input type="date" id="dateFrom" class="form-input" 
+                               max="<?php echo date('Y-m-d'); ?>" />
                     </label>
                     <label>
                         <span>Hasta</span>
-                        <input type="date" id="dateTo" class="form-input" />
+                        <input type="date" id="dateTo" class="form-input" 
+                               max="<?php echo date('Y-m-d'); ?>" />
                     </label>
                 </div>
             </div>

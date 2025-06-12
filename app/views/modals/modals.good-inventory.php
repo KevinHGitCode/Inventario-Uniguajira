@@ -174,7 +174,7 @@
 
                     <div>
                         <label for="editFechaIngresoBien" class="form-label">Fecha de ingreso:</label>
-                        <input type="date" name="fecha_ingreso" id="editFechaIngresoBien" class="form-input" />
+                        <input type="date" name="fecha_ingreso" id="editFechaIngresoBien" class="form-input" readonly />
                     </div>
                 </div>
             </div>

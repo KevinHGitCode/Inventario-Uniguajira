@@ -24,133 +24,21 @@ function iniciarBusquedaHistorial(searchInputID) {
 }
 
 function activarBusquedaEnTablaHistorial() {
-    // Obtiene el campo de entrada para la búsqueda
     const searchInput = document.getElementById('searchRecordInput');
-    if (!searchInput) {
-        console.warn("No se encontró el campo de búsqueda.");
-        return;
-    }
-
-    // Agregar contenedor para el indicador de búsqueda
-    const searchContainer = searchInput.parentElement;
-    let searchSpinner = document.createElement('div');
-    searchSpinner.className = 'search-spinner';
-    searchSpinner.style.display = 'none';
-    searchSpinner.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    searchContainer.appendChild(searchSpinner);
-
-    // Agregar clases CSS para la modalidad de búsqueda
-    searchInput.classList.add('search-input');
-    
-    // Contador de resultados
-    let resultCounter = document.createElement('div');
-    resultCounter.className = 'result-counter';
-    resultCounter.style.display = 'none';
-    resultCounter.innerHTML = 'Resultados encontrados: 0';
-    searchContainer.appendChild(resultCounter);
-
-    // Variable para el temporizador de debounce
-    let searchTimeout = null;
-
-    // Agrega un evento para detectar cuando el usuario escribe en el campo de búsqueda
     searchInput.addEventListener('keyup', function () {
-        // Mostrar el spinner mientras se prepara la búsqueda
-        searchSpinner.style.display = 'inline-block';
-        
-        // Añadir clase activa al campo de búsqueda
-        searchInput.classList.add('searching');
-        
-        // Obtener la tabla y aplicar estilo de "cargando"
-        const table = document.querySelector("table");
-        if (table) {
-            table.classList.add('table-searching');
-        }
-        
-        // Cancelar temporizador anterior si existe
-        if (searchTimeout) {
-            clearTimeout(searchTimeout);
-        }
-        
-        // Iniciar un nuevo temporizador para ejecutar la búsqueda después de 300ms
-        searchTimeout = setTimeout(function() {
-            const filter = searchInput.value.toLowerCase();
-            // Obtiene todas las filas de la tabla
-            const rows = document.querySelectorAll("table tbody tr");
-            let foundCount = 0;
+        const filter = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll("table tbody tr");
 
-            // Itera sobre cada fila y verifica si coincide con el texto de búsqueda
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const match = text.includes(filter);
-                
-                // Muestra u oculta la fila según si coincide con el filtro
-                row.style.display = match ? '' : 'none';
-                
-                // Efecto visual en las filas coincidentes
-                if (match) {
-                    foundCount++;
-                    row.classList.add('highlight-row');
-                    
-                    // Quitar la clase de resaltado después de un tiempo
-                    setTimeout(() => {
-                        row.classList.remove('highlight-row');
-                    }, 800);
-                }
-            });
-            
-            // Actualizar contador de resultados
-            resultCounter.innerHTML = `Resultados encontrados: ${foundCount}`;
-            resultCounter.style.display = 'block';
-            
-            // Ocultar el spinner
-            searchSpinner.style.display = 'none';
-            
-            // Quitar clase activa de búsqueda
-            searchInput.classList.remove('searching');
-            
-            // Quitar clase de "cargando" de la tabla
-            if (table) {
-                table.classList.remove('table-searching');
-            }
-            
-            // Mostrar mensaje cuando no hay resultados
-            const noResultsMsg = document.getElementById('noResultsMessage');
-            if (foundCount === 0 && filter !== '') {
-                // Crear mensaje si no existe
-                if (!noResultsMsg) {
-                    const msg = document.createElement('div');
-                    msg.id = 'noResultsMessage';
-                    msg.className = 'no-results';
-                    msg.innerHTML = 'No se encontraron registros que coincidan con la búsqueda';
-                    table.parentNode.appendChild(msg);
-                } else {
-                    noResultsMsg.style.display = 'block';
-                }
-            } else if (noResultsMsg) {
-                noResultsMsg.style.display = 'none';
-            }
-            
-        }, 300); // Debounce de 300ms
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
     });
-    
-    // Agregar evento para cuando se enfoca el campo de búsqueda
-    searchInput.addEventListener('focus', function() {
-        searchInput.classList.add('search-focus');
-    });
-    
-    // Agregar evento para cuando se pierde el foco del campo de búsqueda
-    searchInput.addEventListener('blur', function() {
-        searchInput.classList.remove('search-focus');
-    });
-    
-  
 }
-
-
 
 // Función para inicializar todo
 function inicializarHistorial() {
-    agregarEstilosHistorial();
+    iniciarBusquedaHistorial('searchRecordInput');
     activarBusquedaEnTablaHistorial();
     
     // Asegurarse de que la estructura del contenedor de búsqueda sea correcta
@@ -162,9 +50,23 @@ function inicializarHistorial() {
         searchInput.parentNode.insertBefore(wrapper, searchInput);
         wrapper.appendChild(searchInput);
     }
+
+    // Cargar usuarios en la sección de filtros
+    const userListContainer = document.getElementById('userList');
+    if (userListContainer && window.allUserNames) {
+        window.allUserNames.forEach(userName => {
+            const userCheckbox = document.createElement('label');
+            userCheckbox.className = 'checkbox-container';
+            userCheckbox.innerHTML = `
+                <input type="checkbox" class="user-checkbox" value="${userName}">
+                <span class="checkmark"></span>
+                <span class="checkbox-label">${userName}</span>
+            `;
+            userListContainer.appendChild(userCheckbox);
+        });
+    }
 }
 
-// boton de filtro -----------------------
 
 // Función para alternar todos los checkboxes de usuarios cuando se cambia "Todos los usuarios"
 function toggleAllUsers() {
@@ -224,7 +126,7 @@ function applyFilters() {
     });
 
     // Cerrar el modal después de aplicar los filtros
-    closeModal();
+    ocultarModal('#Modalfiltrarhistorial')
 }
 
 // Limpiar todos los filtros y mostrar todas las filas
@@ -245,46 +147,13 @@ function clearFilters() {
     });
 
     // Cerrar el modal
-    closeModal();
+    ocultarModal('#Modalfiltrarhistorial')
 }
-
-
-
-
-
-
-
-
 
 
 
 // scripts boton reporte---------------------------->>>>>>>
-// Función para cargar jsPDF dinámicamente
-function loadJsPDFDynamically() {
-    const script1 = document.createElement('script');
-    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-    script1.onload = function() {
-        const script2 = document.createElement('script');
-        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js';
-        script2.onload = function() {
-            console.log('Librerías cargadas dinámicamente');
-            setTimeout(generatePDF, 100); // Reintentar después de cargar
-        };
-        document.head.appendChild(script2);
-    };
-    document.head.appendChild(script1);
-}
-
 function generatePDF() {
-    console.log('=== DEBUG JSPDF ===');
-    console.log('window.jspdf:', typeof window.jspdf);
-    console.log('window.jsPDF:', typeof window.jsPDF);
-
-    if ((!window.jspdf || !window.jspdf.jsPDF) && !window.jsPDF) {
-        alert('Cargando..........');
-        loadJsPDFDynamically();
-        return;
-    }
 
     let jsPDF;
     if (window.jspdf && window.jspdf.jsPDF) {
