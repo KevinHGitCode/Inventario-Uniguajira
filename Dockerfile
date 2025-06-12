@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     intl \
     mbstring \
+    gd \
     pdo_mysql
 
 # Instala Composer
