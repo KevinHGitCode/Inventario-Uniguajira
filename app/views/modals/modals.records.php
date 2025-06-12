@@ -9,7 +9,7 @@
         <div class="modal-body filters-horizontal">
 
             <!-- Filtro por Usuario -->
-            <div class="filter-section" style="border: 2px solid red;">
+            <div class="filter-section">
                 <h3 class="section-title">
                     <i class="fa fa-user section-icon"></i>
                     Usuarios
@@ -27,7 +27,7 @@
             </div>
 
             <!-- Filtro por Acción -->
-            <div class="filter-section" style="border: 2px solid red;">
+            <div class="filter-section">
                 <h3 class="section-title">
                     <i class="fa fa-star section-icon"></i>
                     Acciones
@@ -59,7 +59,7 @@
             </div>
 
             <!-- Filtro por Fecha -->
-            <div class="filter-section" style="border: 2px solid red;">
+            <div class="filter-section">
                 <h3 class="section-title">
                     <i class="fa fa-calendar section-icon"></i>
                     Rango de Fechas
