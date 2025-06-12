@@ -144,16 +144,28 @@
 }
 
 .task-date.past {
-    color: #c54b57;
+    color: #ffffff;
+    background-color: #c54b57;
+    border-radius: 8px;
 }
 
 .task-date.today {
-    color: #43be60;
+    color: #ffffff;
+    background-color: #e4790e;
     font-weight: 500;
+    border-radius: 8px;
 }
 
 .task-date.future {
-    color: #40b3ff;
+    color: #ffffff;
+    background-color: #0e7f9199;
+    border-radius: 8px;
+}
+
+.task-date.completo {
+    color: #ffffff;
+    background-color: #589804f9;
+    border-radius: 8px;
 }
 
 .task-trash-button {
