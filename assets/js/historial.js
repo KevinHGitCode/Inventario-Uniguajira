@@ -396,14 +396,13 @@ function generatePDF() {
 
         img.onload = function() {
             // Agregar imagen al encabezado
-            doc.addImage(img, 'WEBP', 10, 10, 50, 20); // Ajusta la posición y tamaño según sea necesario
+            doc.addImage(img, 'WEBP', 10, 10, 50, 20);
 
-            // Ajustar la posición del texto para dar espacio entre la imagen y el título
-            const titleY = 45; // Cambia esta coordenada Y para ajustar el espacio
+            const titleY = 45;
             doc.setFontSize(16);
             doc.text('Reporte de Historial', 20, titleY);
             doc.setFontSize(12);
-            doc.text('Fecha de generación: ' + new Date().toLocaleDateString(), 20, titleY + 15); // Espacio adicional para la fecha
+            doc.text('Fecha de generación: ' + new Date().toLocaleDateString(), 20, titleY + 15);
 
             const table = document.querySelector('.record-table');
             if (!table) {
@@ -413,18 +412,41 @@ function generatePDF() {
             }
 
             const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
-            const rows = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+            
+            // CAMBIO PRINCIPAL: Solo incluir filas visibles (no ocultas por filtros)
+            const visibleRows = Array.from(table.querySelectorAll('tbody tr')).filter(row => {
+                return row.style.display !== 'none'; // Solo filas que no están ocultas
+            });
+
+            const rows = visibleRows.map(row => {
                 return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim());
             });
 
-            doc.autoTable({
-                head: [headers],
-                body: rows,
-                startY: titleY + 30, // Ajusta la posición para que no se superponga con el encabezado
-            });
+            // Agregar información sobre filtros aplicados
+            let filterInfo = '';
+            const totalRows = table.querySelectorAll('tbody tr').length;
+            const visibleRowsCount = visibleRows.length;
+            
+            if (visibleRowsCount < totalRows) {
+                filterInfo = `Registros mostrados: ${visibleRowsCount} de ${totalRows} (filtros aplicados)`;
+                doc.setFontSize(10);
+                doc.text(filterInfo, 20, titleY + 25);
+            }
+
+            // Verificar si hay datos para mostrar
+            if (rows.length === 0) {
+                doc.setFontSize(12);
+                doc.text('No hay registros que coincidan con los filtros aplicados.', 20, titleY + 40);
+            } else {
+                doc.autoTable({
+                    head: [headers],
+                    body: rows,
+                    startY: titleY + (filterInfo ? 35 : 30),
+                });
+            }
 
             doc.save('historial_reporte.pdf');
-            console.log('✅ PDF generado exitosamente');
+            console.log('✅ PDF generado exitosamente con filtros aplicados');
         };
 
         img.onerror = function() {
@@ -436,25 +458,4 @@ function generatePDF() {
         console.error('❌ Error al generar PDF:', error);
         alert('Error al generar PDF: ' + error.message);
     }
-}
-
-// Código para el botón de generación de PDF
-document.addEventListener('DOMContentLoaded', () => {
-    const reportBtn = document.getElementById('reportBtn');
-    if (reportBtn) {
-        reportBtn.addEventListener('click', () => {
-            console.log('Botón Reportes presionado.');
-            generatePDF();
-        });
-    } else {
-        console.error('No se encontró el botón Reportes.');
-    }
-});
-
-// Test simple - añadir al final del archivo
-console.log('historial.js cargado correctamente');
-
-function testButton() {
-    alert('¡El botón funciona!');
-    console.log('Botón clickeado');
 }
