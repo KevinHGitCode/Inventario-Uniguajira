@@ -162,12 +162,6 @@
     border-radius: 8px;
 }
 
-.task-date.completo {
-    color: #ffffff;
-    background-color: #589804f9;
-    border-radius: 8px;
-}
-
 .task-trash-button {
     margin-right: 2px;
     background: transparent;
@@ -186,6 +180,25 @@
 .task-card.completed {
     background: #f9f9f9;
     opacity: 0.85;
+
+    .task-date.past {
+        color: #ffffff;
+        background-color: #589804f9;
+        border-radius: 8px;
+    }
+
+    .task-date.today {
+        color: #ffffff;
+        background-color: #589804f9;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .task-date.future {
+        color: #ffffff;
+        background-color: #589804f9;
+        border-radius: 8px;
+    }
 }
 
 .task-card.completed .task-title {
