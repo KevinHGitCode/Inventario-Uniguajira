@@ -109,8 +109,8 @@
             </table>
         </div>
 
-        <button onclick="btnClearExcelUploadUI()">Cancelar</button>
-        <button id="btnEnviarExcel" onclick="sendGoodsData(collectGoodsData())" disabled>Enviar</button>
+        <button onclick="btnClearExcelUploadUI()" class="btn">Cancelar</button>
+        <button id="btnEnviarExcel" class="btn create-btn" onclick="sendGoodsData(collectGoodsData())" disabled>Enviar</button>
 
     </div>
 

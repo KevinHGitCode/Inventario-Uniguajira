@@ -126,7 +126,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">Guardar Cambios</button>
+                <button type="submit" class="btn submit-btn">Guardar Cambios</button>
             </div>
         </form>
         <p style="margin-top: 15px; font-size: 0.9em; color: #555;">

@@ -78,15 +78,7 @@ h4 {
     font-size: 1.25rem;
 }
 
-p {
-    font-size: 15px;
-    font-weight: 300;
-    margin: 0 30px 4px 0;
-    white-space: nowrap; /* Evita saltos de línea */
-    overflow: hidden; /* Oculta el texto que sobresale */
-    text-overflow: ellipsis; /* Añade puntos suspensivos */
-    max-width: 100%; /* Asegura que respete el ancho del contenedor */
-}
+
 
 .me-2 {
     margin-right: 0.5rem;

@@ -36,6 +36,34 @@ function activarBusquedaEnTablaHistorial() {
     });
 }
 
+// Función para convertir fecha string a objeto Date
+function parseDateTime(dateTimeString) {
+    // Formato esperado: "2025-06-12 03:14:10"
+    const [datePart, timePart] = dateTimeString.split(' ');
+    return new Date(datePart + 'T' + timePart);
+}
+
+// Función para verificar si una fecha está en el rango especificado
+function isDateInRange(dateTimeString, dateFrom, dateTo) {
+    if (!dateFrom && !dateTo) return true;
+    
+    const recordDate = parseDateTime(dateTimeString);
+    
+    if (dateFrom) {
+        const fromDate = new Date(dateFrom);
+        fromDate.setHours(0, 0, 0, 0); // Inicio del día
+        if (recordDate < fromDate) return false;
+    }
+    
+    if (dateTo) {
+        const toDate = new Date(dateTo);
+        toDate.setHours(23, 59, 59, 999); // Final del día
+        if (recordDate > toDate) return false;
+    }
+    
+    return true;
+}
+
 // Función para inicializar todo
 function inicializarHistorial() {
     iniciarBusquedaHistorial('searchRecordInput');
@@ -51,10 +79,16 @@ function inicializarHistorial() {
         wrapper.appendChild(searchInput);
     }
 
-    // Cargar usuarios en la sección de filtros
+    // Cargar usuarios en la sección de filtros - SOLUCIONADO: Evitar duplicados
     const userListContainer = document.getElementById('userList');
     if (userListContainer && window.allUserNames) {
-        window.allUserNames.forEach(userName => {
+        // Limpiar contenedor primero para evitar duplicados
+        userListContainer.innerHTML = '';
+        
+        // Usar Set para eliminar usuarios duplicados
+        const uniqueUsers = [...new Set(window.allUserNames)];
+        
+        uniqueUsers.forEach(userName => {
             const userCheckbox = document.createElement('label');
             userCheckbox.className = 'checkbox-container';
             userCheckbox.innerHTML = `
@@ -64,9 +98,10 @@ function inicializarHistorial() {
             `;
             userListContainer.appendChild(userCheckbox);
         });
+        
+        console.log(`✅ Usuarios cargados: ${uniqueUsers.length} únicos de ${window.allUserNames.length} totales`);
     }
 }
-
 
 // Función para alternar todos los checkboxes de usuarios cuando se cambia "Todos los usuarios"
 function toggleAllUsers() {
@@ -94,10 +129,29 @@ function updateActionSelection() {
     allActionsCheckbox.checked = allChecked;
 }
 
-// Aplicar filtros a la tabla de historial según los usuarios y acciones seleccionados
+// Sincronizar el checkbox "Todos los usuarios" si cambia algún checkbox de usuario
+function updateUserSelection() {
+    const allUsersCheckbox = document.getElementById('allUsers');
+    const userCheckboxes = document.querySelectorAll('.user-checkbox');
+    const allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
+    allUsersCheckbox.checked = allChecked;
+}
+
+// NUEVA FUNCIÓN: Aplicar filtros a la tabla de historial incluyendo fechas
 function applyFilters() {
     const userCheckboxes = document.querySelectorAll('.user-checkbox');
     const actionCheckboxes = document.querySelectorAll('.action-checkbox');
+    const dateFrom = document.getElementById('dateFrom').value;
+    const dateTo = document.getElementById('dateTo').value;
+
+    // Validar rango de fechas
+    if (dateFrom && dateTo && new Date(dateFrom) > new Date(dateTo)) {
+        showToast({ 
+            success: false, 
+            message: 'La fecha "Desde" no puede ser posterior a la fecha "Hasta"' 
+        });
+        return;
+    }
 
     const selectedUsers = Array.from(userCheckboxes)
         .filter(cb => cb.checked)
@@ -108,25 +162,42 @@ function applyFilters() {
         .map(cb => cb.value);
 
     const rows = document.querySelectorAll('.record-table tbody tr');
+    let visibleCount = 0;
 
     rows.forEach(row => {
         const userCell = row.cells[1].textContent.trim();
         const actionCell = row.cells[2].textContent.trim();
+        const dateTimeCell = row.cells[6].textContent.trim(); // Columna de fecha y hora
 
-        // Si no se seleccionan usuarios, se considera que se seleccionan todos
+        // Verificar filtros
         const userMatch = selectedUsers.length === 0 || selectedUsers.includes(userCell);
-        // Si no se seleccionan acciones, se considera que se seleccionan todas
         const actionMatch = selectedActions.length === 0 || selectedActions.includes(actionCell);
+        const dateMatch = isDateInRange(dateTimeCell, dateFrom, dateTo);
 
-        if (userMatch && actionMatch) {
+        if (userMatch && actionMatch && dateMatch) {
             row.style.display = '';
+            visibleCount++;
         } else {
             row.style.display = 'none';
         }
     });
 
+    // Mostrar información de resultados
+    console.log(`✅ Filtros aplicados: ${visibleCount} registros visibles de ${rows.length} totales`);
+    
+    // Mostrar notificación temporal
+    showFilterNotification(visibleCount, rows.length);
+
     // Cerrar el modal después de aplicar los filtros
     ocultarModal('#Modalfiltrarhistorial')
+}
+
+// Función para mostrar notificación usando el sistema existente
+function showFilterNotification(visible, total) {
+    showToast({ 
+        success: true, 
+        message: `Filtros aplicados: ${visible} de ${total} registros visibles` 
+    });
 }
 
 // Limpiar todos los filtros y mostrar todas las filas
@@ -141,16 +212,27 @@ function clearFilters() {
     allActionsCheckbox.checked = false;
     document.querySelectorAll('.action-checkbox').forEach(cb => { cb.checked = false; });
 
+    // Limpiar campos de fecha
+    document.getElementById('dateFrom').value = '';
+    document.getElementById('dateTo').value = '';
+
     // Mostrar todas las filas
-    document.querySelectorAll('.record-table tbody tr').forEach(row => {
+    const rows = document.querySelectorAll('.record-table tbody tr');
+    rows.forEach(row => {
         row.style.display = '';
+    });
+
+    console.log(`✅ Filtros limpiados: ${rows.length} registros visibles`);
+    
+    // Mostrar notificación de filtros limpiados
+    showToast({ 
+        success: true, 
+        message: `Filtros limpiados: ${rows.length} registros visibles` 
     });
 
     // Cerrar el modal
     ocultarModal('#Modalfiltrarhistorial')
 }
-
-
 
 // scripts boton reporte---------------------------->>>>>>>
 function generatePDF() {
@@ -185,7 +267,10 @@ function generatePDF() {
             const table = document.querySelector('.record-table');
             if (!table) {
                 console.error('No se encontró la tabla de historial.');
-                alert('Error: No se encontró la tabla de historial.');
+                showToast({ 
+                    success: false, 
+                    message: 'Error: No se encontró la tabla de historial.' 
+                });
                 return;
             }
 
@@ -211,6 +296,22 @@ function generatePDF() {
                 doc.text(filterInfo, 20, titleY + 25);
             }
 
+            // Agregar información de filtros de fecha si están aplicados
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            if (dateFrom || dateTo) {
+                let dateFilterText = 'Filtro de fechas: ';
+                if (dateFrom && dateTo) {
+                    dateFilterText += `${dateFrom} a ${dateTo}`;
+                } else if (dateFrom) {
+                    dateFilterText += `desde ${dateFrom}`;
+                } else {
+                    dateFilterText += `hasta ${dateTo}`;
+                }
+                doc.setFontSize(10);
+                doc.text(dateFilterText, 20, titleY + (filterInfo ? 35 : 25));
+            }
+
             // Verificar si hay datos para mostrar
             if (rows.length === 0) {
                 doc.setFontSize(12);
@@ -219,21 +320,31 @@ function generatePDF() {
                 doc.autoTable({
                     head: [headers],
                     body: rows,
-                    startY: titleY + (filterInfo ? 35 : 30),
+                    startY: titleY + (filterInfo || (dateFrom || dateTo) ? 45 : 30),
                 });
             }
 
             doc.save('historial_reporte.pdf');
             console.log('✅ PDF generado exitosamente con filtros aplicados');
+            showToast({ 
+                success: true, 
+                message: 'PDF generado exitosamente' 
+            });
         };
 
         img.onerror = function() {
             console.error('❌ Error al cargar la imagen.');
-            alert('Error al cargar la imagen.');
+            showToast({ 
+                success: false, 
+                message: 'Error al cargar la imagen del logo' 
+            });
         };
 
     } catch (error) {
         console.error('❌ Error al generar PDF:', error);
-        alert('Error al generar PDF: ' + error.message);
+        showToast({ 
+            success: false, 
+            message: 'Error al generar PDF: ' + error.message 
+        });
     }
 }
