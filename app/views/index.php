@@ -49,6 +49,7 @@
         include __DIR__ . '/modals/modals.inventory.php';
         include __DIR__ . '/modals/modals.user.php';
         include __DIR__ . '/modals/modals.reports.php';
+        include __DIR__ . '/modals/modals.records.php';
     } ?>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

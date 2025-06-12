@@ -143,101 +143,10 @@ function activarBusquedaEnTablaHistorial() {
         searchInput.classList.remove('search-focus');
     });
     
-    // Agregar botón para limpiar la búsqueda
-    // const clearButton = document.createElement('button');
-    // clearButton.className = 'clear-search';
-    // clearButton.innerHTML = '<i class="fas fa-times"></i>';
-    // clearButton.style.display = 'none';
-    // searchContainer.appendChild(clearButton);
-    
-    // // Mostrar/ocultar botón limpiar según contenido
-    // searchInput.addEventListener('input', function() {
-    //     clearButton.style.display = this.value ? 'block' : 'none';
-    // });
-    
-    // // Limpiar búsqueda al hacer clic en el botón
-    // clearButton.addEventListener('click', function() {
-    //     searchInput.value = '';
-    //     searchInput.dispatchEvent(new Event('keyup'));
-    //     clearButton.style.display = 'none';
-    //     resultCounter.style.display = 'none';
-    // });
+  
 }
 
-// CSS para los nuevos estilos (agregar al head del documento)
-//  function agregarEstilosHistorial() {
-//     const style = document.createElement('style');
-//     style.textContent = `
-//         .search-input {
-//             padding-right: 30px;
-//             transition: all 0.3s ease;
-//             border: 1px solid #ced4da;
-//             border-radius: 4px;
-//         }
-        
-//         .search-focus {
-//             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-//             border-color: #80bdff;
-//         }
-        
-//         .searching {
-//             background-color: #f8f9fa;
-//         }
-        
-//         .search-spinner {
-//             position: absolute;
-//             right: 40px;
-//             top: 50%;
-//             transform: translateY(-50%);
-//             color: #007bff;
-//         }
-        
-//         .result-counter {
-//             font-size: 0.8rem;
-//             color: #6c757d;
-//             margin-top: 5px;
-//         }
-        
-//         .table-searching {
-//             opacity: 0.8;
-//             transition: opacity 0.3s ease;
-//         }
-        
-//         .highlight-row {
-//             animation: highlightFade 1.5s ease;
-//         }
-        
-//         @keyframes highlightFade {
-//             0% { background-color: rgba(255, 255, 140, 0.8); }
-//             100% { background-color: transparent; }
-//         }
-        
-//         .clear-search {
-//             position: absolute;
-//             right: 10px;
-//             top: 50%;
-//             transform: translateY(-50%);
-//             background: none;
-//             border: none;
-//             color: #6c757d;
-//             cursor: pointer;
-//             padding: 0;
-//             font-size: 1rem;
-//         }
-        
-//         .clear-search:hover {
-//             color: #495057;
-//         }
-        
-//         .no-results {
-//             text-align: center;
-//             padding: 20px;
-//             color: #dc3545;
-//             font-weight: bold;
-//         }
-//     `;
-//     document.head.appendChild(style);
-//  }
+
 
 // Función para inicializar todo
 function inicializarHistorial() {
