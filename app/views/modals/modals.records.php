@@ -86,7 +86,7 @@
                 <i class="fa fa-eraser"></i>
                 Limpiar Campos
             </button>
-            <button class="btn btn-primary" onclick="applyFilters()">
+            <button class="btn submit-btn" onclick="applyFilters()">
                 <i class="fa fa-check"></i>
                 Aplicar
             </button>

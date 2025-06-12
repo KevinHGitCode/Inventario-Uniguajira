@@ -190,19 +190,6 @@
     border-top: 1px solid #dee2e6;
 }
 
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
 .btn-secondary {
     background-color: #6c757d;
     color: white;
@@ -212,14 +199,6 @@
     background-color: #5a6268;
 }
 
-.btn-primary {
-    background-color: #a31927;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #8b1622;
-}
 
 /* Responsive para pantallas más pequeñas */
 @media (max-width: 768px) {

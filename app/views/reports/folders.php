@@ -16,7 +16,7 @@
             </div>
 
             <?php if ($_SESSION['user_rol'] === 'administrador'): ?>
-                <button id="btnCrearCarpeta" class="report-create-btn" onclick="mostrarModal('#modalCrearCarpeta')">Crear</button>
+                <button id="btnCrearCarpeta" class="create-btn" onclick="mostrarModal('#modalCrearCarpeta')">Crear</button>
             <?php endif; ?>
         </div>
 
