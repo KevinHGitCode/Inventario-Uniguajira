@@ -1,22 +1,26 @@
 # Usa una imagen base de PHP con Apache
 FROM php:8.1-apache
 
-# Instala las extensiones necesarias para mysqli
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
-
-# Instala dependencias necesarias para composer y extensiones PHP comunes
+# Instala dependencias necesarias para mysqli, pdo_mysql y otras extensiones
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    default-mysql-client \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
-    zip \
-    intl \
-    mbstring \
-    gd \
-    pdo_mysql
+       mysqli \
+       pdo_mysql \
+       zip \
+       intl \
+       mbstring \
+       gd \
+    && docker-php-ext-enable mysqli pdo_mysql
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
