@@ -1,18 +1,14 @@
 # Usa una imagen base de PHP con Apache
 FROM php:8.1-apache
 
-# Instala dependencias necesarias para mysqli, pdo_mysql y otras extensiones
+# Instala dependencias necesarias para extensiones PHP y Composer
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
     libicu-dev \
     libonig-dev \
-    libjpeg-dev \
     libpng-dev \
-    libfreetype6-dev \
-    default-mysql-client \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
        mysqli \
        pdo_mysql \
@@ -31,26 +27,26 @@ COPY . /var/www/html/
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Instala las dependencias de Composer si existe un composer.json
+# Instala dependencias de Composer si existe composer.json
 RUN if [ -f "composer.json" ]; then \
         composer install --no-dev --optimize-autoloader; \
     fi
 
-# Establece los permisos correctos para los archivos
+# Establece permisos correctos
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 
-# Habilita el módulo de reescritura de Apache (opcional, si usas URLs amigables)
+# Habilita mod_rewrite de Apache
 RUN a2enmod rewrite
 
-# Configura Apache para usar mod_rewrite
+# Configura Apache para permitir .htaccess
 RUN echo '<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
-# Expone el puerto 80 para el servidor web
+# Expone el puerto 80
 EXPOSE 80
 
 # Comando para iniciar Apache
